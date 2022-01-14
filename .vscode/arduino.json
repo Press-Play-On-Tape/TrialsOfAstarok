@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:leonardo",
+    "sketch": "Squario.ino",
+    "output": "../build"
+}

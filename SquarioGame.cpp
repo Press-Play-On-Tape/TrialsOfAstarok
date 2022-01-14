@@ -1,5 +1,4 @@
 #include <Arduboy2.h>
-#include "DefinesImagesAndSounds.h"
 #include "SquarioGame.h"
 
 SquarioGame::SquarioGame() {
@@ -20,7 +19,7 @@ void SquarioGame::newGame() {
   this->coins = 0;
   this->lives = 1;
   this->mapNumber = 1;
-  this->player.LoadSprite(SmallSquarioSprite, 10, spawnY());
+  this->player.LoadSprite(SmallSquarioSprite, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 10, spawnY());
   startLevel();
 
 }
@@ -114,11 +113,11 @@ void SquarioGame::cycle(Arduboy2 &arduboy, GameState &gameState) {
       this->mobs[a].Think();
       if (this->mobs[a].y > MapPixelHeight) this->mobs[a].Deactivate();
       else if (testCollision(arduboy, &player, &this->mobs[a])) {
-        if (this->mobs[a].SpriteData == MushroomSprite) {
+        if (this->mobs[a].spriteData == MushroomSprite) {
           this->mobs[a].Deactivate();
           this->score += POINTSMushroom;
           SFX = SFX_Mushroom;
-          if (this->player.SpriteData == SmallSquarioSprite) this->player.LoadSprite(BigSquarioSprite, this->player.x, this->player.y-8);
+          if (this->player.spriteData == SmallSquarioSprite) this->player.LoadSprite(BigSquarioSprite, Images::SpriteImages[ObjectTypes::STBigSquario], Images::SpriteMasks[ObjectTypes::STBigSquario], this->player.x, this->player.y-8);
           else if (this->health < 5) this->health++;
         }
         else if (this->player.Falling()) {
@@ -137,7 +136,7 @@ void SquarioGame::cycle(Arduboy2 &arduboy, GameState &gameState) {
               //SJH this->event = EventType::Death_Init; 
             }
             if (this->player.getHeight() > TileSize) {
-              this->player.LoadSprite(SmallSquarioSprite, this->player.x, this->player.y+8);
+              this->player.LoadSprite(SmallSquarioSprite, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], this->player.x, this->player.y+8);
               SFX = SFX_Hit;
             }
           }
@@ -200,7 +199,7 @@ void SquarioGame::die(Arduboy2 &arduboy, GameState &gameState) {
 
   if (this->lives > 0) {
     this->health = 0;
-    this->player.LoadSprite(SmallSquarioSprite, 10, spawnY());
+    this->player.LoadSprite(SmallSquarioSprite, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 10, spawnY());
     startLevel();
   }
   else {
@@ -321,11 +320,11 @@ void SquarioGame::draw(Arduboy2 &arduboy) {
 
 }
 
-void SquarioGame::addMob(const uint8_t *dataPointer, int x, int y) {
+void SquarioGame::addMob(const uint8_t *data, const uint8_t * img, const uint8_t * mask, int x, int y) {
 
   int Distances[ SpriteCap ];
   for (uint8_t a = 0; a < SpriteCap; a++) {
-    if (!this->mobs[a].Active) { this->mobs[a].Activate(dataPointer, x, y); return; }
+    if (!this->mobs[a].Active) { this->mobs[a].Activate(data, img, mask, x, y); return; }
     Distances[a] = this->player.x - this->mobs[a].x;
     if (Distances[a] < 0) Distances[a] *= -1;
   }
@@ -337,6 +336,6 @@ void SquarioGame::addMob(const uint8_t *dataPointer, int x, int y) {
       Distance = Distances[a];
     }
   }
-  this->mobs[Candidate].Activate(dataPointer, x, y);
+  this->mobs[Candidate].Activate(data, img, mask, x, y);
   
 }

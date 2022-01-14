@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Arduboy2.h>
-#include "Enums.h"
-#include "DefinesImagesAndSounds.h"
+#include "src/images/Images.h"
+#include "src/utils/Enums.h"
+#include "src/utils/DefinesImagesAndSounds.h"
 
 
 class Room;
@@ -14,7 +15,7 @@ class SquarioGame;
 class Sprite {
 
   public:
-    void LoadSprite(const uint8_t * dataPointer, int tX, int tY);
+    void LoadSprite(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
     void ClearSprite();
     bool IsIn (int tX, int tY);
     bool IsInTopHalf (int tX, int tY);
@@ -43,7 +44,9 @@ class Sprite {
     const uint8_t * MaskPointer();
 
     SquarioGame         * Game;
-    const uint8_t * SpriteData;
+    const uint8_t       * spriteData;
+    const uint8_t       * spriteImg;
+    const uint8_t       * spriteMask;
     int                   x, y, vx, vy;
     int                   currentFrame;
     bool                  Mirrored;
@@ -52,7 +55,7 @@ class Sprite {
 
 class AISprite : public Sprite {
   public:
-    void Activate(const uint8_t * dataPointer, int tX, int tY);
+    void Activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
     void Deactivate();
     void Think();
     void Seek();
@@ -123,7 +126,7 @@ class SquarioGame {
     void drawMap(Arduboy2 &arduboy);
     void drawPlayer(Arduboy2 &arduboy);
     void drawMobs(Arduboy2 &arduboy);
-    void addMob(const uint8_t *dataPointer, int x, int y);
+    void addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask,  int x, int y);
     void adjustCamera();
     void processButtons(Arduboy2 &arduboy);
     

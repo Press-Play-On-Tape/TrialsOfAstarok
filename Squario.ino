@@ -2,11 +2,11 @@
 #include <EEPROM.h>
 
 #include <Arduboy2.h>
+#include "src/images/Images.h"
+#include "src/utils/DefinesImagesAndSounds.h"
 #include "SquarioGame.h"
-#include "DefinesImagesAndSounds.h"
-#include "Enums.h"
-#include "Structs.h"
-#include "src/fonts/Font3x5.h"
+#include "src/utils/Enums.h"
+#include "src/utils/Structs.h"
 
 Arduboy2 arduboy;
 SquarioGame Game;

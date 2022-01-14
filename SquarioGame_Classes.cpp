@@ -1,6 +1,4 @@
 #include <Arduboy2.h>
-#include "Enums.h"
-#include "DefinesImagesAndSounds.h"
 #include "SquarioGame.h"
 
 
@@ -8,29 +6,33 @@
 // Sprite
 //---------------------------------------------------------------------------------------------------
 //
-uint8_t Sprite::getWidth()          { return pgm_read_byte(SpriteData + SpriteWidth); }
-uint8_t Sprite::getHeight()         { return pgm_read_byte(SpriteData + SpriteHeight); }
-uint8_t Sprite::getMasks()          { return pgm_read_byte(SpriteData + SpriteMasks); }
-uint8_t Sprite::getMaxFrame()       { return pgm_read_byte(SpriteData + SpriteMaxFrame); }
-uint8_t Sprite::getCyclesPerFrame() { return pgm_read_byte(SpriteData + SpritegetCyclesPerFrame); }
-uint8_t Sprite::getFlags()          { return pgm_read_byte(SpriteData + SpriteFlags); }
+uint8_t Sprite::getWidth()          { return pgm_read_byte(this->spriteData + SpriteWidth); }
+uint8_t Sprite::getHeight()         { return pgm_read_byte(this->spriteData + SpriteHeight); }
+uint8_t Sprite::getMasks()          { return pgm_read_byte(this->spriteData + SpriteMasks); }
+uint8_t Sprite::getMaxFrame()       { return pgm_read_byte(this->spriteData + SpriteMaxFrame); }
+uint8_t Sprite::getCyclesPerFrame() { return pgm_read_byte(this->spriteData + SpritegetCyclesPerFrame); }
+uint8_t Sprite::getFlags()          { return pgm_read_byte(this->spriteData + SpriteFlags); }
 
-int16_t Sprite::getRightX() { return x + this->getWidth()-1; }
-int16_t Sprite::getBottomY() { return y + this->getHeight()-1; }
+int16_t Sprite::getRightX() { return x + this->getWidth() - 1; }
+int16_t Sprite::getBottomY() { return y + this->getHeight() - 1; }
 
 
 const uint8_t * Sprite::FramePointer () {
-  int frameSize = this->getHeight() * this->getWidth() / 8;
-  return SpriteData + SpriteImageData + (frameSize * (currentFrame / getCyclesPerFrame()));
+  // int frameSize = this->getHeight() * this->getWidth() / 8;
+  // return SpriteData + SpriteImageData + (frameSize * (currentFrame / getCyclesPerFrame()));
+  return this->spriteImg;
 }
 
 const uint8_t * Sprite::MaskPointer () {
-  int frameSize = this->getHeight() * this->getWidth() / 8;
-  return SpriteData + SpriteImageData + (frameSize * getMaxFrame()) + (frameSize * (currentFrame / getCyclesPerFrame()));
+  // int frameSize = this->getHeight() * this->getWidth() / 8;
+  // return SpriteData + SpriteImageData + (frameSize * getMaxFrame()) + (frameSize * (currentFrame / getCyclesPerFrame()));
+  return this->spriteMask;
 }
 
-void Sprite::LoadSprite(const uint8_t * dataPointer, int tX, int tY) {
-  SpriteData = dataPointer;
+void Sprite::LoadSprite(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
+  this->spriteData = data;
+  this->spriteImg = img;
+  this->spriteMask = mask;
   x = tX; y = tY;
   vx = 0; vy = 0;
   Mirrored = false;
@@ -38,7 +40,7 @@ void Sprite::LoadSprite(const uint8_t * dataPointer, int tX, int tY) {
 }
 
 void Sprite::ClearSprite() {
-  SpriteData = NULL;
+  this->spriteData = NULL;
   x = -1;
   y = -1;
   vx = 0;
@@ -203,7 +205,7 @@ void Sprite::draw(Arduboy2 &arduboy) {
     x - Game->cameraX,
     y - Game->cameraY,
     MaskPointer(), this->getWidth(), this->getHeight(), BLACK);
-    arduboy.drawBitmap(x - Game->cameraX, y - Game->cameraY, FramePointer(), this->getWidth(), this->getHeight(), WHITE);
+    Sprites::drawExternalMask(x - Game->cameraX, y - Game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
     if (currentFrame + 1 < getMaxFrame() * getCyclesPerFrame()) currentFrame++;
     else currentFrame = 0;
 }
@@ -215,15 +217,18 @@ void Sprite::draw(Arduboy2 &arduboy) {
 // AISprite
 //---------------------------------------------------------------------------------------------------
 //
-uint8_t AISprite::Speed()        { return pgm_read_byte(SpriteData + SpriteSpeed); }
-byte    AISprite::Intelligence() { return pgm_read_byte(SpriteData + SpriteIntelligence); }
+uint8_t AISprite::Speed()        { return pgm_read_byte(this->spriteData + SpriteSpeed); }
+byte    AISprite::Intelligence() { return pgm_read_byte(this->spriteData + SpriteIntelligence); }
 
-void AISprite::Activate(const uint8_t * dataPointer, int tX, int tY) {
-  SpriteData = dataPointer;
+void AISprite::Activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
+  // this->spriteData = data;
+  // this->spriteImg = img;
+  // this->spriteMask = mask;
+
   Active = true;
   this->facing = Direction::Left;
-  LoadSprite(dataPointer, tX*TileSize, tY*TileSize);
-  if (dataPointer == BoltSprite) {
+  LoadSprite(data, img, mask, tX * TileSize, tY * TileSize);
+  if (data == Images::SpriteImages[ObjectTypes::STBolt]) {
     vx = -4;
     vy = 2;
   }
@@ -231,7 +236,7 @@ void AISprite::Activate(const uint8_t * dataPointer, int tX, int tY) {
 }
 
 void AISprite::Deactivate() {
-  SpriteData = NULL;
+  this->spriteData = NULL;
   Active = false;
   this->facing = Direction::Up;
   ClearSprite();
@@ -347,13 +352,13 @@ void Map::generateRoom(int RoomNum) {
         if (tSpawnBarrier > SpawnBarrier) {
           if (!random(8)) {
             uint8_t MobSelector = random(20);
-            if      (MobSelector < 10) Game->addMob(TriangleoSprite, tSpawnBarrier + x, Floor - 2);
-            else if (MobSelector < 16) Game->addMob(SmileoSprite, tSpawnBarrier + x, Floor - 2);
+            if      (MobSelector < 10) Game->addMob(TriangleoSprite, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, Floor - 2);
+            else if (MobSelector < 16) Game->addMob(SmileoSprite, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, Floor - 2);
             else if (MobSelector < 19) {
-              if (RoomNum > 8) Game->addMob(StarmanoSprite, tSpawnBarrier + x, Floor - 2);
+              if (RoomNum > 8) Game->addMob(StarmanoSprite, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, Floor - 2);
             }
             else { 
-              if (RoomNum > 8) Game->addMob(BoltSprite, tSpawnBarrier + x, 2);
+              if (RoomNum > 8) Game->addMob(BoltSprite, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
             }
           }
           if (!random(16) && !Gap && Floor > Ceiling + 5 && x != RoomWidth - 1) {
@@ -412,7 +417,7 @@ void Map::handleObject(int x, int y) {
           objects[a].type = STBQBlock;
           break;
         case STMushBlock:
-          Game->addMob (MushroomSprite, x, y - 1);
+          Game->addMob (MushroomSprite,  Images::SpriteImages[ObjectTypes::STMushroom], Images::SpriteMasks[ObjectTypes::STMushroom], x, y - 1);
           objects[a].type = STBQBlock; break;
       }
     }

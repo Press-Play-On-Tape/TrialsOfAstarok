@@ -6,8 +6,8 @@
 // Sprite
 //---------------------------------------------------------------------------------------------------
 //
-uint8_t Sprite::getWidth()          { return pgm_read_byte(this->spriteData + SpriteWidth); }
-uint8_t Sprite::getHeight()         { return pgm_read_byte(this->spriteData + SpriteHeight); }
+uint8_t Sprite::getWidth()          { Serial.print("Width:"); Serial.print(pgm_read_byte(&this->spriteImg[0]));  return pgm_read_byte(&this->spriteImg[0]); }
+uint8_t Sprite::getHeight()         { Serial.print(" Height:"); Serial.println(pgm_read_byte(&this->spriteImg[1]));  return pgm_read_byte(&this->spriteImg[1]); }
 uint8_t Sprite::getMasks()          { return pgm_read_byte(this->spriteData + SpriteMasks); }
 uint8_t Sprite::getMaxFrame()       { return pgm_read_byte(this->spriteData + SpriteMaxFrame); }
 uint8_t Sprite::getCyclesPerFrame() { return pgm_read_byte(this->spriteData + SpritegetCyclesPerFrame); }

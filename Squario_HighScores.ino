@@ -1,29 +1,34 @@
-#include <Arduboy2.h>
+#include "src/utils/Arduboy2Ext.h"
 #include <EEPROM.h>
 
 void initEEPROM() {
 
-  uint8_t c1 = EEPROM.read(EEPROM_START_C1);
-  uint8_t c2 = EEPROM.read(EEPROM_START_C2);
+  uint8_t c1 = EEPROM.read(Constants::EEPROM_Start_C1);
+  uint8_t c2 = EEPROM.read(Constants::EEPROM_Start_C2);
 
   if (c1 != 'S' || c2 != 'Q') {
 
-    EEPROM.update(EEPROM_START_C1, 'S');
-    EEPROM.update(EEPROM_START_C2, 'Q');  
+    EEPROM.update(Constants::EEPROM_Start_C1, 'S');
+    EEPROM.update(Constants::EEPROM_Start_C2, 'Q');  
 
     uint16_t score = 1;
-    
+
+    for (uint8_t i = 0; i < 5; i++) {
+        EEPROM.update(Constants::EEPROM_Seeds + i, 0);
+    }
     
     for (uint8_t i = 0; i < 10; i++) {
 
-        EEPROM.put(EEPROM_SCORES + (5 * i), score++);
-        EEPROM.update(EEPROM_SCORES + (5 * i) + 2, 65 + i);
-        EEPROM.update(EEPROM_SCORES + (5 * i) + 3, 65 + i);
-        EEPROM.update(EEPROM_SCORES + (5 * i) + 4, 65 + i);
+        EEPROM.put(Constants::EEPROM_Scores + (5 * i), score++);
+        EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 2, 65 + i);
+        EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 3, 65 + i);
+        EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 4, 65 + i);
 
 
     }
-  }  
+
+  } 
+   
 }
 
 uint8_t checkHighScoreSlot(uint16_t score) {
@@ -32,13 +37,13 @@ uint8_t checkHighScoreSlot(uint16_t score) {
 
   // High score processing
   for (byte i = 0; i < 10; i++) {
-    EEPROM.get(EEPROM_SCORES + (5 * i), tmpScore);
+    EEPROM.get(Constants::EEPROM_Scores + (5 * i), tmpScore);
     if (tmpScore < score) {
       return i;
     }
   }
 
-  return EEPROM_NO_SLOT;
+  return Constants::EEPROM_No_Slot;
 }
 
 void enterHighScore() {
@@ -48,7 +53,7 @@ void enterHighScore() {
   arduboy.setCursor(16, 0);
   arduboy.print(F("HIGH SCORE"));
   arduboy.setCursor(88, 0);
-  arduboy.print(Game.score);
+  arduboy.print(Game.totalScore);
   arduboy.setCursor(56, 20);
   arduboy.print(highScoreVars.initials[0]);
   arduboy.setCursor(64, 20);
@@ -109,22 +114,23 @@ void enterHighScore() {
 
         // Shuffle existing slots down to make room for new enrtry ..
 
-      uint8_t i = checkHighScoreSlot(Game.score);
-        for (uint8_t j = 9; j > i; j--) {          
-        
+      uint8_t i = checkHighScoreSlot(Game.totalScore);
+
+      for (uint8_t j = 9; j > i; j--) {          
+
         for (uint8_t k = 0; k < 5; k++) {
 
-            EEPROM.write(EEPROM_SCORES + (5 * j) + k, (char)EEPROM.read(EEPROM_SCORES + (5 * (j - 1)) + k));
+          EEPROM.write(Constants::EEPROM_Scores + (5 * j) + k, (char)EEPROM.read(Constants::EEPROM_Scores + (5 * (j - 1)) + k));
 
+        }
 
       }
-}
 
-        // write score and initials to current slot
-        EEPROM.put(EEPROM_SCORES + (5 * i), Game.score);
-        EEPROM.update(EEPROM_SCORES + (5 * i) + 2, highScoreVars.initials[0]);
-        EEPROM.update(EEPROM_SCORES + (5 * i) + 3, highScoreVars.initials[1]);
-        EEPROM.update(EEPROM_SCORES + (5 * i) + 4, highScoreVars.initials[2]);
+      // write score and initials to current slot
+      EEPROM.put(Constants::EEPROM_Scores + (5 * i), Game.totalScore);
+      EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 2, highScoreVars.initials[0]);
+      EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 3, highScoreVars.initials[1]);
+      EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 4, highScoreVars.initials[2]);
 
       highScoreVars.initials[0] = ' ';
       highScoreVars.initials[1] = ' ';
@@ -153,13 +159,13 @@ void displayHighScores() {
   for (int i = 0; i < 10; i++) {
     arduboy.setCursor(x, y + (i * 8));
     arduboy.print(i);
-    EEPROM.get(EEPROM_SCORES + (5 * i), Score);
+    EEPROM.get(Constants::EEPROM_Scores + (5 * i), Score);
 
 
     if (Score > 0) {
-      sprintf(highScoreVars.text, "%c%c%c %u", (char)EEPROM.read(EEPROM_SCORES + (5 * i) + 2),
-              (char)EEPROM.read(EEPROM_SCORES + (5 * i) + 3),
-              (char)EEPROM.read(EEPROM_SCORES + (5 * i) + 4), Score);
+      sprintf(highScoreVars.text, "%c%c%c %u", (char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 2),
+              (char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 3),
+              (char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 4), Score);
       arduboy.setCursor(x + 24, y + (i * 8));
       arduboy.print(highScoreVars.text);
     }

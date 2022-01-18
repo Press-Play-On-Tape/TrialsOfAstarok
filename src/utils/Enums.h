@@ -2,6 +2,8 @@
 
 enum GameState {
   Title,
+  Seed_Init,
+  Seed,
   Game_Init,
   Game_Play,
   HighScore_Check,
@@ -9,26 +11,21 @@ enum GameState {
   HighScore_DisplayAll,
 };
 
+enum MapLevel {
+  BelowGround,
+  AboveGround,
+};
+
+enum Hearts {
+  FilledIn,
+  Outline,
+};
+
 enum SpriteDataLayout {
-  SpriteWidth = 0,
-  SpriteHeight,
-  SpriteMaxFrame,
-  SpritegetCyclesPerFrame,
+  SpriteType,
   SpriteFlags,
   SpriteSpeed,
   SpriteIntelligence,
-  SpriteMasks,
-  SpriteImageData
-};
-
-enum SquarioButtons {
-  ButtonLeft = 0,
-  ButtonUp,
-  ButtonRight,
-  ButtonDown,
-  ButtonJump,
-  ButtonRun,
-  NumButtons
 };
 
 enum Direction { Up, Down, Left, Right };
@@ -41,12 +38,12 @@ enum ObjectTypes {
   STSmileo,
   STBolt,
 
-  STMushroom,
+  STMushroom = 6,
 
   STQBlock,  // Interactive Tiles
   STBQBlock,
   STMushBlock,
-  STBricks,
+  STBricks = 10,
   STPipeCapLeft,
   STPipeCapRight,
   STTopPipeCapLeft,
@@ -54,7 +51,7 @@ enum ObjectTypes {
   STPipeLeft,
   STPipeRight,
 
-  NumObjectTypes
+  NumObjectTypes = 17
 };
 
 enum EventType {

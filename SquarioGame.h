@@ -1,9 +1,12 @@
 #pragma once
 
-#include <Arduboy2.h>
+#include "src/utils/Arduboy2Ext.h"
+#include "src/data/SpriteData.h"
 #include "src/images/Images.h"
+#include "src/sounds/Sounds.h"
 #include "src/utils/Enums.h"
-#include "src/utils/DefinesImagesAndSounds.h"
+#include "src/utils/Constants.h"
+#include "src/utils/Utils.h"
 
 
 class Room;
@@ -14,86 +17,93 @@ class SquarioGame;
 
 class Sprite {
 
-  public:
-    void LoadSprite(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
-    void ClearSprite();
-    bool IsIn (int tX, int tY);
-    bool IsInTopHalf (int tX, int tY);
-    virtual bool GetPixelAbsolute(int tX, int tY);
-    byte Collide(int tX, int tY);
-    bool CollisionCheckX(Direction direction);
-    bool CollisionCheckY(Direction direction);
-    void headCollision();
-    bool Falling();
-    void Gravity();
-    void Move();
-    bool Jump();
-    void duck();
-    void draw(Arduboy2 &arduboy);
-    
-    uint8_t getWidth();
-    uint8_t getHeight();
-    uint8_t getMasks();
-    uint8_t getMaxFrame();
-    uint8_t getCyclesPerFrame();
-    int16_t getRightX();
-    int16_t getBottomY();
-
-    byte getFlags();
-    const uint8_t * FramePointer();
-    const uint8_t * MaskPointer();
-
-    SquarioGame         * Game;
+  protected:
     const uint8_t       * spriteData;
     const uint8_t       * spriteImg;
     const uint8_t       * spriteMask;
+
+  public:
+    void init(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
+    bool isFalling();
+    void move();
+    bool jump();
+    void duck();
+    void draw();
+    
+    uint8_t getWidth();
+    uint8_t getHeight();
+    int16_t getRightX();
+    int16_t getBottomY();
+
+    uint8_t getFlags();
+    uint8_t getType();
+    uint8_t getFrame();
+
     int                   x, y, vx, vy;
     int                   currentFrame;
-    bool                  Mirrored;
+    Direction             facing;
+    SquarioGame         * Game;
+
+  private:
+    uint8_t               frame;
+
+
+  protected:
+    void clear();
+    void applyGravity();
+    byte collide(int tX, int tY);
+    bool collisionCheckX(Direction direction);
+    bool collisionCheckY(Direction direction);
+    void headCollision();
+
 
 };
 
 class AISprite : public Sprite {
-  public:
-    void Activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
-    void Deactivate();
-    void Think();
-    void Seek();
-    void DetectJump();
-    void DetectWall();
-    void DetectGap();
-    
-    uint8_t Speed();
-    byte Intelligence();
-    bool                  Active;
 
   private:
-    Direction             facing;
+    bool  active;
+
+  private:
+    void seek();
+    void detectJump();
+    void detectWall();
+    void detectGap();
+    uint8_t getSpeed();
+    uint8_t getIntelligence();
+
+  public:
+    void activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
+    void deactivate();
+    void think();
+    bool getActive();
+
 };
+
 class InteractiveObject {
   public:
     int x, y;
     byte type;
 };
+
 class Room {
   public:
-    void ClearRoom();
-    void SetTile(int x, int y);
-    bool ReadTile(int x, int y);
-    byte         data[ RoomBytes ];
+    void clearRoom();
+    void setTile(int x, int y);
+    bool readTile(int x, int y);
+    byte         data[ Constants::RoomBytes ];
 };
 class Map {
   public:
-    void NewMap();
-    void LoadMap();
+    void newMap();
+    void loadMap();
     void generateRoom(int RoomNum);
     void addObject(byte type, int x, int y);
     void handleObject (int x, int y);
-    void RemoveObject(int x, int y);
-    byte CheckObject(int x, int y);
-    bool CheckTile(int x, int y);
-    void AddPipe(int x, int y);
-    void AddTopPipe(int x, int y);
+    byte checkObject(int x, int y);
+    bool checkTile(int x, int y);
+    void addPipe(int x, int y);
+    void addTopPipe(int x, int y);
 
     int MinXPixel();
     int MaxXPixel();
@@ -103,8 +113,8 @@ class Map {
     int MaxYTile();
     
     SquarioGame         * Game;
-    Room                  rooms[MapRooms];
-    InteractiveObject     objects[MapObjects];
+    Room                  rooms[Constants::MapRooms];
+    InteractiveObject     objects[Constants::MapObjects];
     int                   ObjectIndex;
     int                   RandomChance;
     int                   FirstRoom, LastRoom, MapHeight, LastLoadLocation, SpawnBarrier;
@@ -123,27 +133,28 @@ class SquarioGame {
     bool testCollision(Arduboy2 &arduboy, Sprite * sprite1, AISprite * sprite2);
     void draw(Arduboy2 &arduboy);
     void die(Arduboy2 &arduboy, GameState &gameState);
+    void drawScorePanel(Arduboy2 &arduboy);
     void drawMap(Arduboy2 &arduboy);
+    void drawHUD(Arduboy2 &arduboy);
     void drawPlayer(Arduboy2 &arduboy);
-    void drawMobs(Arduboy2 &arduboy);
+    void drawMobs();
     void addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask,  int x, int y);
     void adjustCamera();
     void processButtons(Arduboy2 &arduboy);
     
     Sprite                player;
-    AISprite              mobs[ SpriteCap ];
+    AISprite              mobs[ Constants::SpriteCap ];
     Map                   level;
 
-    int                   health;
-    unsigned int          origScore;
-    unsigned int          score;
-    unsigned int          distancePoints;
+    int16_t               health; //SJH needed?
+    uint16_t              totalScore;
+    uint16_t              score;
+    uint16_t              distancePoints;
     int                   coins, lives, mapNumber;
-    byte                  inventory;
-    int                   cameraX, cameraY;
+    int16_t               cameraX, cameraY;
     EventType             event;
-    int                   eventCounter;
+    uint8_t               eventCounter;
     const byte *          SFX;
-    byte                  Seeds[ GameSeeds ];
+    byte                  Seeds[ Constants::GameSeeds ];
     unsigned long         lastPress;
 };

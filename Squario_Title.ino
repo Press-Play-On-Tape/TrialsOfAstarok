@@ -3,7 +3,9 @@
 void TitleScreen() {
 
 
-  Sprites::drawOverwrite(16, 4, Images::Title, 0);
+  Sprites::drawOverwrite(16, 4, Images::Title_Top, 0);
+  Sprites::drawOverwrite(27, 33, Images::Title_Bottom, 0);
+  Sprites::drawSelfMasked(35, 17, Images::Text_Trials, 0);
 
   if (SoundOn) {
     Sprites::drawExternalMask(119, 56, Images::Sound_On, Images::Sound_Mask, 0, 0);

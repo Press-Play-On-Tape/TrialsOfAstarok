@@ -10,6 +10,9 @@ SquarioGame::SquarioGame() {
     this->mobs[a].Game = this;
   }
 
+  for (uint8_t a = 0; a < Constants::MapObjects; a++) {
+    this->level.objects[a].Game = this;
+  }
 }
 void SquarioGame::newGame() {
 
@@ -18,7 +21,7 @@ void SquarioGame::newGame() {
   this->score = 0;
   this->distancePoints = 0;
   this->coins = 0;
-  this->lives = 3;
+  this->lives = 1;
   this->mapNumber = 1;
   this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 10, spawnY());
   startLevel();
@@ -51,8 +54,8 @@ uint8_t SquarioGame::spawnY() {
 }
 void SquarioGame::processButtons(Arduboy2 &arduboy) {
 
-  uint8_t MaxSpeed = arduboy.pressed(A_BUTTON) ? 4 : 3;
-
+  uint8_t MaxSpeed = 3; //SJHarduboy.pressed(A_BUTTON) ? 4 : 3;
+Serial.println(this->player.x);
 
   if (!arduboy.pressed(LEFT_BUTTON) && !arduboy.pressed(RIGHT_BUTTON)) {
     if (this->player.vx > 0) this->player.vx--;
@@ -77,6 +80,10 @@ void SquarioGame::processButtons(Arduboy2 &arduboy) {
 
   if (arduboy.pressed(B_BUTTON)) {
     if (this->player.jump()) SFX = Sounds::SFX_Jump;
+  }
+
+  if (arduboy.pressed(A_BUTTON)) {
+    this->player.x = 1000;
   }
 
   if (arduboy.pressed(DOWN_BUTTON)) this->player.duck();
@@ -155,6 +162,43 @@ void SquarioGame::cycle(Arduboy2 &arduboy, GameState &gameState) {
     default: break;
 
   }
+
+
+  // Have we touched an end of level thingy?
+// Serial.print("level.objects ");
+  for (uint8_t a = 0; a < Constants::MapObjects; a++) {
+
+    uint8_t type = this->level.objects[a].type;
+//     Serial.print(type);
+// Serial.print(" (");
+//     Serial.print(this->level.objects[a].x);
+// Serial.print(") ");
+
+
+    switch (type) {
+
+          case ObjectTypes::STAboveGroundExit:
+          case ObjectTypes::STUnderGroundExit:
+
+            // ObjectTypes tile = static_cast<ObjectTypes>(this->level.checkObject(x, y));
+            // if (testCollision(arduboy, &player, &this->mobs[a])) {
+Serial.print("Test for coll ");
+Serial.print(player.x);
+Serial.print(", ");
+Serial.println(this->level.objects[a].x);
+            if (this->level.objects[a].collide(player.x + player.getWidth(), player.y)) {
+              this->SFX = Sounds::SFX_Pipe;
+              this->event = EventType::LevelExit;
+              this->eventCounter = 0;
+            }
+            break;
+
+    }
+
+  }
+// Serial.println("");
+
+
   for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
     if (this->mobs[a].getActive()) {
       this->mobs[a].think();
@@ -166,21 +210,30 @@ void SquarioGame::cycle(Arduboy2 &arduboy, GameState &gameState) {
         this->mobs[a].deactivate();
       }
       else if (testCollision(arduboy, &player, &this->mobs[a])) {
-        if (this->mobs[a].getType() == ObjectTypes::STMushroom) {
-          this->mobs[a].deactivate();
-          this->score += Constants::Points_Mushroom;
-          SFX = Sounds::SFX_Mushroom;
-          if (this->player.getType() == ObjectTypes::STSquario) {
-            this->player.init(Data::STBigSquario, Images::SpriteImages[ObjectTypes::STBigSquario], Images::SpriteMasks[ObjectTypes::STBigSquario], this->player.x, this->player.y-8);
-          }
-          else if (this->health < 5) this->health++;
+        
+        uint8_t type = this->mobs[a].getType();
+
+        switch (type) {
+
+          case ObjectTypes::STMushroom:
+            this->mobs[a].deactivate();
+            this->score += Constants::Points_Mushroom;
+            SFX = Sounds::SFX_Mushroom;
+            if (this->player.getType() == ObjectTypes::STSquario) {
+              this->player.init(Data::STBigSquario, Images::SpriteImages[ObjectTypes::STBigSquario], Images::SpriteMasks[ObjectTypes::STBigSquario], this->player.x, this->player.y-8);
+            }
+            else if (this->health < 5) this->health++;
+            break;
+
         }
-        else if (this->player.isFalling()) {
+
+        if (this->player.isFalling()) {
           this->mobs[a].deactivate();
           this->score += Constants::Points_Skill;
           SFX = Sounds::SFX_Hit;
-          if (arduboy.pressed(A_BUTTON)) { this->player.vy = -10;}
-          else { this->player.vy = -4; }          
+          //SJH if (arduboy.pressed(A_BUTTON)) { this->player.vy = -10;}
+          //SJH else { this->player.vy = -4; } 
+          this->player.vy = -4; //SJH         
         }
         else if (!this->eventCounter) {
           if (this->health > 0) this->health--;
@@ -193,6 +246,12 @@ void SquarioGame::cycle(Arduboy2 &arduboy, GameState &gameState) {
               this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], this->player.x, this->player.y+8);
               SFX = Sounds::SFX_Hit;
             }
+
+
+
+
+
+
           }
           this->eventCounter = 30;
         }
@@ -230,12 +289,23 @@ void SquarioGame::cycle(Arduboy2 &arduboy, GameState &gameState) {
         // Serial.println("startLevel 2");
         startLevel();
       }
+      break;
+
+    case EventType::LevelExit:
+      this->eventCounter = 0;
+      this->distancePoints += this->player.x / Constants::TileSize;
+      this->mapNumber++;
+      this->player.x = 10;
+      this->player.y = spawnY();
+      startLevel();
+    
 
       break;
 
     default: break;
 
   }
+
 
 }
 

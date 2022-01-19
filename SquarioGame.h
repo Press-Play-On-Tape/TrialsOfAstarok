@@ -81,9 +81,14 @@ class AISprite : public Sprite {
 };
 
 class InteractiveObject {
+
   public:
     int x, y;
     byte type;
+    SquarioGame         * Game;
+  
+    byte collide(int tX, int tY);
+  
 };
 
 class Room {
@@ -101,9 +106,10 @@ class Map {
     void addObject(byte type, int x, int y);
     void handleObject (int x, int y);
     byte checkObject(int x, int y);
-    bool checkTile(int x, int y);
+    bool isTile(int x, int y);
     void addPipe(int x, int y);
     void addTopPipe(int x, int y);
+    void addExit(ObjectTypes exitType, int x, int y);
 
     int MinXPixel();
     int MaxXPixel();
@@ -134,7 +140,8 @@ class SquarioGame {
     void draw(Arduboy2 &arduboy);
     void die(Arduboy2 &arduboy, GameState &gameState);
     void drawScorePanel(Arduboy2 &arduboy);
-    void drawMap(Arduboy2 &arduboy);
+    void drawMap_Background(Arduboy2 &arduboy);
+    void drawMap_Foreground(Arduboy2 &arduboy);
     void drawHUD(Arduboy2 &arduboy);
     void drawPlayer(Arduboy2 &arduboy);
     void drawMobs();

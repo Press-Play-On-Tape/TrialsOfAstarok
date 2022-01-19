@@ -64,7 +64,7 @@ void Sprite::clear() {
 byte Sprite::collide(int tX, int tY) {
   int nX = tX / Constants::TileSize;
   int nY = tY / Constants::TileSize;
-  if (Game->level.checkTile(nX, nY)) return 0xFF;
+  if (Game->level.isTile(nX, nY)) return 0xFF;
   return Game->level.checkObject(nX, nY);
 }
 
@@ -375,6 +375,23 @@ void AISprite::detectGap() {
 
 
 //---------------------------------------------------------------------------------------------------
+// InteractiveObject
+//---------------------------------------------------------------------------------------------------
+//
+byte InteractiveObject::collide(int tX, int tY) {
+  int16_t nX = tX / Constants::TileSize;
+  int16_t nY = tY / Constants::TileSize;
+  if (Game->level.isTile(nX, nY)) {
+    Serial.print("Game->level.isTile(nX, nY) ");
+    Serial.println(Game->level.isTile(nX, nY));
+    return 0xFF;
+  }
+  Serial.print("Game->level.checkObject(nX, nY) ");
+  Serial.println(Game->level.checkObject(nX, nY));
+  return Game->level.checkObject(nX, nY);
+}
+
+//---------------------------------------------------------------------------------------------------
 // Room
 //---------------------------------------------------------------------------------------------------
 //
@@ -425,7 +442,7 @@ void Map::generateRoom(int roomNum) {
   int Gap = 0;
   int tSpawnBarrier = roomNum * Constants::RoomWidth;
 
-  if (!roomNum) {
+  if (roomNum == 0) {
     #ifdef ORIG_GAME_CEILING
     if (ceiling) addTopPipe(1, ceiling + 1);
     else addPipe(1, floor - 2);
@@ -534,11 +551,19 @@ void Map::generateRoom(int roomNum) {
       addPipe(MaxXTile() - 2, floor - 2);
     }
     #else
-    addPipe(MaxXTile() - 2, floor - 2);
+    
+    addExit(this->Game->mapNumber % 2 == MapLevel::AboveGround ? ObjectTypes::STAboveGroundExit : ObjectTypes::STUnderGroundExit, MaxXTile() - 2, floor - 1);
+
     #endif
   }
   
   if (tSpawnBarrier > SpawnBarrier) SpawnBarrier = tSpawnBarrier;
+
+}
+
+void Map::addExit(ObjectTypes exitType, int x, int y) {
+
+  addObject(exitType, x, y);
 
 }
 
@@ -553,6 +578,7 @@ void Map::addPipe(int x, int y) {
   }
 
 }
+
 void Map::addTopPipe(int x, int y) {
 
   addObject(STTopPipeCapLeft,  x,   y + 1);
@@ -630,11 +656,11 @@ void Map::loadMap() {
   }
 }
 
-bool Map::checkTile(int x, int y) {
+bool Map::isTile(int x, int y) {
   int room = (x / Constants::RoomWidth) % Constants::MapRooms;
 
   #ifdef DEBUG
-  // Serial.print("checkTile(");
+  // Serial.print("isTile(");
   // Serial.print(x);
   // Serial.print(",");
   // Serial.print(y);

@@ -7,9 +7,11 @@
 #include "SquarioGame.h"
 #include "src/utils/Enums.h"
 #include "src/utils/Structs.h"
+#include "src/fonts/Font4x6.h"
 
 Arduboy2Ext arduboy;
 SquarioGame Game;
+Font4x6 font4x6;
 
 GameState gameState = GameState::Title;
 bool SoundOn = false;
@@ -26,7 +28,7 @@ SeedVars seedVars;
 
 void setup() {
 
-  arduboy.begin();
+  arduboy.boot();
   arduboy.setFrameRate(30);
   initEEPROM();
 

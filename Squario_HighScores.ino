@@ -11,15 +11,15 @@ void initEEPROM() {
     EEPROM.update(Constants::EEPROM_Start_C1, 'S');
     EEPROM.update(Constants::EEPROM_Start_C2, 'Q');  
 
-    uint16_t score = 1;
+    uint16_t score = 30;
 
     for (uint8_t i = 0; i < 5; i++) {
         EEPROM.update(Constants::EEPROM_Seeds + i, 0);
     }
     
-    for (uint8_t i = 0; i < 10; i++) {
+    for (uint8_t i = 0; i < Constants::NumberOfScores; i++) {
 
-        EEPROM.put(Constants::EEPROM_Scores + (5 * i), score++);
+        EEPROM.put(Constants::EEPROM_Scores + (5 * i), score = score - 10);
         EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 2, 65 + i);
         EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 3, 65 + i);
         EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 4, 65 + i);
@@ -36,7 +36,7 @@ uint8_t checkHighScoreSlot(uint16_t score) {
   uint16_t tmpScore = 0;
 
   // High score processing
-  for (byte i = 0; i < 10; i++) {
+  for (byte i = 0; i < Constants::NumberOfScores; i++) {
     EEPROM.get(Constants::EEPROM_Scores + (5 * i), tmpScore);
     if (tmpScore < score) {
       return i;
@@ -50,24 +50,34 @@ void enterHighScore() {
   // Each block of EEPROM has 10 high scores, and each high score entry
   // is 5 bytes long:  3 bytes for initials and two bytes for score.
 
-  arduboy.setCursor(16, 0);
-  arduboy.print(F("HIGH SCORE"));
-  arduboy.setCursor(88, 0);
-  arduboy.print(Game.totalScore);
-  arduboy.setCursor(56, 20);
-  arduboy.print(highScoreVars.initials[0]);
-  arduboy.setCursor(64, 20);
-  arduboy.print(highScoreVars.initials[1]);
-  arduboy.setCursor(72, 20);
-  arduboy.print(highScoreVars.initials[2]);
+  Sprites::drawOverwrite(16, 4, Images::Title_Top, 0);
+  Sprites::drawSelfMasked(35, 17, Images::Text_HighScores, 0);
+  
+  font4x6.setCursor(60, 30);
+  font4x6.print(Game.totalScore);
+  font4x6.setCursor(56, 35);
+  font4x6.print(highScoreVars.initials[0]);
+  font4x6.setCursor(64, 35);
+  font4x6.print(highScoreVars.initials[1]);
+  font4x6.setCursor(72, 35);
+  font4x6.print(highScoreVars.initials[2]);
 
   for (byte i = 0; i < 3; i++) {
-    arduboy.drawLine(56 + (i * 8), 27, 56 + (i * 8) + 6, 27, 1);
+    arduboy.drawLine(56 + (i * 8), 44, 56 + (i * 8) + 6, 44, WHITE);
   }
 
   arduboy.drawLine(56, 28, 88, 28, 0);
-  arduboy.drawLine(56 + (highScoreVars.index * 8), 28, 56 + (highScoreVars.index * 8) + 6, 28, 1);
+
+  if (arduboy.getFrameCountHalf(32)) {
+    arduboy.drawLine(56 + (highScoreVars.index * 8), 44, 56 + (highScoreVars.index * 8) + 6, 44, BLACK);
+  }
   
+  arduboy.drawPixel(24, 62, WHITE);
+  arduboy.drawPixel(102, 62, WHITE);
+  arduboy.drawFastHLine(25, 63, 77);
+
+
+
   if (arduboy.justPressed(LEFT_BUTTON)) {
     if (highScoreVars.index > 0) highScoreVars.index--;
     else if (SoundOn) { /*arduboy.tunes.tone(1046, 250);*/
@@ -146,30 +156,41 @@ void enterHighScore() {
 
 }
 void displayHighScores() {
-  unsigned int Score;
+
+  uint16_t score;
   byte y = 10;
-  byte x = 24;
+  byte x = 64;
 
   // Each block of EEPROM has 10 high scores, and each high score entry
   // is 5 bytes long:  3 bytes for initials and two bytes for score.
 
 
-  arduboy.setCursor(32, 0);
-  arduboy.print(F("HIGH SCORES"));
-  for (int i = 0; i < 10; i++) {
-    arduboy.setCursor(x, y + (i * 8));
-    arduboy.print(i);
-    EEPROM.get(Constants::EEPROM_Scores + (5 * i), Score);
+  Sprites::drawOverwrite(16, 4, Images::Title_Top, 0);
+  Sprites::drawSelfMasked(35, 17, Images::Text_HighScores, 0);
 
+  for (int i = 0; i < Constants::NumberOfScores; i++) {
 
-    if (Score > 0) {
-      sprintf(highScoreVars.text, "%c%c%c %u", (char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 2),
-              (char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 3),
-              (char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 4), Score);
-      arduboy.setCursor(x + 24, y + (i * 8));
-      arduboy.print(highScoreVars.text);
-    }
+    EEPROM.get(Constants::EEPROM_Scores + (5 * i), score);
+
+    // if (Score > 0) {
+      font4x6.setCursor(33, 34 + (i * 9));
+      font4x6.print((char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 2));
+      font4x6.print((char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 3));
+      font4x6.print((char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 4));
+      font4x6.setCursor(64, 34 + (i * 9));
+
+      uint8_t digits[6] = {};
+      extractDigits(digits, score);
+
+      for (uint8_t i = 0; i < 6; i++) {
+        font4x6.print(static_cast<char>(digits[5 - i] + 48));
+     }
   }
+
+  arduboy.drawPixel(24, 62, WHITE);
+  arduboy.drawPixel(102, 62, WHITE);
+  arduboy.drawFastHLine(25, 63, 77);
+
 
   if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
       gameState = GameState::Title;

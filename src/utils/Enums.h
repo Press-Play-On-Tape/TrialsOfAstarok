@@ -30,6 +30,12 @@ enum SpriteDataLayout {
 
 enum Direction { Up, Down, Left, Right };
 
+
+
+
+
+
+
 enum ObjectTypes {
   STSquario = 0,  // Sprites
   STBigSquario,
@@ -37,9 +43,7 @@ enum ObjectTypes {
   STStarmano,
   STSmileo,
   STBolt,
-
   STMushroom = 6,
-
   STQBlock,  // Interactive Tiles
   STBQBlock,
   STMushBlock,
@@ -50,8 +54,9 @@ enum ObjectTypes {
   STTopPipeCapRight,
   STPipeLeft,
   STPipeRight,
-
-  NumObjectTypes = 17
+  STAboveGroundExit,
+  STUnderGroundExit,
+  NumObjectTypes = 18
 };
 
 enum EventType {
@@ -61,4 +66,5 @@ enum EventType {
   Death,
   PipeDrop,
   PipeRise,
+  LevelExit,
 };

@@ -7,10 +7,10 @@ void SoundEngine() {
 //     SoundCounter++;
 //     if (SoundCounter == 16) SoundCounter = 0;
 //   }
-//   if (Game.SFX) {
+//   if (game.SFX) {
 //     SFXNoteSet = SFXFrequencies;
-//     SFX = Game.SFX;
-//     Game.SFX = NULL;
+//     SFX = game.SFX;
+//     game.SFX = NULL;
 //     SFX_Counter = 2;
 //     lastNote = 0;
 //   }

@@ -1,5 +1,5 @@
 #include "src/utils/Arduboy2Ext.h"
-#include "SquarioGame.h"
+#include "Squariogame.h"
 
 SquarioGame::SquarioGame() {
 
@@ -55,7 +55,7 @@ uint8_t SquarioGame::spawnY() {
 void SquarioGame::processButtons(Arduboy2 &arduboy) {
 
   uint8_t MaxSpeed = 3; //SJHarduboy.pressed(A_BUTTON) ? 4 : 3;
-Serial.println(this->player.x);
+// Serial.println(this->player.x);
 
   if (!arduboy.pressed(LEFT_BUTTON) && !arduboy.pressed(RIGHT_BUTTON)) {
     if (this->player.vx > 0) this->player.vx--;
@@ -182,10 +182,10 @@ void SquarioGame::cycle(Arduboy2 &arduboy, GameState &gameState) {
 
             // ObjectTypes tile = static_cast<ObjectTypes>(this->level.checkObject(x, y));
             // if (testCollision(arduboy, &player, &this->mobs[a])) {
-Serial.print("Test for coll ");
-Serial.print(player.x);
-Serial.print(", ");
-Serial.println(this->level.objects[a].x);
+// Serial.print("Test for coll ");
+// Serial.print(player.x);
+// Serial.print(", ");
+// Serial.println(this->level.objects[a].x);
             if (this->level.objects[a].collide(player.x + player.getWidth(), player.y)) {
               this->SFX = Sounds::SFX_Pipe;
               this->event = EventType::LevelExit;

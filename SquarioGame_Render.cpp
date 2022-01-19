@@ -1,23 +1,48 @@
 #include "src/utils/Arduboy2Ext.h"
-#include "SquarioGame.h"
+#include "Squariogame.h"
 
 
-void SquarioGame::drawScorePanel(Arduboy2 &arduboy) {
+void SquarioGame::drawScorePanel(Arduboy2 &arduboy, Font4x6 &font4x6) {
 
-    arduboy.drawRect(16,8,96,48, WHITE); // Box border
-    arduboy.fillRect(17,9,94,46, BLACK); // Black out the inside
-    Sprites::drawSelfMasked(30, 12, Images::GameOver, 0);
+    arduboy.drawRect(22, 19, 83, 39, BLACK);
+    arduboy.fillRect(23, 20, 81, 37, WHITE);
+    Sprites::drawExternalMask(15, 8, Images::Scores, Images::Scores_Mask, 0, 0);
     
-    arduboy.setCursor(26,29); arduboy.print(F("Score"));
-    arduboy.setCursor(20,37); arduboy.print(F("+Dist."));
-    arduboy.setCursor(26,45); arduboy.print(F("Total"));
+    font4x6.setTextColor(BLACK);
+    font4x6.setCursor(28, 31); font4x6.print(F("Score"));
+    font4x6.setCursor(28, 39); font4x6.print(F("Dist"));
+    font4x6.setCursor(28, 47); font4x6.print(F("Total"));
 
-    arduboy.setCursor(76, 29);
-    arduboy.print(this->score);
-    arduboy.setCursor(76, 37);
-    arduboy.print(this->distancePoints);
-    arduboy.setCursor(76, 45);
-    arduboy.print(this->totalScore);
+    // font4x6.setCursor(76, 29);
+    // font4x6.print(this->score);
+      uint8_t digits[6] = {};
+      extractDigits(digits, this->score);
+
+      font4x6.setCursor(70, 31);
+      for (uint8_t i = 0; i < 6; i++) {
+        font4x6.print(static_cast<char>(digits[5 - i] + 48));
+    }
+
+
+    // font4x6.setCursor(76, 37);
+    // font4x6.print(this->distancePoints);
+      extractDigits(digits, this->distancePoints);
+
+      font4x6.setCursor(70, 39);
+      for (uint8_t i = 0; i < 6; i++) {
+        font4x6.print(static_cast<char>(digits[5 - i] + 48));
+    }
+
+    // font4x6.setCursor(70, 45);
+    // font4x6.print(this->totalScore);
+      extractDigits(digits, this->totalScore);
+
+      font4x6.setCursor(70, 47);
+      for (uint8_t i = 0; i < 6; i++) {
+        font4x6.print(static_cast<char>(digits[5 - i] + 48));
+    }
+
+    font4x6.setTextColor(WHITE);
 
 }
 

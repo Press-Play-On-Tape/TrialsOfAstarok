@@ -7,6 +7,7 @@
 #include "src/utils/Enums.h"
 #include "src/utils/Constants.h"
 #include "src/utils/Utils.h"
+#include "src/fonts/Font4x6.h"
 
 
 class Room;
@@ -139,7 +140,7 @@ class SquarioGame {
     bool testCollision(Arduboy2 &arduboy, Sprite * sprite1, AISprite * sprite2);
     void draw(Arduboy2 &arduboy);
     void die(Arduboy2 &arduboy, GameState &gameState);
-    void drawScorePanel(Arduboy2 &arduboy);
+    void drawScorePanel(Arduboy2 &arduboy, Font4x6 &font4x6);
     void drawMap_Background(Arduboy2 &arduboy);
     void drawMap_Foreground(Arduboy2 &arduboy);
     void drawHUD(Arduboy2 &arduboy);

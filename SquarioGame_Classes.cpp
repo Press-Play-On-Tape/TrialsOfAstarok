@@ -1,5 +1,5 @@
 #include "src/utils/Arduboy2Ext.h"
-#include "SquarioGame.h"
+#include "Squariogame.h"
 
 
 //---------------------------------------------------------------------------------------------------
@@ -382,12 +382,12 @@ byte InteractiveObject::collide(int tX, int tY) {
   int16_t nX = tX / Constants::TileSize;
   int16_t nY = tY / Constants::TileSize;
   if (Game->level.isTile(nX, nY)) {
-    Serial.print("Game->level.isTile(nX, nY) ");
-    Serial.println(Game->level.isTile(nX, nY));
+    // Serial.print("Game->level.isTile(nX, nY) ");
+    // Serial.println(Game->level.isTile(nX, nY));
     return 0xFF;
   }
-  Serial.print("Game->level.checkObject(nX, nY) ");
-  Serial.println(Game->level.checkObject(nX, nY));
+  // Serial.print("Game->level.checkObject(nX, nY) ");
+  // Serial.println(Game->level.checkObject(nX, nY));
   return Game->level.checkObject(nX, nY);
 }
 

@@ -5,7 +5,8 @@
 struct HighScoreVars {
 
     char initials[3];
-    int8_t index = 0;
+    uint8_t index = 0;
+    uint8_t slot = Constants::EEPROM_No_Slot;
 
     void reset() {
 
@@ -13,6 +14,7 @@ struct HighScoreVars {
         initials[1] = 'A';
         initials[2] = 'A';
         index = 0;
+        slot = Constants::EEPROM_No_Slot;
 
     }
 

@@ -56,7 +56,8 @@ enum ObjectTypes {
   STPipeRight,
   STAboveGroundExit,
   STUnderGroundExit,
-  NumObjectTypes = 18
+  NumObjectTypes = 18,
+  STSign,
 };
 
 enum EventType {

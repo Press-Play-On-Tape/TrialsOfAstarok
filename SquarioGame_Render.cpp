@@ -95,17 +95,19 @@ void SquarioGame::drawMap_Background() {
 
     if (this->mapNumber % 2 == MapLevel::AboveGround) {
 
-        Sprites::drawOverwrite(0 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
-        Sprites::drawOverwrite(64 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
-        Sprites::drawOverwrite(128 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
+        Sprites::drawOverwrite(0 - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
+        Sprites::drawOverwrite(64 - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
+        Sprites::drawOverwrite(128 - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
 
     }
     else {
 
         for (uint8_t a = 0; a <= 128; a += 64) {
+
             Sprites::drawOverwrite(a + 2 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
             Sprites::drawOverwrite(a + 22 - backgroundXOffset, backgroundYOffset + 6, Images::Underground_Brick, 0);
             Sprites::drawOverwrite(a + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
+
         }
 
     }
@@ -117,10 +119,14 @@ void SquarioGame::drawMap_Background() {
             if (this->level.isTile(x, y)) {
 
                 if (this->mapNumber % 2 == MapLevel::AboveGround) {   
-                    Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]),  pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), MapLevel::AboveGround, 0);
+                    Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, 
+                                              pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]),  
+                                              pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), MapLevel::AboveGround, 0);
                 }
                 else {
-                    Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]), pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), 0, 0);
+                    Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, 
+                                              pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]), 
+                                              pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), 0, 0);
                 }
 
             }
@@ -140,6 +146,10 @@ void SquarioGame::drawMap_Background() {
 
                     case ObjectTypes::STUnderGroundExit:
                         Sprites::drawOverwrite(x * Constants::TileSize - this->cameraX - 13, y * Constants::TileSize - this->cameraY - 4, Images::Underground_Exit_00, 0);
+                        break;
+
+                    case ObjectTypes::STSign:
+                        Sprites::drawOverwrite(x * Constants::TileSize - this->cameraX - 4, y * Constants::TileSize - this->cameraY - 4, Images::SignPost, this->mapNumber % 2);
                         break;
 
                     default: break;
@@ -201,12 +211,12 @@ void SquarioGame::drawPlayer(Arduboy2 &arduboy) {
                                     0,0);
         }
         else {
-            Serial.println("Day");
+
             Sprites::drawErase(this->player.x - this->cameraX, this->player.y - this->cameraY - 4, 
                                     pgm_read_word_near(&Images::Puffs[(28 - this->eventCounter) / 4]), 
                                     0);
         }
-        
+
     }
 
     if (this->health) {

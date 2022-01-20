@@ -25,7 +25,8 @@ namespace Constants {
 
     constexpr uint16_t EEPROM_Start_C1   = EEPROM_STORAGE_SPACE_START + 500;
     constexpr uint16_t EEPROM_Start_C2   = EEPROM_Start_C1 + 1;
-    constexpr uint16_t EEPROM_Seeds      = EEPROM_Start_C2 + 1;
+    constexpr uint16_t EEPROM_Sounds     = EEPROM_Start_C2 + 1;
+    constexpr uint16_t EEPROM_Seeds      = EEPROM_Sounds + 1;
     constexpr uint16_t EEPROM_Scores     = EEPROM_Seeds + 5;
     constexpr uint8_t  EEPROM_No_Slot    = 255;
     constexpr uint8_t NumberOfScores     = 3;

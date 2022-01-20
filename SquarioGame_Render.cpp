@@ -1,44 +1,37 @@
 #include "src/utils/Arduboy2Ext.h"
-#include "Squariogame.h"
-
+#include "SquarioGame.h"
+#include <EEPROM.h>
 
 void SquarioGame::drawScorePanel(Arduboy2 &arduboy, Font4x6 &font4x6) {
 
     arduboy.drawRect(22, 19, 83, 39, BLACK);
     arduboy.fillRect(23, 20, 81, 37, WHITE);
     Sprites::drawExternalMask(15, 8, Images::Scores, Images::Scores_Mask, 0, 0);
-    
+
     font4x6.setTextColor(BLACK);
     font4x6.setCursor(28, 31); font4x6.print(F("Score"));
     font4x6.setCursor(28, 39); font4x6.print(F("Dist"));
     font4x6.setCursor(28, 47); font4x6.print(F("Total"));
 
-    // font4x6.setCursor(76, 29);
-    // font4x6.print(this->score);
-      uint8_t digits[6] = {};
-      extractDigits(digits, this->score);
+    uint8_t digits[6] = {};
+    extractDigits(digits, this->score);
 
-      font4x6.setCursor(70, 31);
-      for (uint8_t i = 0; i < 6; i++) {
+    font4x6.setCursor(70, 31);
+    for (uint8_t i = 0; i < 6; i++) {
         font4x6.print(static_cast<char>(digits[5 - i] + 48));
     }
 
+    extractDigits(digits, this->distancePoints);
 
-    // font4x6.setCursor(76, 37);
-    // font4x6.print(this->distancePoints);
-      extractDigits(digits, this->distancePoints);
-
-      font4x6.setCursor(70, 39);
-      for (uint8_t i = 0; i < 6; i++) {
+    font4x6.setCursor(70, 39);
+    for (uint8_t i = 0; i < 6; i++) {
         font4x6.print(static_cast<char>(digits[5 - i] + 48));
     }
 
-    // font4x6.setCursor(70, 45);
-    // font4x6.print(this->totalScore);
-      extractDigits(digits, this->totalScore);
+    extractDigits(digits, this->totalScore);
 
-      font4x6.setCursor(70, 47);
-      for (uint8_t i = 0; i < 6; i++) {
+    font4x6.setCursor(70, 47);
+    for (uint8_t i = 0; i < 6; i++) {
         font4x6.print(static_cast<char>(digits[5 - i] + 48));
     }
 
@@ -47,228 +40,212 @@ void SquarioGame::drawScorePanel(Arduboy2 &arduboy, Font4x6 &font4x6) {
 }
 
 void SquarioGame::drawMobs() {
-//  Serial.println("drawMobs() start");
-  for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
-    if (this->mobs[a].getActive()) {
-//  Serial.print("drawMobs() 1 : ");
-//  Serial.print(this->cameraX);
-//  Serial.print(", AI:");
-//  Serial.println(this->mobs[a].getRightX() - this->cameraX);
-      if (this->mobs[a].getRightX() - this->cameraX > 0 && this->mobs[a].x - this->cameraX < 128) {
-        this->mobs[a].draw();
-      }
+
+    for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
+
+        if (this->mobs[a].getActive()) {
+            if (this->mobs[a].getRightX() - this->cameraX > 0 && this->mobs[a].x - this->cameraX < 128) {
+                this->mobs[a].draw();
+            }
+        }
+
     }
-  }
-//  Serial.println("drawMobs() end");
+
 }
 
 void SquarioGame::drawHUD(Arduboy2 &arduboy) {
 
-  uint16_t tmpScore = this->score + this->distancePoints + this->player.x / Constants::TileSize; 
-  uint8_t digits[6] = {};
-  extractDigits(digits, tmpScore);
-// Serial.println(this->lives);
-  if (this->mapNumber % 2 == MapLevel::AboveGround) {
+    uint16_t tmpScore = this->score + this->distancePoints + this->player.x / Constants::TileSize; 
+    uint8_t digits[6] = {};
+    extractDigits(digits, tmpScore);
 
-    // arduboy.fillRect(0, 0, 58, 8, WHITE);
-    for(size_t index = 0; index < 58; ++index) arduboy.sBuffer[index] = 0xFF;
+    if (this->mapNumber % 2 == MapLevel::AboveGround) {
 
-    Sprites::drawErase(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
-    Sprites::drawErase(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
-    Sprites::drawErase(17, 1, Images::Heart, this->lives >= 3 ? Hearts::FilledIn : Hearts::Outline);
+        for(size_t index = 0; index < 58; ++index) arduboy.sBuffer[index] = 0xFF;
 
-    for (uint8_t x = 6; x > 0; x--) {
-      Sprites::drawErase(27 + ((6 - x) * 5), 1, Images::Numbers, digits[x - 1]);
+        Sprites::drawErase(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
+        Sprites::drawErase(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
+        Sprites::drawErase(17, 1, Images::Heart, this->lives >= 3 ? Hearts::FilledIn : Hearts::Outline);
+
+        for (uint8_t x = 6; x > 0; x--) {
+            Sprites::drawErase(27 + ((6 - x) * 5), 1, Images::Numbers, digits[x - 1]);
+        }
+
     }
+    else {
 
-  }
-  else {
+        for(size_t index = 0; index < 58; ++index) arduboy.sBuffer[index] = 0x00;
 
-    for(size_t index = 0; index < 58; ++index) arduboy.sBuffer[index] = 0x00;
+        Sprites::drawSelfMasked(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
+        Sprites::drawSelfMasked(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
+        Sprites::drawSelfMasked(17, 1, Images::Heart, this->lives >= 3 ? Hearts::FilledIn : Hearts::Outline);
 
-    Sprites::drawSelfMasked(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
-    Sprites::drawSelfMasked(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
-    Sprites::drawSelfMasked(17, 1, Images::Heart, this->lives >= 3 ? Hearts::FilledIn : Hearts::Outline);
+        for (uint8_t x = 6; x > 0; x--) {
+            Sprites::drawSelfMasked(27 + ((6 - x) * 5), 1, Images::Numbers, digits[x - 1]);
+        }
 
-    for (uint8_t x = 6; x > 0; x--) {
-      Sprites::drawSelfMasked(27 + ((6 - x) * 5), 1, Images::Numbers, digits[x - 1]);
     }
-
-  }
 
 }
 
-void SquarioGame::drawMap_Background(Arduboy2 &arduboy) {
+void SquarioGame::drawMap_Background() {
 
-  #ifdef ORIG_GAME_TILESIZE_8
+    int16_t backgroundXOffset = (this->cameraX / 4) % 64;
+    int16_t backgroundYOffset = (this->cameraY / 12) - 8;
 
-  int mountainOffset = (this->cameraX / 4) % 64;
-  int mountainYOffset = (this->cameraY / 12) - 4;
-  
-  if (this->mapNumber % 2) {
-    arduboy.drawBitmap( 0 - mountainOffset, mountainYOffset,OverworldBG,64,16,1);
-    arduboy.drawBitmap(64 - mountainOffset, mountainYOffset,OverworldBG,64,16,1);
-    arduboy.drawBitmap(128 - mountainOffset, mountainYOffset,OverworldBG,64,16,1);
-  }
-  else {
-    for (uint8_t a = 0; a < 196; a += 96) {
-    arduboy.drawBitmap( a - (this->cameraX / 4) % 96, mountainYOffset+20, UndergroundBricks, 37, 24, 1);
+    if (this->mapNumber % 2 == MapLevel::AboveGround) {
+
+        Sprites::drawOverwrite(0 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
+        Sprites::drawOverwrite(64 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
+        Sprites::drawOverwrite(128 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
+
     }
+    else {
 
-  }
-  #else
-
-  int16_t backgroundXOffset = (this->cameraX / 4) % 64;
-  int16_t backgroundYOffset = (this->cameraY / 12) - 8;
-
-  if (this->mapNumber % 2 == MapLevel::AboveGround) {
-
-    Sprites::drawOverwrite(0 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
-    Sprites::drawOverwrite(64 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
-    Sprites::drawOverwrite(128 - backgroundXOffset, backgroundYOffset, Images::Sky, 0);
-
-  }
-  else {
-
-    for (uint8_t a = 0; a <= 128; a += 64) {
-      Sprites::drawOverwrite(a + 2 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
-      Sprites::drawOverwrite(a + 22 - backgroundXOffset, backgroundYOffset + 6, Images::Underground_Brick, 0);
-      Sprites::drawOverwrite(a + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
-    }
-
-  }
-  #endif
-
-  for (int x = this->cameraX / Constants::TileSize; x < (this->cameraX / Constants::TileSize) + 17; x++) {
-    for (int y = this->cameraY / Constants::TileSize; y < (this->cameraY / Constants::TileSize) + 9; y++) {
-
-      
-      // if (this->level.isTile(x, y)) {
-      //   #ifdef ORIG_GAME_TILESIZE_8
-      //     Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, Images::SpriteImages[ObjectTypes::STBricks], Images::SpriteMasks[ObjectTypes::STBricks], 0, 0);
-      //   #else
-      //     if (this->mapNumber % 2 == MapLevel::AboveGround) {   
-      //       Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]),  pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), MapLevel::AboveGround, 0);
-      //     }
-      //     else {
-      //       Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]), pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), 0, 0);
-      //     }
-      //   #endif
-      // }
-      // else {
-        
-      //   uint8_t i = this->level.checkObject(x, y);
-
-      //   if (i != 0) {
-      //     Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[i]), pgm_read_word_near(&Images::SpriteMasks[i]), 0, 0);
-      //   }
-
-      // }
-
-      if (this->level.isTile(x, y)) {
-
-        if (this->mapNumber % 2 == MapLevel::AboveGround) {   
-          Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]),  pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), MapLevel::AboveGround, 0);
-        }
-        else {
-          Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]), pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), 0, 0);
+        for (uint8_t a = 0; a <= 128; a += 64) {
+            Sprites::drawOverwrite(a + 2 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
+            Sprites::drawOverwrite(a + 22 - backgroundXOffset, backgroundYOffset + 6, Images::Underground_Brick, 0);
+            Sprites::drawOverwrite(a + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
         }
 
-      }
-      else {
+    }
 
-        ObjectTypes tile = static_cast<ObjectTypes>(this->level.checkObject(x, y));
+    for (int x = this->cameraX / Constants::TileSize; x < (this->cameraX / Constants::TileSize) + 17; x++) {
 
-        switch (tile) {
+        for (int y = this->cameraY / Constants::TileSize; y < (this->cameraY / Constants::TileSize) + 9; y++) {
 
-          case ObjectTypes::STQBlock ... ObjectTypes::STPipeRight:
-              Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[tile]), pgm_read_word_near(&Images::SpriteMasks[tile]), 0, 0);
-              break;
+            if (this->level.isTile(x, y)) {
 
-          case ObjectTypes::STAboveGroundExit:
-              Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX - 36, y * Constants::TileSize - this->cameraY - 24, Images::Outside_Exit_00, Images::Outside_Exit_00_Mask, 0, 0);
-            break;
+                if (this->mapNumber % 2 == MapLevel::AboveGround) {   
+                    Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]),  pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), MapLevel::AboveGround, 0);
+                }
+                else {
+                    Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]), pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), 0, 0);
+                }
 
-          case ObjectTypes::STUnderGroundExit:
-              Sprites::drawOverwrite(x * Constants::TileSize - this->cameraX - 13, y * Constants::TileSize - this->cameraY - 4, Images::Underground_Exit_00, 0);
-            break;
+            }
+            else {
 
-          default: break;
+                ObjectTypes tile = static_cast<ObjectTypes>(this->level.checkObject(x, y));
+
+                switch (tile) {
+
+                    case ObjectTypes::STQBlock ... ObjectTypes::STPipeRight:
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[tile]), pgm_read_word_near(&Images::SpriteMasks[tile]), 0, 0);
+                        break;
+
+                    case ObjectTypes::STAboveGroundExit:
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX - 36, y * Constants::TileSize - this->cameraY - 24, Images::Outside_Exit_00, Images::Outside_Exit_00_Mask, 0, 0);
+                        break;
+
+                    case ObjectTypes::STUnderGroundExit:
+                        Sprites::drawOverwrite(x * Constants::TileSize - this->cameraX - 13, y * Constants::TileSize - this->cameraY - 4, Images::Underground_Exit_00, 0);
+                        break;
+
+                    default: break;
+                }
+
+            }
+
         }
 
-      }
     }
-  }
+
 }
 
-void SquarioGame::drawMap_Foreground(Arduboy2 &arduboy) {
+void SquarioGame::drawMap_Foreground() {
 
-  for (int x = this->cameraX / Constants::TileSize; x < (this->cameraX / Constants::TileSize) + 17; x++) {
+    for (int x = this->cameraX / Constants::TileSize; x < (this->cameraX / Constants::TileSize) + 17; x++) {
 
-    for (int y = this->cameraY / Constants::TileSize; y < (this->cameraY / Constants::TileSize) + 9; y++) {
+        for (int y = this->cameraY / Constants::TileSize; y < (this->cameraY / Constants::TileSize) + 9; y++) {
 
-      if (!this->level.isTile(x, y)) {
+            if (!this->level.isTile(x, y)) {
 
-        ObjectTypes tile = static_cast<ObjectTypes>(this->level.checkObject(x, y));
+                ObjectTypes tile = static_cast<ObjectTypes>(this->level.checkObject(x, y));
 
-        switch (tile) {
+                switch (tile) {
 
-          case ObjectTypes::STAboveGroundExit:
-            Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX - 10, y * Constants::TileSize - this->cameraY - 24, Images::Outside_Exit_01, Images::Outside_Exit_01_Mask, 0, 0);
-            break;
+                    case ObjectTypes::STAboveGroundExit:
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX - 10, y * Constants::TileSize - this->cameraY - 24, Images::Outside_Exit_01, Images::Outside_Exit_01_Mask, 0, 0);
+                        break;
 
-          case ObjectTypes::STUnderGroundExit:
-            Sprites::drawOverwrite(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY - 4, Images::Underground_Exit_01, 0);
-            break;
+                    case ObjectTypes::STUnderGroundExit:
+                        Sprites::drawOverwrite(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY - 4, Images::Underground_Exit_01, 0);
+                        break;
 
-          default: break;
+                    default: break;
+
+                }
+
+            }
 
         }
 
-      }
     }
-  }
+
 }
 
 void SquarioGame::drawPlayer(Arduboy2 &arduboy) {
-  this->player.draw();
-  if (this->health) {
-    for (uint8_t a = 0; a < this->health; a++) {
-      arduboy.drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+11-(a*2)-this->cameraY, 6, WHITE);
-      arduboy.drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+10-(a*2)-this->cameraY, 6, WHITE);
+
+    if ((this->event == EventType::StartLevel && this->eventCounter < 12) || this->event != EventType::StartLevel) { 
+        this->player.draw();
     }
-  }  
+
+    if (this->event == EventType::StartLevel) { 
+
+        if ( this->mapNumber % 2 == 0) {
+        
+            Sprites::drawExternalMask(this->player.x - this->cameraX, this->player.y - this->cameraY - 4, 
+                                    pgm_read_word_near(&Images::Puffs[(28 - this->eventCounter) / 4]), 
+                                    pgm_read_word_near(&Images::Puff_Masks[(28 - this->eventCounter) / 4]), 
+                                    0,0);
+        }
+        else {
+            Serial.println("Day");
+            Sprites::drawErase(this->player.x - this->cameraX, this->player.y - this->cameraY - 4, 
+                                    pgm_read_word_near(&Images::Puffs[(28 - this->eventCounter) / 4]), 
+                                    0);
+        }
+        
+    }
+
+    if (this->health) {
+
+        for (uint8_t a = 0; a < this->health; a++) {
+            arduboy.drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+11-(a*2)-this->cameraY, 6, WHITE);
+            arduboy.drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+10-(a*2)-this->cameraY, 6, WHITE);
+        }
+
+    }
+
 }
 
 void SquarioGame::draw(Arduboy2 &arduboy) {
 
-  switch (this->event) {
+    switch (this->event) {
 
-    case EventType::Death_Init:
-    case EventType::Death:
-    case EventType::Playing:   
-      drawMap_Background(arduboy); 
-      #ifndef ORIG_GAME_TILESIZE_8
-      drawHUD(arduboy);
-      #endif
-      drawMobs(); 
-      if (!(this->eventCounter % 2)) drawPlayer(arduboy);
-      drawMap_Foreground(arduboy); 
-      break;
+        case EventType::Death_Init:
+        case EventType::Death:
+        case EventType::Playing:   
+            drawMap_Background(); 
+            drawHUD(arduboy);
+            drawMobs(); 
+            if (!(this->eventCounter % 2)) drawPlayer(arduboy);
+            drawMap_Foreground(); 
+            break;
 
-    case EventType::PipeDrop:
-    case EventType::PipeRise:  
-      drawPlayer(arduboy); 
-      drawMap_Background(arduboy); 
-      #ifndef ORIG_GAME_TILESIZE_8
-      drawHUD(arduboy);
-      #endif
-      drawMobs(); 
-      drawMap_Foreground(arduboy); 
-      break;
+        case EventType::PipeDrop:
+        case EventType::PipeRise:  
+        case EventType::StartLevel:   
+            drawMap_Background(); 
+            drawPlayer(arduboy); 
+            drawHUD(arduboy);
+            drawMobs(); 
+            drawMap_Foreground(); 
+            break;
 
-    default: break;
+        default: break;
 
-  }
+    }
 
 }

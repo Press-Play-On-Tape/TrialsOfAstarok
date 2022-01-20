@@ -36,7 +36,7 @@ uint8_t checkHighScoreSlot(uint16_t score) {
   uint16_t tmpScore = 0;
 
   // High score processing
-  for (byte i = 0; i < Constants::NumberOfScores; i++) {
+  for (uint8_t i = 0; i < Constants::NumberOfScores; i++) {
     EEPROM.get(Constants::EEPROM_Scores + (5 * i), tmpScore);
     if (tmpScore < score) {
       return i;
@@ -106,7 +106,7 @@ void highScores() {
       font4x6.setCursor(43, 34 + (i * 9));
       font4x6.print(highScoreVars.initials[2]);
 
-      for (byte j = 0; j < 3; j++) {
+      for (uint8_t j = 0; j < 3; j++) {
         if (j == highScoreVars.index && arduboy.getFrameCountHalf(32)) {
         // arduboy.drawLine(33 + (j * 5), 42 + (i * 9), 33 + (j * 5) + 4, 42 + (i * 9), WHITE);
         arduboy.drawFastHLine(33 + (j * 5), 33 + (i * 9), 4, WHITE);

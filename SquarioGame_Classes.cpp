@@ -12,53 +12,49 @@ uint8_t Sprite::getType()       { return pgm_read_byte(this->spriteData + Sprite
 int16_t Sprite::getRightX()     { return this->x + this->getWidth() - 1; }
 int16_t Sprite::getBottomY()    { return this->y + this->getHeight() - 1; }
 
-uint8_t Sprite::getWidth()      { 
-  #ifdef ORIG_GAME_TILESIZE_8
-    return pgm_read_byte(&this->spriteImg[0]);
-  #else
+uint8_t Sprite::getWidth() { 
+
     if (this->getType() == ObjectTypes::STSquario) {
-      return 12; 
+        return 12; 
     }
     else {
-      return pgm_read_byte(&this->spriteImg[0]); 
+        return pgm_read_byte(&this->spriteImg[0]); 
     }
-  #endif
+
 }
 
-uint8_t Sprite::getHeight()      { 
-  #ifdef ORIG_GAME_TILESIZE_8
-    return pgm_read_byte(&this->spriteImg[0]);
-  #else
+uint8_t Sprite::getHeight() { 
+
     if (this->getType() == ObjectTypes::STSquario) {
-      return 12; 
+        return 12; 
     }
     else {
-      return pgm_read_byte(&this->spriteImg[1]); 
+        return pgm_read_byte(&this->spriteImg[1]); 
     }
-  #endif
+
 }
 
 void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
-  this->spriteData = data;
-  this->spriteImg = img;
-  this->spriteMask = mask;
-  this->x = tX; 
-  this->y = tY;
-  this->vx = 0; 
-  this->vy = 0;
-  this->currentFrame = 0;
 
-  // Serial.print("init Type: ");
-  // Serial.println(this->getType());
+    this->spriteData = data;
+    this->spriteImg = img;
+    this->spriteMask = mask;
+    this->x = tX; 
+    this->y = tY;
+    this->vx = 0; 
+    this->vy = 0;
+    this->currentFrame = 0;
+    this->facing = Direction::Right;
+
 }
 
 void Sprite::clear() {
-  this->spriteData = NULL;
-  this->x = -1;
-  this->y = -1;
-  this->vx = 0;
-  this->vy = 0;
-  this->currentFrame = 0;
+    this->spriteData = NULL;
+    this->x = -1;
+    this->y = -1;
+    this->vx = 0;
+    this->vy = 0;
+    this->currentFrame = 0;
 }
 
 byte Sprite::collide(int tX, int tY) {
@@ -172,8 +168,6 @@ void Sprite::move() {
       else { 
         this->x++;
         if (this->getType() == ObjectTypes::STSquario) {
-// Serial.print("vy=");
-// Serial.println(vy);
         }
         if (vy == 0 && !isFalling()) {
           this->frame = (this->frame + 1) % 4;
@@ -197,22 +191,11 @@ void Sprite::move() {
 
 bool Sprite::jump() {
 
-  #ifdef ORIG_GAME_TILESIZE_8
-    if (this->collisionCheckY(Direction::Down)) { vy = -8; return true; }
-  #else
-    if (this->collisionCheckY(Direction::Down)) { vy = -10; return true; }
-  #endif
+  if (this->collisionCheckY(Direction::Down)) { vy = -10; return true; }
   return false;
+
 }
 
-void Sprite::duck() {
-  if (x < 64) return;
-  if (this->collide(x, y + this->getHeight() + 1) == STPipeCapLeft && this->collide(this->getRightX(), y + this->getHeight() + 1) == STPipeCapRight) {
-    Game->SFX = Sounds::SFX_Pipe;
-    Game->event = EventType::PipeDrop;
-    Game->eventCounter = 0;
-  }
-}
 
 void Sprite::headCollision() {
 
@@ -239,43 +222,18 @@ void Sprite::headCollision() {
 
 void Sprite::draw() {
 
-  #ifdef ORIG_GAME_TILESIZE_8
-    Sprites::drawExternalMask(x - Game->cameraX, y - Game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
-  #else
     if (this->getType() == ObjectTypes::STSquario) {
-
-// Serial.print("Render ObjectTypes::STSquario ");
-// Serial.print(y);
-// Serial.print(" ");
-// Serial.print(this->getHeight() - 8);
-// Serial.print(" ");
-// Serial.print(Game->cameraY);
-// Serial.print(" = ");
-// Serial.print(y - (this->getHeight() - 8) - Game->cameraY);
-// Serial.print(", frame = ");
-// Serial.println(this->getFrame());
-
-      // Sprites::drawExternalMask(x - Game->cameraX, y - (this->getHeight() - 8) - Game->cameraY, Images::Player_Walking_00, Images::Player_Walking_00_Mask, 0, 0);
       Sprites::drawExternalMask(x - Game->cameraX, y - 1 - Game->cameraY, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
     }
     else {
-// Serial.print("Image:");
-// Serial.print(this->getType());
-// Serial.print(", x:");
-// Serial.print(x - Game->cameraX);
-// Serial.print(", y:");
-// Serial.print(y - (getHeight() - 8) - Game->cameraY);
-// Serial.println("");
 
       if (this->Game->mapNumber % 2 == MapLevel::AboveGround) {
-//        Sprites::drawErase(x - Game->cameraX, y - (this->getHeight() - 8) - Game->cameraY, this->spriteImg, 0);
         Sprites::drawErase(x - Game->cameraX, y -  Game->cameraY, this->spriteImg, 0);
       }
       else {
         Sprites::drawExternalMask(x - Game->cameraX, y - Game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
       }
     }
-  #endif
 
 }
 
@@ -293,84 +251,117 @@ uint8_t AISprite::getSpeed()        { return pgm_read_byte(this->spriteData + Sp
 uint8_t AISprite::getIntelligence() { return pgm_read_byte(this->spriteData + SpriteIntelligence); }
 
 void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
-// Serial.println("activate");
-  this->active = true;
-  this->facing = Direction::Left;
-  init(data, img, mask, tX * Constants::TileSize, tY * Constants::TileSize);
-  if (data == Images::SpriteImages[ObjectTypes::STBolt]) {
-    vx = -4;
-    vy = 2;
-  }
-  this->think();
+
+    this->active = true;
+    this->facing = Direction::Left;
+
+    init(data, img, mask, tX * Constants::TileSize, tY * Constants::TileSize);
+
+    if (data == Images::SpriteImages[ObjectTypes::STBolt]) {
+        vx = -4;
+        vy = 2;
+    }
+
+    this->think();
+
 }
 
 void AISprite::deactivate() {
-  // Serial.println("Deactivate");
-  this->spriteData = NULL;
-  this->active = false;
-  this->facing = Direction::Up;
-  this->clear();
+
+    this->spriteData = NULL;
+    this->active = false;
+    this->facing = Direction::Up;
+    this->clear();
+
 }
 
 bool AISprite::getActive() {
-  return this->active;
+
+    return this->active;
+
 }
 
 void AISprite::think() {
-  if   (this->getIntelligence() & 0b00000100) {
-    this->seek();
-    if (this->getIntelligence() & 0b00001000) this->detectJump();
-  }
-  else {
-    if (this->getIntelligence() & 0b00000001) this->detectWall();
-    if (this->getIntelligence() & 0b00000010) this->detectGap();
-  }
-  move();
+    
+    if (this->getIntelligence() & 0b00000100) {
+        this->seek();
+        if (this->getIntelligence() & 0b00001000) this->detectJump();
+    }
+    else {
+        if (this->getIntelligence() & 0b00000001) this->detectWall();
+        if (this->getIntelligence() & 0b00000010) this->detectGap();
+    }
+    move();
+
 }
 
 void AISprite::seek() {
-  if (Game->player.x + Game->player.getWidth() < x) {
-    this->facing = Direction::Left;
-    vx = this->getSpeed() * -1;
-  }
-  if (Game->player.x > x + this->getWidth()) {
-    this->facing = Direction::Right;
-    vx = this->getSpeed();
-  }
+    if (Game->player.x + Game->player.getWidth() < x) {
+        this->facing = Direction::Left;
+        vx = this->getSpeed() * -1;
+    }
+    if (Game->player.x > x + this->getWidth()) {
+        this->facing = Direction::Right;
+        vx = this->getSpeed();
+    }
 }
 
 void AISprite::detectJump() {
 
-  if (this->collisionCheckX(this->facing)) jump();
-  if (this->facing == Direction::Left) {
-    if (!this->collide(x - 1, (Constants::RoomHeight * Constants::TileSize) - 1)) jump();
-  }
-  if (this->facing == Direction::Right) {
-    if (!this->collide(this->getRightX() + 1, (Constants::RoomHeight * Constants::TileSize) - 1)) jump();
-  }
+    if (this->collisionCheckX(this->facing)) jump();
+
+    if (this->facing == Direction::Left) {
+        if (!this->collide(x - 1, (Constants::RoomHeight * Constants::TileSize) - 1)) jump();
+    }
+
+    if (this->facing == Direction::Right) {
+        if (!this->collide(this->getRightX() + 1, (Constants::RoomHeight * Constants::TileSize) - 1)) jump();
+    }
 
 }
 
 void AISprite::detectWall() {
-  if (this->facing == Direction::Left) {
-    if (this->collisionCheckX(Direction::Left)) { this->facing = Direction::Right; vx = 0; return; }
-    else vx = this->getSpeed() * -1;
-  }
-  if (this->facing == Direction::Right) {
-    if (this->collisionCheckX(Direction::Right)) { this->facing = Direction::Left; vx = 0; return; }
-    else vx = this->getSpeed();
-  }
+
+    if (this->facing == Direction::Left) {
+        if (this->collisionCheckX(Direction::Left)) { 
+            this->facing = Direction::Right; vx = 0; return; 
+        }
+        else {
+            vx = this->getSpeed() * -1;
+        }
+    }
+
+    if (this->facing == Direction::Right) {
+        if (this->collisionCheckX(Direction::Right)) { 
+            this->facing = Direction::Left; vx = 0; return; 
+        }
+        else {
+            vx = this->getSpeed();
+        }
+    }
+
 }
 
 void AISprite::detectGap() {
-  if (this->facing == Direction::Left) {
-    if (!this->collide(x-1, this->getBottomY() + 1)) { this->facing = Direction::Right; vx = 0; return; }
-    else vx = this->getSpeed() * -1;
-  }
-  if (this->facing == Direction::Right) {
-    if (!this->collide(this->getRightX()+1, this->getBottomY() + 1)) { this->facing = Direction::Left; vx = 0; return; }
-    else vx = this->getSpeed();
-  }
+
+    if (this->facing == Direction::Left) {
+        if (!this->collide(x-1, this->getBottomY() + 1)) { 
+            this->facing = Direction::Right; vx = 0; return; 
+        }
+        else {
+            vx = this->getSpeed() * -1;
+        }
+    }
+
+    if (this->facing == Direction::Right) {
+        if (!this->collide(this->getRightX()+1, this->getBottomY() + 1)) { 
+            this->facing = Direction::Left; vx = 0; return; 
+        }
+        else {
+            vx = this->getSpeed();
+        }
+    }
+
 }
 
 
@@ -378,17 +369,17 @@ void AISprite::detectGap() {
 // InteractiveObject
 //---------------------------------------------------------------------------------------------------
 //
-byte InteractiveObject::collide(int tX, int tY) {
-  int16_t nX = tX / Constants::TileSize;
-  int16_t nY = tY / Constants::TileSize;
-  if (Game->level.isTile(nX, nY)) {
-    // Serial.print("Game->level.isTile(nX, nY) ");
-    // Serial.println(Game->level.isTile(nX, nY));
-    return 0xFF;
-  }
-  // Serial.print("Game->level.checkObject(nX, nY) ");
-  // Serial.println(Game->level.checkObject(nX, nY));
-  return Game->level.checkObject(nX, nY);
+uint8_t InteractiveObject::collide(int tX, int tY) {
+
+    int16_t nX = tX / Constants::TileSize;
+    int16_t nY = tY / Constants::TileSize;
+
+    if (Game->level.isTile(nX, nY)) {
+        return 0xFF;
+    }
+
+    return Game->level.checkObject(nX, nY);
+
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -396,30 +387,35 @@ byte InteractiveObject::collide(int tX, int tY) {
 //---------------------------------------------------------------------------------------------------
 //
 void Room::clearRoom() {
-  for (int a = 0; a < Constants::RoomBytes; a++) data[a] = 0;
+    for (int a = 0; a < Constants::RoomBytes; a++) data[a] = 0;
 }
 
 void Room::setTile(int x, int y) {
 
-  if (x > Constants::RoomWidth || y > Constants::RoomHeight) return;
+    if (x > Constants::RoomWidth || y > Constants::RoomHeight) return;
 
-  int index = (Constants::RoomHeight/8) * x;
-  if (y < 8) data[index]     |= 1 << y;
-  else       data[index + 1] |= 1 << (y - 8);
+    int index = (Constants::RoomHeight/8) * x;
+    if (y < 8) data[index]     |= 1 << y;
+    else       data[index + 1] |= 1 << (y - 8);
+
 }
 
 bool Room::readTile(int x, int y) {
-  if (x > Constants::RoomWidth || y > Constants::RoomHeight) return false;
-  int Index = (Constants::RoomHeight/8) * x;
-  if (y < 8) {
-    byte Mask = 1 << y;
-    if (data[ Index ] & Mask) return true;
-  }
-  else {
-    byte Mask = 1 << (y - 8);
-    if (data[ Index+1 ] & Mask) return true;
-  }
-  return false;
+
+    if (x > Constants::RoomWidth || y > Constants::RoomHeight) return false;
+
+    int index = (Constants::RoomHeight/8) * x;
+
+    if (y < 8) {
+        uint8_t mask = 1 << y;
+        if (data[index] & mask) return true;
+    }
+    else {
+        uint8_t mask = 1 << (y - 8);
+        if (data[index + 1] & mask) return true;
+    }
+
+    return false;
 }
 
 
@@ -428,136 +424,99 @@ bool Room::readTile(int x, int y) {
 //---------------------------------------------------------------------------------------------------
 //
 void Map::generateRoom(int roomNum) {
-// Serial.print("generateRoom(");
-// Serial.print(roomNum);
-// Serial.println(") Start");
-  randomSeed(Game->Seeds[ (Game->mapNumber + roomNum) % Constants::GameSeeds ] * Game->mapNumber + roomNum);
-  rooms[roomNum%Constants::MapRooms].clearRoom();
-  uint8_t floor = random(Constants::RoomHeight-3,Constants::RoomHeight);
 
-  #ifdef ORIG_GAME_CEILING
-  uint8_t ceiling = (!(Game->mapNumber % 2)) ? 8 : 0;
-  #endif
+    randomSeed(Game->Seeds[ (Game->mapNumber + roomNum) % Constants::GameSeeds ] * Game->mapNumber + roomNum);
+    rooms[roomNum%Constants::MapRooms].clearRoom();
+    uint8_t floor = random(Constants::RoomHeight-3,Constants::RoomHeight);
 
-  int Gap = 0;
-  int tSpawnBarrier = roomNum * Constants::RoomWidth;
+    int Gap = 0;
+    int tSpawnBarrier = roomNum * Constants::RoomWidth;
 
-  if (roomNum == 0) {
-    #ifdef ORIG_GAME_CEILING
-    if (ceiling) addTopPipe(1, ceiling + 1);
-    else addPipe(1, floor - 2);
-    #else
-    addPipe(1, floor - 2);
-    #endif
-  }
-  for (int x = 0; x < Constants::RoomWidth; x++) {
-// Serial.print("generateRoom() 1 -");
-// Serial.print(x);
-// Serial.print(" of ");
-// Serial.println(Constants::RoomWidth);
-    #ifdef ORIG_GAME_CEILING
-    if (ceiling) rooms[roomNum % Constants::MapRooms].setTile(x, ceiling);
-    #endif
-    if (!Gap) {
-      for (int b = floor; b < Constants::RoomHeight; b++) {
-        rooms[roomNum % Constants::MapRooms].setTile(x, b);
-      }
-      if (roomNum && (roomNum < LastRoom)) {
-// Serial.println("generateRoom() 2");
-        if (!random(10)) { 
-          Gap = random(2,5);
-          #ifdef ORIG_GAME_CEILING
-          if (ceiling) Gap--;
-          #endif
-        }
-        else if (!random(5) ) {
-          if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
-          else floor--;
-        }
+    if (roomNum == 0) {
+        //Remove Pipe addPipe(1, floor - 2);
+    }
+    for (int x = 0; x < Constants::RoomWidth; x++) {
 
-        if (tSpawnBarrier > SpawnBarrier) {
-// Serial.println("generateRoom() 3");
+        if (!Gap) {
+            for (int b = floor; b < Constants::RoomHeight; b++) {
+            rooms[roomNum % Constants::MapRooms].setTile(x, b);
+            }
+            if (roomNum && (roomNum < LastRoom)) {
 
-          if (!random(8)) {
-// Serial.println("generateRoom() 4.1");
-                // Game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, floor - 2);
-
-
-            switch (random(20)) {
-
-              case 0 ... 9:
-// Serial.println("generateRoom() 4.1");
-                Game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, floor - 2);
-                break;
-
-              case 10 ... 15:
-// Serial.println("generateRoom() 4.2");
-                Game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, floor - 2);
-                break;
-
-              case 16 ... 18:
-                if (roomNum > 8) {
-// Serial.println("generateRoom() 4.3");
-                  Game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
+                if (!random(10)) { 
+                    Gap = random(2,5);
                 }
-                break;
-
-              default:
-                if (roomNum > 8) {
-// Serial.println("generateRoom() 4.4");
-                  Game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
+                else if (!random(5) ) {
+                    if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
+                    else floor--;
                 }
-                break;
+
+                if (tSpawnBarrier > SpawnBarrier) {
+
+                    if (!random(8)) {
+
+                        switch (random(20)) {
+
+                            case 0 ... 9:
+                                Game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, floor - 2);
+                                break;
+
+                            case 10 ... 15:
+                                Game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, floor - 2);
+                                break;
+
+                            case 16 ... 18:
+                                if (roomNum > 8) {
+                                    Game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
+                                }
+                                break;
+
+                            default:
+                                if (roomNum > 8) {
+                                    Game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
+                                }
+                                break;
+
+                        }
+
+                    }
+
+                    #ifdef ORIG_GAME_MUSHROOM
+                    if (!random(16) && !Gap && floor > ceiling + 5 && x != Constants::RoomWidth - 1) {
+
+                        int y = random(max(floor - 7, ceiling + 2), floor - 3);
+
+                        if (!random(4)) {
+                            addObject (STMushBlock, tSpawnBarrier + x, y);
+                        }
+                        else {
+                            addObject(STQBlock, tSpawnBarrier + x, y);
+                        }
+
+                    }
+                    #endif
+
+                }
 
             }
-
-          }
-
-          #ifdef ORIG_GAME_MUSHROOM
-          if (!random(16) && !Gap && floor > ceiling + 5 && x != Constants::RoomWidth - 1) {
-
-            int y = random(max(floor - 7, ceiling + 2), floor - 3);
-
-            if (!random(4)) {
-              addObject (STMushBlock, tSpawnBarrier + x, y);
-            }
-            else {
-              addObject(STQBlock, tSpawnBarrier + x, y);
-            }
-
-          }
-          #endif
 
         }
+        else Gap--;
 
-      }
+        // Serial.println("generateRoom() End");
 
     }
-    else Gap--;
-
-// Serial.println("generateRoom() End");
-
-  }
 
 
-  // If this is the last room in a map, then add a pipe so we can leave ..
+    // If this is the last room in a map, then add a pipe so we can leave ..
 
-  if (roomNum == LastRoom) {
-    #ifdef ORIG_GAME_CEILING
-    if (ceiling) {
-      addTopPipe (MaxXTile() - 2, ceiling + 1);
+    if (roomNum == LastRoom) {
+
+        addExit(this->Game->mapNumber % 2 == MapLevel::AboveGround ? ObjectTypes::STAboveGroundExit : ObjectTypes::STUnderGroundExit, MaxXTile() - 2, floor - 1);
+
     }
-    else {
-      addPipe(MaxXTile() - 2, floor - 2);
-    }
-    #else
-    
-    addExit(this->Game->mapNumber % 2 == MapLevel::AboveGround ? ObjectTypes::STAboveGroundExit : ObjectTypes::STUnderGroundExit, MaxXTile() - 2, floor - 1);
 
-    #endif
-  }
-  
-  if (tSpawnBarrier > SpawnBarrier) SpawnBarrier = tSpawnBarrier;
+    if (tSpawnBarrier > SpawnBarrier) SpawnBarrier = tSpawnBarrier;
 
 }
 
@@ -567,26 +526,26 @@ void Map::addExit(ObjectTypes exitType, int x, int y) {
 
 }
 
-void Map::addPipe(int x, int y) {
+// void Map::addPipe(int x, int y) {
 
-  addObject(STPipeCapLeft,  x,   y);
-  addObject(STPipeCapRight, x+1, y);
+//   addObject(STPipeCapLeft,  x,   y);
+//   addObject(STPipeCapRight, x+1, y);
 
-  for (uint8_t a = y+1; a < Constants::RoomHeight; a++) {
-    addObject(STPipeLeft,     x,   a);
-    addObject(STPipeRight,    x+1, a);
-  }
+//   for (uint8_t a = y+1; a < Constants::RoomHeight; a++) {
+//     addObject(STPipeLeft,     x,   a);
+//     addObject(STPipeRight,    x+1, a);
+//   }
 
-}
+// }
 
-void Map::addTopPipe(int x, int y) {
+// void Map::addTopPipe(int x, int y) {
 
-  addObject(STTopPipeCapLeft,  x,   y + 1);
-  addObject(STTopPipeCapRight, x+1, y + 1);
-  addObject(STPipeLeft,     x,   y);
-  addObject(STPipeRight,    x+1, y);
+//   addObject(STTopPipeCapLeft,  x,   y + 1);
+//   addObject(STTopPipeCapRight, x+1, y + 1);
+//   addObject(STPipeLeft,     x,   y);
+//   addObject(STPipeRight,    x+1, y);
 
-}
+// }
 
 void Map::addObject(byte type, int tX, int tY) {
 

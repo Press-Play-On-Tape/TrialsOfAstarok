@@ -17,7 +17,7 @@ GameState gameState = GameState::Title;
 bool SoundOn = false;
 
 uint8_t SoundCounter = 0;
-const byte *SFX = 0;
+const uint8_t *SFX = 0;
 const unsigned int *SFXNoteSet;
 int SFX_Counter = -1;
 unsigned long duration = 0, lastNote = 0;
@@ -68,10 +68,7 @@ void loop() {
         case GameState::Game_Play:
 
             // SoundEngine();
-            //  Serial.println("Cycle");
             game.cycle(arduboy, gameState);
-            // if (game.Event) game.draw(display);
-            //  Serial.println("draw");
             game.draw(arduboy);
 
             if (game.event == EventType::Death) {

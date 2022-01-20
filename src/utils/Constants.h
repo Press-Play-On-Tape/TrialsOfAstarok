@@ -4,18 +4,11 @@
 
 #define _DEBUG
 
-#define _ORIG_GAME_TILESIZE_8
-#define _ORIG_GAME_CEILING
 #define _ORIG_GAME_MUSHROOM
 
 namespace Constants {
 
-    #ifdef ORIG_GAME_TILESIZE_8
-    constexpr uint8_t TileSize          = 8;
-    #else
     constexpr uint8_t TileSize          = 12;
-    #endif
-
     constexpr uint8_t GameSeeds         = 4;
     constexpr uint8_t MinLevelWidth     = 12;
 

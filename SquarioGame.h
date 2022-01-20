@@ -28,7 +28,6 @@ class Sprite {
     bool isFalling();
     void move();
     bool jump();
-    void duck();
     void draw();
     
     uint8_t getWidth();
@@ -52,7 +51,7 @@ class Sprite {
   protected:
     void clear();
     void applyGravity();
-    byte collide(int tX, int tY);
+    uint8_t collide(int tX, int tY);
     bool collisionCheckX(Direction direction);
     bool collisionCheckY(Direction direction);
     void headCollision();
@@ -85,10 +84,10 @@ class InteractiveObject {
 
   public:
     int x, y;
-    byte type;
+    uint8_t type;
     SquarioGame         * Game;
   
-    byte collide(int tX, int tY);
+    uint8_t collide(int tX, int tY);
   
 };
 
@@ -97,19 +96,19 @@ class Room {
     void clearRoom();
     void setTile(int x, int y);
     bool readTile(int x, int y);
-    byte         data[ Constants::RoomBytes ];
+    uint8_t         data[ Constants::RoomBytes ];
 };
 class Map {
   public:
     void newMap();
     void loadMap();
     void generateRoom(int RoomNum);
-    void addObject(byte type, int x, int y);
+    void addObject(uint8_t type, int x, int y);
     void handleObject (int x, int y);
     byte checkObject(int x, int y);
     bool isTile(int x, int y);
-    void addPipe(int x, int y);
-    void addTopPipe(int x, int y);
+    // void addPipe(int x, int y);
+    // void addTopPipe(int x, int y);
     void addExit(ObjectTypes exitType, int x, int y);
 
     int MinXPixel();
@@ -141,8 +140,8 @@ class SquarioGame {
     void draw(Arduboy2 &arduboy);
     void die(Arduboy2 &arduboy, GameState &gameState);
     void drawScorePanel(Arduboy2 &arduboy, Font4x6 &font4x6);
-    void drawMap_Background(Arduboy2 &arduboy);
-    void drawMap_Foreground(Arduboy2 &arduboy);
+    void drawMap_Background();
+    void drawMap_Foreground();
     void drawHUD(Arduboy2 &arduboy);
     void drawPlayer(Arduboy2 &arduboy);
     void drawMobs();
@@ -162,7 +161,7 @@ class SquarioGame {
     int16_t               cameraX, cameraY;
     EventType             event;
     uint8_t               eventCounter;
-    const byte *          SFX;
+    const uint8_t *          SFX;
     byte                  Seeds[ Constants::GameSeeds ];
     unsigned long         lastPress;
 };

@@ -67,4 +67,5 @@ enum EventType {
   PipeDrop,
   PipeRise,
   LevelExit,
+  StartLevel
 };

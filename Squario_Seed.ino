@@ -16,8 +16,13 @@ void seed() {
 
     for (uint8_t i = 0; i < 5; i++) {
 
-        Sprites::drawOverwrite(30 + (i* 14), 40, Images::Rune_Frame, 0);
-        Sprites::drawOverwrite(33 + (i* 14), 44, Images::Runes, seedVars.seed[i]);
+        if (i == seedVars.index && seedVars.spinIndex > 0) {
+            Sprites::drawOverwrite(30 + (i* 14), 40, Images::Rune_Frame, 16 - seedVars.spinIndex);
+        }
+        else {
+            Sprites::drawOverwrite(30 + (i* 14), 40, Images::Rune_Frame, 0);
+            Sprites::drawOverwrite(33 + (i* 14), 44, Images::Runes, seedVars.seed[i]);
+        }
 
     }
 
@@ -25,33 +30,39 @@ void seed() {
     Sprites::drawSelfMasked(34 + (seedVars.index* 14), 56, Images::ArrowDown, 0);
 
 
-    if (arduboy.justPressed(UP_BUTTON)) {
-        seedVars.incValue();
-    }
+    if (seedVars.spinIndex == 0) {
 
-    if (arduboy.justPressed(DOWN_BUTTON)) { 
-        seedVars.decValue();
-    }
+        if (arduboy.justPressed(UP_BUTTON)) {
+            seedVars.incValue();
+        }
 
-    if (arduboy.justPressed(LEFT_BUTTON)) { 
-        seedVars.decIndex();
-    }
+        if (arduboy.justPressed(DOWN_BUTTON)) { 
+            seedVars.decValue();
+        }
 
-    if (arduboy.justPressed(RIGHT_BUTTON)) { 
-        seedVars.incIndex();
-    }
+        if (arduboy.justPressed(LEFT_BUTTON)) { 
+            seedVars.decIndex();
+        }
 
-    if (arduboy.justPressed(A_BUTTON)) {
+        if (arduboy.justPressed(RIGHT_BUTTON)) { 
+            seedVars.incIndex();
+        }
 
-        randomSeed(seedVars.getSeedValue());
-        for (uint8_t a = 0; a < Constants::GameSeeds; a++) game.Seeds[a] = random(255);
-        gameState = GameState::Game_Init;
+        if (arduboy.justPressed(A_BUTTON)) {
+
+            randomSeed(seedVars.getSeedValue());
+            for (uint8_t a = 0; a < Constants::GameSeeds; a++) game.Seeds[a] = random(255);
+            gameState = GameState::Game_Init;
+
+        }
 
     }
 
     arduboy.drawPixel(24, 62, WHITE);
     arduboy.drawPixel(102, 62, WHITE);
     arduboy.drawFastHLine(25, 63, 77);
+
+    seedVars.decSpinIndex();
 
 }
 

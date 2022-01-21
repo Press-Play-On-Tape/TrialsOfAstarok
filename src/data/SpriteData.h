@@ -8,10 +8,6 @@ namespace Data {
          ObjectTypes::STSquario, 0, 0, 0,    // Flags, Speed, AI Setting
     };
 
-    PROGMEM const uint8_t STBigSquario[] {
-        ObjectTypes::STSquario, 0, 0, 0,     // Flags, Speed, AI Setting
-    };
-
     PROGMEM const uint8_t Triangleo[] {
         ObjectTypes::STTriangleo, 
         0b10,       // Flags
@@ -40,6 +36,18 @@ namespace Data {
         ObjectTypes::STBolt, 
         0b11,         // Flags
         2, 0,         // Speed, AI Setting
+    };
+
+    PROGMEM const uint8_t Fireball[] {
+        ObjectTypes::STFireball_Up, 
+        0b00,         // Flags
+        0, 0,         // Speed, AI Setting
+    };
+
+    PROGMEM const uint8_t Firepit[] {
+        ObjectTypes::STFirepit, 
+        0b00,         // Flags
+        0, 0,         // Speed, AI Setting
     };
 
 };

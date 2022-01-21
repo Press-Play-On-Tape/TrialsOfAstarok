@@ -38,26 +38,20 @@ enum Direction { Up, Down, Left, Right };
 
 enum ObjectTypes {
   STSquario = 0,  // Sprites
-  STBigSquario,
   STTriangleo,
   STStarmano,
   STSmileo,
   STBolt,
-  STMushroom = 6,
+  STMushroom = 5,
   STQBlock,  // Interactive Tiles
   STBQBlock,
   STMushBlock,
-  STBricks = 10,
-  STPipeCapLeft,
-  STPipeCapRight,
-  STTopPipeCapLeft,
-  STTopPipeCapRight,
-  STPipeLeft,
-  STPipeRight,
+  STBricks = 9,
   STAboveGroundExit,
   STUnderGroundExit,
-  NumObjectTypes = 18,
   STSign,
+  STFireball_Up,
+  STFirepit,
 };
 
 enum EventType {

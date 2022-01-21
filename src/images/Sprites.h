@@ -4,16 +4,6 @@
 
 namespace Images {
 
-    const uint8_t PROGMEM Squario[] = {
-    12, 12,
-    0x00, 0x3e, 0xe2, 0x22, 0xe2, 0x22, 0x3e, 0x00, 0xff, 0xff, 0xff, 0xff,
-    0x00, 0x3e, 0xe2, 0x22, 0xe2, 0x22, 0x3e, 0x00, 0xff, 0xff, 0xff, 0xff,
-    };
-
-    const uint8_t PROGMEM Squario_Mask[] = {
-    0x00, 0x3e, 0xfe, 0x3e, 0xfe, 0x3e, 0x3e, 0x00, 
-    };
-
     const uint8_t PROGMEM Mushroom[] = {
     8, 8,
     0x18, 0x24, 0xe2, 0xa5, 0xa9, 0xe2, 0x24, 0x18, 
@@ -86,65 +76,38 @@ namespace Images {
     0xff, 0x81, 0xa5, 0x81, 0x81, 0xa5, 0x81, 0xff, 
     };
 
-    const uint8_t PROGMEM Tile_PipeCapLeft[] = {
-    8, 8,
-    0xff, 0x81, 0x81, 0xfd, 0x81, 0x81, 0x81, 0x81, 
-    };
-
-    const uint8_t PROGMEM Tile_PipeCapRight[] = {
-    8, 8,
-    0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xff, 
-    };
-
-    const uint8_t PROGMEM Tile_TopPipeCapLeft[] = {
-    8, 8,
-    0xff, 0x81, 0x81, 0xbf, 0x81, 0x81, 0x81, 0x81, 
-    };
-
-    const uint8_t PROGMEM Tile_TopPipeCapRight[] = {
-    8, 8,
-    0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xff, 
-    };
-
-    const uint8_t PROGMEM Tile_PipeLeft[] = {
-    8, 8,
-    0x00, 0x00, 0xff, 0x00, 0xff, 0x00, 0x00, 0x00, 
-    };
-
-    const uint8_t PROGMEM Tile_PipeRight[] = {
-    8, 8,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00, 0x00, 
-    };
-
     const uint8_t PROGMEM Tile_Mask[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
 //        0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 
     };
 
+    const uint8_t PROGMEM Fireball_Up[] = {
+    12, 14,
+    0x00, 0x70, 0x8c, 0x02, 0x09, 0x1d, 0x1d, 0x09, 0x02, 0x8c, 0x70, 0x00, 
+    0x00, 0x00, 0x01, 0x0a, 0x01, 0x16, 0x02, 0x01, 0x0a, 0x01, 0x00, 0x00, 
+    };
+
+    const uint8_t PROGMEM Fireball_Up_Mask[] = {
+    0x00, 0x70, 0xfc, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xfc, 0x70, 0x00, 
+    0x00, 0x00, 0x01, 0x0b, 0x01, 0x17, 0x03, 0x01, 0x0b, 0x01, 0x00, 0x00, 
+    };
+
     const uint8_t * const SpriteImages[] PROGMEM = { 
-        Squario,                    // 0
-        Squario,                    // 1
-        Triangleo,                  // 2
-        Starmano,                   // 3
-        Smileo,                     // 4
-        Bolt,                       // 5
-        Mushroom,                   // 6
-        Tile_QBlock,                // 7
-        Tile_BQBlock,               // 8
-        Tile_QBlock,                // 9
-        Tile_Brick,                 // 10
-        Tile_PipeCapLeft,           // 11
-        Tile_PipeCapRight,          // 12
-        Tile_TopPipeCapLeft,        // 13
-        Tile_TopPipeCapRight,       // 14
-        Tile_PipeLeft,              // 15
-        Tile_PipeRight              // 16
+        Triangleo,                  // 0 - not used
+        Triangleo,                  // 1
+        Starmano,                   // 2
+        Smileo,                     // 3
+        Bolt,                       // 4
+        Mushroom,                   // 5
+        Tile_QBlock,                // 6
+        Tile_BQBlock,               // 7
+        Tile_QBlock,                // 8
+        Tile_Brick,                 // 9
     };
 
     const uint8_t * const SpriteMasks[] PROGMEM =  { 
-        Squario_Mask, 
-        Squario_Mask, 
+        Triangleo_Mask, 
         Triangleo_Mask, 
         Starmano_Mask, 
         Smileo_Mask, 
@@ -154,36 +117,25 @@ namespace Images {
         Tile_Mask, 
         Tile_Mask, 
         Tile_Mask, 
-        Tile_Mask, 
-        Tile_Mask, 
-        Tile_Mask, 
-        Tile_Mask, 
-        Tile_Mask, 
-        Tile_Mask 
     };
 
 // enum ObjectTypes {
 //   STSquario = 0,  // Sprites
-//   STBigSquario,
 //   STTriangleo,
 //   STStarmano,
 //   STSmileo,
 //   STBolt,
 
-//   STMushroom = 6,
+//   STMushroom = 5,
 
 //   STQBlock,  // Interactive Tiles
 //   STBQBlock,
 //   STMushBlock,
-//   STBricks = 10,
-//   STPipeCapLeft,
-//   STPipeCapRight,
-//   STTopPipeCapLeft,
-//   STTopPipeCapRight,
-//   STPipeLeft,
-//   STPipeRight,
-
-//   NumObjectTypes = 17
+//   STBricks = 9,
+//   STAboveGroundExit,
+//   STUnderGroundExit,
+//   STSign,
+//   STFireball_Up,
 // };
 
 };

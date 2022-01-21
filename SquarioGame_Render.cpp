@@ -2,7 +2,7 @@
 #include "SquarioGame.h"
 #include <EEPROM.h>
 
-void SquarioGame::drawScorePanel(Arduboy2 &arduboy, Font4x6 &font4x6) {
+void SquarioGame::drawScorePanel(Arduboy2Ext &arduboy, Font4x6 &font4x6) {
 
     arduboy.drawRect(22, 19, 83, 39, BLACK);
     arduboy.fillRect(23, 20, 81, 37, WHITE);
@@ -39,21 +39,23 @@ void SquarioGame::drawScorePanel(Arduboy2 &arduboy, Font4x6 &font4x6) {
 
 }
 
-void SquarioGame::drawMobs() {
+void SquarioGame::drawMobs(Arduboy2Ext &arduboy) {
 
     for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
 
         if (this->mobs[a].getActive()) {
+
             if (this->mobs[a].getRightX() - this->cameraX > 0 && this->mobs[a].x - this->cameraX < 128) {
-                this->mobs[a].draw();
+                this->mobs[a].draw(arduboy);
             }
+
         }
 
     }
 
 }
 
-void SquarioGame::drawHUD(Arduboy2 &arduboy) {
+void SquarioGame::drawHUD(Arduboy2Ext &arduboy) {
 
     uint16_t tmpScore = this->score + this->distancePoints + this->player.x / Constants::TileSize; 
     uint8_t digits[6] = {};
@@ -136,7 +138,7 @@ void SquarioGame::drawMap_Background() {
 
                 switch (tile) {
 
-                    case ObjectTypes::STQBlock ... ObjectTypes::STPipeRight:
+                    case ObjectTypes::STQBlock ... ObjectTypes::STBricks:
                         Sprites::drawExternalMask(x * Constants::TileSize - this->cameraX, y * Constants::TileSize - this->cameraY, pgm_read_word_near(&Images::SpriteImages[tile]), pgm_read_word_near(&Images::SpriteMasks[tile]), 0, 0);
                         break;
 
@@ -195,10 +197,10 @@ void SquarioGame::drawMap_Foreground() {
 
 }
 
-void SquarioGame::drawPlayer(Arduboy2 &arduboy) {
+void SquarioGame::drawPlayer(Arduboy2Ext &arduboy) {
 
     if ((this->event == EventType::StartLevel && this->eventCounter < 12) || this->event != EventType::StartLevel) { 
-        this->player.draw();
+        this->player.draw(arduboy);
     }
 
     if (this->event == EventType::StartLevel) { 
@@ -230,7 +232,7 @@ void SquarioGame::drawPlayer(Arduboy2 &arduboy) {
 
 }
 
-void SquarioGame::draw(Arduboy2 &arduboy) {
+void SquarioGame::draw(Arduboy2Ext &arduboy) {
 
     switch (this->event) {
 
@@ -239,7 +241,7 @@ void SquarioGame::draw(Arduboy2 &arduboy) {
         case EventType::Playing:   
             drawMap_Background(); 
             drawHUD(arduboy);
-            drawMobs(); 
+            drawMobs(arduboy); 
             if (!(this->eventCounter % 2)) drawPlayer(arduboy);
             drawMap_Foreground(); 
             break;
@@ -250,7 +252,7 @@ void SquarioGame::draw(Arduboy2 &arduboy) {
             drawMap_Background(); 
             drawPlayer(arduboy); 
             drawHUD(arduboy);
-            drawMobs(); 
+            drawMobs(arduboy); 
             drawMap_Foreground(); 
             break;
 

@@ -24,6 +24,7 @@ struct SeedVars {
 
     uint8_t seed[5];
     uint8_t index;
+    uint8_t spinIndex;
     uint8_t arrowUp;
     uint8_t arrowDown;
 
@@ -41,6 +42,7 @@ struct SeedVars {
         }
 
         EEPROM.update(Constants::EEPROM_Seeds + this->index, this->seed[this->index]);
+        this->spinIndex = 17;
         
     }
 
@@ -58,6 +60,7 @@ struct SeedVars {
         }
 
         EEPROM.update(Constants::EEPROM_Seeds + this->index, this->seed[this->index]);
+        this->spinIndex = 17;
         
     }
 
@@ -81,6 +84,16 @@ struct SeedVars {
         
     }
 
+    void decSpinIndex() {
+
+        if (this->spinIndex > 0) {
+
+            this->spinIndex--;
+            
+        }
+        
+    }
+
     void reset() {
 
         for (uint8_t i = 0; i < 5; i++) {
@@ -90,6 +103,7 @@ struct SeedVars {
         this->arrowDown = 0;
         this->arrowUp = 0;
         this->index = 0;
+        this->spinIndex = 0;
         
     }
 

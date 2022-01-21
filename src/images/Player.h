@@ -65,8 +65,8 @@ namespace Images {
     0x00, 0x07, 0x1c, 0x01, 0x00, 0x07, 0x07, 0x07, 0x1f, 0x00, 0x14, 0x08, 0x05, 0x02, 
     };
 
-
-    const uint8_t * const Player_Images[] PROGMEM = { /*Player_Idle_00, Player_Idle_01, Player_Idle_02, */Player_Walking_00, Player_Walking_01, Player_Walking_02, Player_Walking_03 }; 
+    const uint8_t * const Player_Images[] PROGMEM = { Player_Walking_00, Player_Walking_01, Player_Walking_02, Player_Walking_03 }; 
+    const uint8_t * const Player_Idle[] PROGMEM = { Player_Idle_00, Player_Idle_01, Player_Idle_02 }; 
 
     const uint8_t PROGMEM Player_Idle_00_Mask[] = {
     0x00, 0xf0, 0xf8, 0xfc, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xbc, 0x00, 0x00, 
@@ -124,7 +124,8 @@ namespace Images {
     0x00, 0x07, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x0f, 0x07, 0x02, 
     };
 
-    const uint8_t * const Player_Masks[] PROGMEM = { /*Player_Idle_00_Mask, Player_Idle_01_Mask, Player_Idle_02_Mask, */Player_Walking_00_Mask, Player_Walking_01_Mask, Player_Walking_02_Mask, Player_Walking_03_Mask }; 
+    const uint8_t * const Player_Masks[] PROGMEM = { Player_Walking_00_Mask, Player_Walking_01_Mask, Player_Walking_02_Mask, Player_Walking_03_Mask }; 
+    const uint8_t * const Player_Idle_Masks[] PROGMEM = { Player_Idle_00_Mask, Player_Idle_01_Mask, Player_Idle_02_Mask }; 
 
     const uint8_t PROGMEM Jump_Effect[] = {
     9, 4,

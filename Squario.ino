@@ -14,7 +14,7 @@ SquarioGame game;
 Font4x6 font4x6;
 
 GameState gameState = GameState::Title;
-bool SoundOn = false;
+bool soundOn = EEPROM.read(Constants::EEPROM_Sounds);
 
 uint8_t SoundCounter = 0;
 const uint8_t *SFX = 0;
@@ -61,7 +61,7 @@ void loop() {
 
         case GameState::Game_Init:
 
-            game.newGame();
+            game.newGame(arduboy);
             gameState = GameState::Game_Play;
             break;
 

@@ -24,11 +24,12 @@ class Sprite {
         const uint8_t       * spriteMask;
 
     public:
+
         void init(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
         bool isFalling();
-        void move(Arduboy2Ext &arduboy);
+        void move();
         bool jump();
-        void draw(Arduboy2Ext &arduboy);
+        void draw();
 
         uint8_t getWidth();
         uint8_t getHeight();
@@ -44,6 +45,7 @@ class Sprite {
         Direction             facing;
         SquarioGame           * game;
         Sprite                * relatedSprite;
+        Arduboy2Ext           * arduboy;
 
     private:
         uint8_t               frame;
@@ -72,9 +74,9 @@ class AISprite : public Sprite {
         uint8_t getIntelligence();
 
     public:
-        void activate(Arduboy2Ext &arduboy, const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
+        void activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
         void deactivate();
-        void think(Arduboy2Ext &arduboy);
+        void think();
         bool getActive();
 
 };
@@ -85,6 +87,7 @@ class InteractiveObject {
         int16_t             x, y;
         uint8_t             type;
         SquarioGame         * game;
+        Arduboy2Ext         * arduboy;
 
         uint8_t collide(int16_t tX, int16_t tY);
         void deactivate();
@@ -105,9 +108,9 @@ class Room {
 class Map {
 
     public:
-        void newMap(Arduboy2Ext &arduboy);
-        void loadMap(Arduboy2Ext &arduboy);
-        void generateRoom(Arduboy2Ext &arduboy, uint8_t roomNum);
+        void newMap();
+        void loadMap();
+        void generateRoom(uint8_t roomNum);
         void addObject(uint8_t type, int x, int y);
         void handleObject (int x, int y);
         byte checkObject(int x, int y);
@@ -133,7 +136,7 @@ class Map {
 class SquarioGame {
 
     public:  // Constructor
-        SquarioGame();      
+        SquarioGame(Arduboy2Ext *arduboy);
 
     public:  // Variables
         int16_t               health; //SJH needed?
@@ -152,26 +155,27 @@ class SquarioGame {
         Sprite                player;
         AISprite              mobs[ Constants::SpriteCap ];
         Map                   level;
+        Arduboy2Ext           * arduboy;
 
     public:  // Methods
-        void newGame(Arduboy2Ext &arduboy);
-        void cycle(Arduboy2Ext &arduboy, GameState &gameState);
-        void draw(Arduboy2Ext &arduboy);
-        void addMob(Arduboy2Ext &arduboy, const uint8_t *data, const uint8_t *sprite, const uint8_t *mask,  int x, int y);
+        void newGame();
+        void cycle(GameState &gameState);
+        void draw();
+        void addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask,  int x, int y);
         uint8_t getSpareMobCount();
-        void drawScorePanel(Arduboy2Ext &arduboy, Font4x6 &font4x6);
+        void drawScorePanel(Font4x6 &font4x6);
 
     private:  // Methods
-        void startLevel(Arduboy2Ext &arduboy);
-        bool testCollision(Arduboy2Ext &arduboy, Sprite * sprite1, AISprite * sprite2);
-        void die(Arduboy2Ext &arduboy, GameState &gameState);
+        void startLevel();
+        bool testCollision(Sprite * sprite1, AISprite * sprite2);
+        void die(GameState &gameState);
         void drawMap_Background();
         void drawMap_Foreground();
-        void drawHUD(Arduboy2Ext &arduboy);
-        void drawPlayer(Arduboy2Ext &arduboy);
-        void drawMobs(Arduboy2Ext &arduboy);
-        void adjustCamera(Arduboy2Ext &arduboy);
-        void processButtons(Arduboy2Ext &arduboy);
+        void drawHUD();
+        void drawPlayer();
+        void drawMobs();
+        void adjustCamera();
+        void processButtons();
         uint8_t spawnY();
 
 };

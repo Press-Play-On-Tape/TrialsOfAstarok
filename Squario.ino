@@ -10,7 +10,7 @@
 #include "src/utils/Structs.h"
 
 Arduboy2Ext arduboy;
-SquarioGame game;
+SquarioGame game(&arduboy);
 Font4x6 font4x6;
 
 GameState gameState = GameState::Title;
@@ -61,18 +61,18 @@ void loop() {
 
         case GameState::Game_Init:
 
-            game.newGame(arduboy);
+            game.newGame();
             gameState = GameState::Game_Play;
             break;
 
         case GameState::Game_Play:
 
             // SoundEngine();
-            game.cycle(arduboy, gameState);
-            game.draw(arduboy);
+            game.cycle(gameState);
+            game.draw();
 
             if (game.event == EventType::Death) {
-                game.drawScorePanel(arduboy, font4x6);
+                game.drawScorePanel(font4x6);
             }
 
             arduboy.displayWithBackground(game.mapNumber % 2 ? MapLevel::AboveGround : MapLevel::BelowGround);

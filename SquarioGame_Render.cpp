@@ -2,10 +2,10 @@
 #include "SquarioGame.h"
 #include <EEPROM.h>
 
-void SquarioGame::drawScorePanel(Arduboy2Ext &arduboy, Font4x6 &font4x6) {
+void SquarioGame::drawScorePanel(Font4x6 &font4x6) {
 
-    arduboy.drawRect(22, 19, 83, 39, BLACK);
-    arduboy.fillRect(23, 20, 81, 37, WHITE);
+    arduboy->drawRect(22, 19, 83, 39, BLACK);
+    arduboy->fillRect(23, 20, 81, 37, WHITE);
     Sprites::drawExternalMask(15, 8, Images::Scores, Images::Scores_Mask, 0, 0);
 
     font4x6.setTextColor(BLACK);
@@ -39,14 +39,14 @@ void SquarioGame::drawScorePanel(Arduboy2Ext &arduboy, Font4x6 &font4x6) {
 
 }
 
-void SquarioGame::drawMobs(Arduboy2Ext &arduboy) {
+void SquarioGame::drawMobs() {
 
     for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
 
         if (this->mobs[a].getActive()) {
 
             if (this->mobs[a].getRightX() - this->cameraX > 0 && this->mobs[a].x - this->cameraX < 128) {
-                this->mobs[a].draw(arduboy);
+                this->mobs[a].draw();
             }
 
         }
@@ -55,7 +55,7 @@ void SquarioGame::drawMobs(Arduboy2Ext &arduboy) {
 
 }
 
-void SquarioGame::drawHUD(Arduboy2Ext &arduboy) {
+void SquarioGame::drawHUD() {
 
     uint16_t tmpScore = this->score + this->distancePoints + this->player.x / Constants::TileSize; 
     uint8_t digits[6] = {};
@@ -63,7 +63,7 @@ void SquarioGame::drawHUD(Arduboy2Ext &arduboy) {
 
     if (this->mapNumber % 2 == MapLevel::AboveGround) {
 
-        for(size_t index = 0; index < 58; ++index) arduboy.sBuffer[index] = 0xFF;
+        for(size_t index = 0; index < 58; ++index) arduboy->sBuffer[index] = 0xFF;
 
         Sprites::drawErase(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawErase(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
@@ -76,7 +76,7 @@ void SquarioGame::drawHUD(Arduboy2Ext &arduboy) {
     }
     else {
 
-        for(size_t index = 0; index < 58; ++index) arduboy.sBuffer[index] = 0x00;
+        for(size_t index = 0; index < 58; ++index) arduboy->sBuffer[index] = 0x00;
 
         Sprites::drawSelfMasked(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawSelfMasked(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
@@ -197,10 +197,10 @@ void SquarioGame::drawMap_Foreground() {
 
 }
 
-void SquarioGame::drawPlayer(Arduboy2Ext &arduboy) {
+void SquarioGame::drawPlayer() {
 
     if ((this->event == EventType::StartLevel && this->eventCounter < 12) || this->event != EventType::StartLevel) { 
-        this->player.draw(arduboy);
+        this->player.draw();
     }
 
     if (this->event == EventType::StartLevel) { 
@@ -224,15 +224,15 @@ void SquarioGame::drawPlayer(Arduboy2Ext &arduboy) {
     if (this->health) {
 
         for (uint8_t a = 0; a < this->health; a++) {
-            arduboy.drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+11-(a*2)-this->cameraY, 6, WHITE);
-            arduboy.drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+10-(a*2)-this->cameraY, 6, WHITE);
+            arduboy->drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+11-(a*2)-this->cameraY, 6, WHITE);
+            arduboy->drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+10-(a*2)-this->cameraY, 6, WHITE);
         }
 
     }
 
 }
 
-void SquarioGame::draw(Arduboy2Ext &arduboy) {
+void SquarioGame::draw() {
 
     switch (this->event) {
 
@@ -240,19 +240,17 @@ void SquarioGame::draw(Arduboy2Ext &arduboy) {
         case EventType::Death:
         case EventType::Playing:   
             drawMap_Background(); 
-            drawHUD(arduboy);
-            drawMobs(arduboy); 
-            if (!(this->eventCounter % 2)) drawPlayer(arduboy);
+            drawHUD();
+            drawMobs(); 
+            if (!(this->eventCounter % 2)) drawPlayer();
             drawMap_Foreground(); 
             break;
 
-        case EventType::PipeDrop:
-        case EventType::PipeRise:  
         case EventType::StartLevel:   
             drawMap_Background(); 
-            drawPlayer(arduboy); 
-            drawHUD(arduboy);
-            drawMobs(arduboy); 
+            drawPlayer(); 
+            drawHUD();
+            drawMobs(); 
             drawMap_Foreground(); 
             break;
 

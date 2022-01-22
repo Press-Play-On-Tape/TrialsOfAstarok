@@ -59,8 +59,6 @@ enum EventType {
   Playing,
   Death_Init,
   Death,
-  PipeDrop,
-  PipeRise,
   LevelExit,
   StartLevel
 };

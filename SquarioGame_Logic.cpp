@@ -1,22 +1,29 @@
 #include "src/utils/Arduboy2Ext.h"
 #include "SquarioGame.h"
 
-SquarioGame::SquarioGame() {
+SquarioGame::SquarioGame(Arduboy2Ext *arduboy) {
 
     this->player.game = this;
     this->level.game = this;
+    this->arduboy = arduboy;
 
-    for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
-        this->mobs[a].game = this;
+    for (AISprite &mobileObject : this->mobs) {
+
+        mobileObject.game = this;
+        mobileObject.arduboy = arduboy;
+
     }
 
-    for (uint8_t a = 0; a < Constants::MapObjects; a++) {
-        this->level.objects[a].game = this;
+    for (InteractiveObject &interactiveObject : this->level.objects) {
+
+        interactiveObject.game = this;
+        interactiveObject.arduboy = arduboy;
+
     }
 
 }
 
-void SquarioGame::newGame(Arduboy2Ext &arduboy) {
+void SquarioGame::newGame() {
 
     this->health = 0;
     this->score = 0;
@@ -26,21 +33,21 @@ void SquarioGame::newGame(Arduboy2Ext &arduboy) {
     this->mapNumber = 1;
     this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 24, spawnY());
 
-    startLevel(arduboy);
+    startLevel();
 
 }
 
-void SquarioGame::startLevel(Arduboy2Ext &arduboy) {
+void SquarioGame::startLevel() {
 
     SFX = NULL;
-    this->level.newMap(arduboy);
+    this->level.newMap();
     this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 24, spawnY());
 
     while (this->player.isFalling()) {
-        this->player.move(arduboy);
+        this->player.move();
     }
 
-    adjustCamera(arduboy);
+    adjustCamera();
 
     this->event = EventType::StartLevel;
     this->eventCounter = 28;
@@ -54,16 +61,16 @@ uint8_t SquarioGame::spawnY() {
 
 }
 
-void SquarioGame::processButtons(Arduboy2Ext &arduboy) {
+void SquarioGame::processButtons() {
 
-    uint8_t MaxSpeed = 3; //SJHarduboy.pressed(A_BUTTON) ? 4 : 3;
+    uint8_t MaxSpeed = 3; //SJHarduboy->pressed(A_BUTTON) ? 4 : 3;
 
-    if (!arduboy.pressed(LEFT_BUTTON) && !arduboy.pressed(RIGHT_BUTTON)) {
+    if (!arduboy->pressed(LEFT_BUTTON) && !arduboy->pressed(RIGHT_BUTTON)) {
         if (this->player.vx > 0) this->player.vx--;
         if (this->player.vx < 0) this->player.vx++;
     }
 
-    if (arduboy.pressed(LEFT_BUTTON))  { 
+    if (arduboy->pressed(LEFT_BUTTON))  { 
     
         if (!this->player.isFalling()) {
             this->player.facing = Direction::Left;
@@ -77,7 +84,7 @@ void SquarioGame::processButtons(Arduboy2Ext &arduboy) {
 
     }
 
-    if (arduboy.pressed(RIGHT_BUTTON)) { 
+    if (arduboy->pressed(RIGHT_BUTTON)) { 
 
         if (!this->player.isFalling()) {
             this->player.facing = Direction::Right;
@@ -90,17 +97,17 @@ void SquarioGame::processButtons(Arduboy2Ext &arduboy) {
         }
     }
 
-    if (arduboy.pressed(B_BUTTON)) {
+    if (arduboy->pressed(B_BUTTON)) {
         if (this->player.jump()) SFX = Sounds::SFX_Jump;
     }
 
-    // if (arduboy.pressed(A_BUTTON)) {
+    // if (arduboy->pressed(A_BUTTON)) {
     //     this->player.x = 1000;
     // }
 
 }
 
-void SquarioGame::adjustCamera(Arduboy2Ext &arduboy) {
+void SquarioGame::adjustCamera() {
 
     int16_t maxX = this->level.maxXPixel() - WIDTH;
     int16_t maxY = this->level.maxYPixel() - HEIGHT;
@@ -119,30 +126,16 @@ void SquarioGame::adjustCamera(Arduboy2Ext &arduboy) {
 
     // Reload map data ..
 
-    this->level.loadMap(arduboy);
+    this->level.loadMap();
 
 }
 
-void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
+void SquarioGame::cycle(GameState &gameState) {
 
     int MapPixelHeight = this->level.maxYPixel();
-    processButtons(arduboy);
+    processButtons();
 
     switch (this->event) {
-
-        case EventType::PipeDrop:
-            if (this->eventCounter < this->player.getHeight()) {
-                this->player.y++;
-                this->eventCounter++;
-            }
-            break;
-
-        case EventType::PipeRise:
-            if (this->eventCounter < this->player.getHeight()) {
-                this->player.y--;
-                this->eventCounter++;
-            }
-            break;
 
         case EventType::Death_Init:
         case EventType::Death:
@@ -153,8 +146,8 @@ void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
             break;
 
         case EventType::Playing:
-            this->player.move(arduboy);
-            adjustCamera(arduboy);
+            this->player.move();
+            adjustCamera();
             break;
 
         case EventType::StartLevel:
@@ -171,7 +164,7 @@ void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
     }
 
 
-  // Have we touched an end of level thingy?
+    // Have we touched an end of level thingy?
 
     for (uint8_t a = 0; a < Constants::MapObjects; a++) {
 
@@ -207,12 +200,12 @@ void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
                 this->mobs[a].deactivate();
             }
 
-            this->mobs[a].think(arduboy);
+            this->mobs[a].think();
 
             if (this->mobs[a].y > MapPixelHeight) {
                 this->mobs[a].deactivate();
             }
-            else if (testCollision(arduboy, &player, &this->mobs[a])) {
+            else if (testCollision(&player, &this->mobs[a])) {
                     
                 uint8_t type = this->mobs[a].getType();
 
@@ -235,7 +228,7 @@ void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
                     this->mobs[a].deactivate();
                     this->score += Constants::Points_Skill;
                     SFX = Sounds::SFX_Hit;
-                    //SJH if (arduboy.pressed(A_BUTTON)) { this->player.vy = -10;}
+                    //SJH if (arduboy->pressed(A_BUTTON)) { this->player.vy = -10;}
                     //SJH else { this->player.vy = -4; } 
                     this->player.vy = -4; //SJH         
 
@@ -285,20 +278,7 @@ void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
         case EventType::Death:
 
             if (this->eventCounter == 0) {
-                die(arduboy, gameState);
-            }
-            break;
-
-        case EventType::PipeDrop:
-        case EventType::PipeRise:
-
-            if (this->eventCounter == this->player.getHeight()) {
-                this->eventCounter = 0;
-                this->distancePoints += this->player.x / Constants::TileSize;
-                this->mapNumber++;
-                this->player.x = 10;
-                this->player.y = spawnY();
-                startLevel(arduboy);
+                die(gameState);
             }
             break;
 
@@ -309,7 +289,7 @@ void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
             this->mapNumber++;
             this->player.x = 10;
             this->player.y = spawnY();
-            startLevel(arduboy);
+            startLevel();
             break;
 
         default: break;
@@ -318,22 +298,22 @@ void SquarioGame::cycle(Arduboy2Ext &arduboy, GameState &gameState) {
 
 }
 
-bool SquarioGame::testCollision(Arduboy2Ext &arduboy, Sprite * sprite1, AISprite * sprite2) {
+bool SquarioGame::testCollision(Sprite * sprite1, AISprite * sprite2) {
 
     Rect rect1 = { sprite1->x, sprite1->y, sprite1->getWidth(), sprite1->getHeight()};
     Rect rect2 = { sprite2->x, sprite2->y, sprite2->getWidth(), sprite2->getHeight()};
 
-    return arduboy.collide(rect1, rect2);
+    return arduboy->collide(rect1, rect2);
 
 }
 
-void SquarioGame::die(Arduboy2Ext &arduboy, GameState &gameState) {
+void SquarioGame::die(GameState &gameState) {
 
     if (this->lives > 0) {
 
         this->health = 0;
         this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 10, spawnY());
-        startLevel(arduboy);
+        startLevel();
 
     }
     else {
@@ -346,7 +326,7 @@ void SquarioGame::die(Arduboy2Ext &arduboy, GameState &gameState) {
         }
 
         // Move to High Score mode .. 
-        if (arduboy.justPressed(A_BUTTON)) {
+        if (arduboy->justPressed(A_BUTTON)) {
             gameState = GameState::HighScore_Check;
             this->event = EventType::Off;
         }
@@ -355,13 +335,13 @@ void SquarioGame::die(Arduboy2Ext &arduboy, GameState &gameState) {
 
 }
 
-void SquarioGame::addMob(Arduboy2Ext &arduboy, const uint8_t *data, const uint8_t * img, const uint8_t * mask, int x, int y) {
+void SquarioGame::addMob(const uint8_t *data, const uint8_t * img, const uint8_t * mask, int x, int y) {
 
     int distances[Constants::SpriteCap];
 
     for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
 
-        if (!this->mobs[a].getActive()) { this->mobs[a].activate(arduboy, data, img, mask, x, y); 
+        if (!this->mobs[a].getActive()) { this->mobs[a].activate(data, img, mask, x, y); 
             return; 
         }
 
@@ -380,7 +360,7 @@ void SquarioGame::addMob(Arduboy2Ext &arduboy, const uint8_t *data, const uint8_
         }
     }
 
-    this->mobs[candidate].activate(arduboy, data, img, mask, x, y);
+    this->mobs[candidate].activate(data, img, mask, x, y);
 
     return;
 
@@ -389,11 +369,13 @@ void SquarioGame::addMob(Arduboy2Ext &arduboy, const uint8_t *data, const uint8_
 uint8_t SquarioGame::getSpareMobCount() {
 
     uint8_t numberOfSpares = 0;
-    
-    for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
-        if (!this->mobs[a].getActive()) { 
+
+    for (AISprite &mobileObject : this->mobs) {   
+
+        if (!mobileObject.getActive()) { 
             numberOfSpares++; 
         }
+
     }
 
     return numberOfSpares;

@@ -142,7 +142,7 @@ bool Sprite::collisionCheckY(Direction direction) {
 
 }
 
-void Sprite::move(Arduboy2Ext &arduboy) {
+void Sprite::move() {
 
 
     // Handle player frame if stationary ..
@@ -150,7 +150,7 @@ void Sprite::move(Arduboy2Ext &arduboy) {
     if (this->getType() == ObjectTypes::STSquario) {
 
        if (this->vx == 0 && this->vy == 0) {
-           if (arduboy.getFrameCount(6) == 0) {
+           if (arduboy->getFrameCount(6) == 0) {
             this->frame = (this->frame + 1) % 3;
            }
         }
@@ -290,7 +290,7 @@ void Sprite::headCollision() {
   
 }
 
-void Sprite::draw(Arduboy2Ext &arduboy) {
+void Sprite::draw() {
 
     switch (this->getType()) {
 
@@ -305,7 +305,7 @@ void Sprite::draw(Arduboy2Ext &arduboy) {
             break;
 
         case ObjectTypes::STFirepit:
-            Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, arduboy.getFrameCount(24) / 8, arduboy.getFrameCount(24) / 8);
+            Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, arduboy->getFrameCount(24) / 8, arduboy->getFrameCount(24) / 8);
             break;
 
         case ObjectTypes::STFireball:
@@ -345,7 +345,7 @@ uint8_t Sprite::getFrame() {
 uint8_t AISprite::getSpeed()        { return pgm_read_byte(this->spriteData + SpriteSpeed); }
 uint8_t AISprite::getIntelligence() { return pgm_read_byte(this->spriteData + SpriteIntelligence); }
 
-void AISprite::activate(Arduboy2Ext &arduboy, const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
+void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
 
     this->active = true;
     this->facing = Direction::Left;
@@ -357,7 +357,7 @@ void AISprite::activate(Arduboy2Ext &arduboy, const uint8_t * data, const uint8_
         vy = 2;
     }
 
-    this->think(arduboy);
+    this->think();
 
 }
 
@@ -376,7 +376,7 @@ bool AISprite::getActive() {
 
 }
 
-void AISprite::think(Arduboy2Ext &arduboy) {
+void AISprite::think() {
 
     if (this->getIntelligence() & 0b00000100) {
         this->seek();
@@ -387,7 +387,7 @@ void AISprite::think(Arduboy2Ext &arduboy) {
         if (this->getIntelligence() & 0b00000010) this->detectGap();
     }
 
-    this->move(arduboy);
+    this->move();
 
 }
 
@@ -540,7 +540,7 @@ bool Room::readTile(int x, int y) {
 // Map
 //---------------------------------------------------------------------------------------------------
 //
-void Map::generateRoom(Arduboy2Ext &arduboy, uint8_t roomNum) {
+void Map::generateRoom(uint8_t roomNum) {
 
 //    uint8_t floorMinus3 = 0;
 //    uint8_t floorMinus2 = 0;
@@ -578,8 +578,8 @@ void Map::generateRoom(Arduboy2Ext &arduboy, uint8_t roomNum) {
 
                     if (firePit == 2) {
                         rooms[roomNum % Constants::MapRooms].clearTile(x, floor);
-                        this->game->addMob(arduboy, Data::Fireball, Images::Fireball_Up, Images::Fireball_Up_Mask, tSpawnBarrier + x, floor);
-                        this->game->addMob(arduboy, Data::Firepit, Images::Firepit, Images::Firepit_Mask, tSpawnBarrier + x, floor - 1);
+                        this->game->addMob(Data::Fireball, Images::Fireball_Up, Images::Fireball_Up_Mask, tSpawnBarrier + x, floor);
+                        this->game->addMob(Data::Firepit, Images::Firepit, Images::Firepit_Mask, tSpawnBarrier + x, floor - 1);
                     }
 
                     firePit--;
@@ -603,28 +603,28 @@ void Map::generateRoom(Arduboy2Ext &arduboy, uint8_t roomNum) {
                         switch (random(27)) {
 
                             case 0 ... 9:
-                                this->game->addMob(arduboy, Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, floor - 2);
+                                this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, floor - 2);
                                 break;
 
                             case 10 ... 15:
-                                this->game->addMob(arduboy, Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, floor - 2);
+                                this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, floor - 2);
                                 break;
 
                             case 16 ... 18:
                                 if (roomNum > 8) {
-                                    this->game->addMob(arduboy, Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
+                                    this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
                                 }
                                 break;
 
                             case 19 ... 24:
                                 if (roomNum > 8) {
-                                    this->game->addMob(arduboy, Data::Fireball, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
+                                    this->game->addMob(Data::Fireball, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
                                 }
                                 break;
 
                             default:
                                 if (roomNum > 8) {
-                                    this->game->addMob(arduboy, Data::Bolt, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
+                                    this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
                                 }
                                 break;
 
@@ -713,7 +713,7 @@ void Map::handleObject(int x, int y) {
           objects[a].type = STBQBlock;
           break;
         // case STMushBlock:
-        //   this->game->addMob(arduboy, Data::Mushroom, Images::SpriteImages[ObjectTypes::STMushroom], Images::SpriteMasks[ObjectTypes::STMushroom], x, y - 1);
+        //   this->game->addMob(Data::Mushroom, Images::SpriteImages[ObjectTypes::STMushroom], Images::SpriteMasks[ObjectTypes::STMushroom], x, y - 1);
         //   objects[a].type = STBQBlock; break;
       }
     }
@@ -721,7 +721,7 @@ void Map::handleObject(int x, int y) {
 }
 
 
-void Map::newMap(Arduboy2Ext &arduboy) {
+void Map::newMap() {
 
     // Reset Variables
 
@@ -741,12 +741,12 @@ void Map::newMap(Arduboy2Ext &arduboy) {
     this->lastRoom = random(lowEnd, highEnd);
 
     for (uint8_t a = 0; a < Constants::MapRooms; a++) {
-        generateRoom(arduboy, a);
+        generateRoom(a);
     }
 
 }
 
-void Map::loadMap(Arduboy2Ext &arduboy) {
+void Map::loadMap() {
 
     int roomBeforePlayerIsIn = (this->game->player.x / (Constants::RoomWidth*Constants::TileSize)) - 1;
 
@@ -754,7 +754,7 @@ void Map::loadMap(Arduboy2Ext &arduboy) {
 
     if (roomBeforePlayerIsIn > this->firstRoom) {
         this->firstRoom = roomBeforePlayerIsIn;
-        generateRoom(arduboy, roomBeforePlayerIsIn + Constants::MapRooms - 1);
+        generateRoom(roomBeforePlayerIsIn + Constants::MapRooms - 1);
     }
 
 }

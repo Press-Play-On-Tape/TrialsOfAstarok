@@ -16,6 +16,12 @@ class Sprite;
 class AISprite;
 class SquarioGame;
 
+#include "src/entities/Sprite.h"
+#include "src/entities/AISprite.h"
+#include "src/entities/InteractiveObject.h"
+#include "src/entities/Room.h"
+#include "src/entities/Map.h"
+/*
 class Sprite {
 
     protected:
@@ -132,7 +138,7 @@ class Map {
         int16_t               RandomChance;
         int16_t               firstRoom, lastRoom, mapHeight, lastLoadLocation, SpawnBarrier;
 };
-
+*/
 class SquarioGame {
 
     public:  // Constructor

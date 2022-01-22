@@ -1,3 +1,4 @@
+/*
 #include "src/utils/Arduboy2Ext.h"
 #include "Squariogame.h"
 
@@ -52,7 +53,7 @@ void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mas
 
 void Sprite::clear() {
 
-    this->spriteData = NULL;
+    this->spriteData = nullptr;
     this->x = -1;
     this->y = -1;
     this->vx = 0;
@@ -377,7 +378,7 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
 
 void AISprite::deactivate() {
 
-    this->spriteData = NULL;
+    this->spriteData = nullptr;
     this->active = false;
     this->facing = Direction::Up;
     this->clear();
@@ -784,3 +785,4 @@ int16_t Map::maxYPixel() { return ((this->mapHeight + 1) * Constants::RoomHeight
 int16_t Map::minXTile() { return this->firstRoom * Constants::RoomWidth; }
 int16_t Map::maxXTile() { return ((this->lastRoom + 1) * Constants::RoomWidth) - 1; }
 int16_t Map::maxYTile() { return ((this->mapHeight + 1) * Constants::RoomHeight) - 1; }
+*/

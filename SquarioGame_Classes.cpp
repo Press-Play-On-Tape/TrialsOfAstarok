@@ -74,7 +74,7 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     switch (object) {
 
         case ObjectTypes::STTriangleo ... ObjectTypes::STUnderGroundExit:
-        case ObjectTypes::STFireball_Up ... ObjectTypes::STFirepit:
+        case ObjectTypes::STFireball ... ObjectTypes::STFirepit:
             return object;
 
         case STSign:
@@ -159,7 +159,7 @@ void Sprite::move(Arduboy2Ext &arduboy) {
  
     switch (this->getType()) {
 
-        case ObjectTypes::STFireball_Up:
+        case ObjectTypes::STFireball:
 
             if (this->vy == 0 && random(0, 5) == 0) {
                 this->vy = -random(1,3);
@@ -308,7 +308,7 @@ void Sprite::draw(Arduboy2Ext &arduboy) {
             Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, arduboy.getFrameCount(24) / 8, arduboy.getFrameCount(24) / 8);
             break;
 
-        case ObjectTypes::STFireball_Up:
+        case ObjectTypes::STFireball:
             if (this->game->mapNumber % 2) {
                 Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
             }

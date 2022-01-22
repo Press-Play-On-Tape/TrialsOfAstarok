@@ -39,7 +39,7 @@ namespace Data {
     };
 
     PROGMEM const uint8_t Fireball[] {
-        ObjectTypes::STFireball_Up, 
+        ObjectTypes::STFireball, 
         0b00,         // Flags
         0, 0,         // Speed, AI Setting
     };

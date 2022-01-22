@@ -50,7 +50,7 @@ enum ObjectTypes {
   STAboveGroundExit,
   STUnderGroundExit,
   STSign,
-  STFireball_Up,
+  STFireball,
   STFirepit,
 };
 

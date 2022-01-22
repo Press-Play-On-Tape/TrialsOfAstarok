@@ -2,9 +2,11 @@
 
 #include "../utils/Arduboy2Ext.h"
 #include "../utils/Constants.h"
-#include "../../SquarioGame.h"
+
 #include "Room.h"
 #include "InteractiveObject.h"
+
+class SquarioGame;
 
 class Map {
 

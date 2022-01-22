@@ -1,4 +1,5 @@
 #include "InteractiveObject.h"
+#include "../../SquarioGame.h"
 
 uint8_t InteractiveObject::collide(int16_t tX, int16_t tY) {
 

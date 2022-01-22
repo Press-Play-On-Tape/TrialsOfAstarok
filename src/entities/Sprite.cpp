@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "../../SquarioGame.h"
 
 uint8_t Sprite::getFlags()      { return pgm_read_byte(this->spriteData + SpriteFlags); }
 uint8_t Sprite::getType()       { return pgm_read_byte(this->spriteData + SpriteType); }

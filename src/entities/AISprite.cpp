@@ -1,4 +1,6 @@
 #include "AISprite.h"
+#include "../data/SpriteData.h"
+#include "../../SquarioGame.h"
 
 uint8_t AISprite::getSpeed()        { return pgm_read_byte(this->spriteData + SpriteSpeed); }
 uint8_t AISprite::getIntelligence() { return pgm_read_byte(this->spriteData + SpriteIntelligence); }

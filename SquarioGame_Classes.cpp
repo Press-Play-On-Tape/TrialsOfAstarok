@@ -86,11 +86,11 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
 }
 
 bool Sprite::isFalling() {
-  return !this->collisionCheckY(Direction::Down);
+    return !this->collisionCheckY(Direction::Down);
 }
 
 void Sprite::applyGravity() {
-  if (vy < 6) vy++;
+    if (vy < 6) vy++;
 }
 
 bool Sprite::collisionCheckX(Direction direction) {
@@ -161,16 +161,17 @@ void Sprite::move() {
 
         case ObjectTypes::STFireball:
 
-            if (this->vy == 0 && random(0, 5) == 0) {
-                this->vy = -random(1,3);
+            if (this->vy == Constants::Fireball_NotMoving && random(0, 40) == 0) {
+                this->vy = Constants::Fireball_StartPos;
             }
 
-            if (this->vy != 0) {
-                this->y = this->y + this->vy;                
+            if (this->vy != Constants::Fireball_NotMoving) {
+                this->y = this->y + (this->vy / 4);                
+                this->vy++;
             }
 
-            if (this->y < 100) {
-                this->vy = 0;
+            if (this->vy == -Constants::Fireball_StartPos) {
+                this->vy = Constants::Fireball_NotMoving;
                 this->y = this->yInit;
             }
 
@@ -296,7 +297,10 @@ void Sprite::draw() {
 
        case ObjectTypes::STSquario:
 
-            if (this->vx == 0 && this->vy == 0) {
+            if (this->isFalling()) {
+                Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
+            }
+            else if (this->vx == 0 && this->vy == 0) {
                 Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
             else {
@@ -308,13 +312,18 @@ void Sprite::draw() {
             Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, arduboy->getFrameCount(24) / 8, arduboy->getFrameCount(24) / 8);
             break;
 
-        case ObjectTypes::STFireball:
-            if (this->game->mapNumber % 2) {
-                Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
+        case ObjectTypes::STSmileo:
+        case ObjectTypes::STTriangleo:
+            if (this->game->mapNumber % 2 == MapLevel::AboveGround) {
+                Sprites::drawErase(x - this->game->cameraX, y -  this->game->cameraY, this->spriteImg, this->facing == Direction::Right);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
+                Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
             }
+            break;
+
+        case ObjectTypes::STFireball:
+            Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
             break;
 
         default:
@@ -352,9 +361,14 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
 
     init(data, img, mask, tX * Constants::TileSize, tY * Constants::TileSize);
 
-    if (data == Images::SpriteImages[ObjectTypes::STBolt]) {
+    if (data == Data::Bolt) {
         vx = -4;
         vy = 2;
+    }
+
+    if (data == Data::Fireball) {
+        vx = 0;
+        vy = Constants::Fireball_NotMoving;
     }
 
     this->think();
@@ -541,10 +555,6 @@ bool Room::readTile(int x, int y) {
 //---------------------------------------------------------------------------------------------------
 //
 void Map::generateRoom(uint8_t roomNum) {
-
-//    uint8_t floorMinus3 = 0;
-//    uint8_t floorMinus2 = 0;
-//    uint8_t floorMinus1 = 0;
    
     randomSeed(this->game->Seeds[ (this->game->mapNumber + roomNum) % Constants::GameSeeds ] * this->game->mapNumber + roomNum);
     rooms[roomNum%Constants::MapRooms].clearRoom();
@@ -578,7 +588,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                     if (firePit == 2) {
                         rooms[roomNum % Constants::MapRooms].clearTile(x, floor);
-                        this->game->addMob(Data::Fireball, Images::Fireball_Up, Images::Fireball_Up_Mask, tSpawnBarrier + x, floor);
+                        this->game->addMob(Data::Fireball, Images::Fireball, Images::Fireball_Mask, tSpawnBarrier + x, floor);
                         this->game->addMob(Data::Firepit, Images::Firepit, Images::Firepit_Mask, tSpawnBarrier + x, floor - 1);
                     }
 
@@ -596,11 +606,11 @@ void Map::generateRoom(uint8_t roomNum) {
                     firePit = 3; 
                 }
 
-                if (tSpawnBarrier > SpawnBarrier) {
+                if (tSpawnBarrier > SpawnBarrier && firePit != 2) {
 
                     if (!random(8)) {
 
-                        switch (random(27)) {
+                        switch (random(20)) {
 
                             case 0 ... 9:
                                 this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, floor - 2);
@@ -613,12 +623,6 @@ void Map::generateRoom(uint8_t roomNum) {
                             case 16 ... 18:
                                 if (roomNum > 8) {
                                     this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
-                                }
-                                break;
-
-                            case 19 ... 24:
-                                if (roomNum > 8) {
-                                    this->game->addMob(Data::Fireball, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
                                 }
                                 break;
 

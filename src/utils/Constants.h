@@ -31,4 +31,7 @@ namespace Constants {
     constexpr uint8_t  EEPROM_No_Slot    = 255;
     constexpr uint8_t NumberOfScores     = 3;
 
+    constexpr uint8_t Fireball_NotMoving = 127;
+    constexpr int8_t Fireball_StartPos = -16;
+
 }

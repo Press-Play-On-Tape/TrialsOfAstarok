@@ -8,3 +8,4 @@
 - Make the Fireball invincible.
 - Add a way to generate a treasure chest sometimes in levels that will give a heart.
 - Have collision damage actually working
+- Add a quick story intro explaining that after the fall of Astarok, people from the village are hosting an event each year to elect a champion by competing to know who can get the furthest in the Trials of Astarok

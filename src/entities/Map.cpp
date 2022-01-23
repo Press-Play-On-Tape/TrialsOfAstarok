@@ -42,15 +42,15 @@ void Map::generateRoom(uint8_t roomNum) {
                         // Serial.print(" ");
                         // Serial.println(floor - 1);
 
-                        rooms[roomNum % Constants::MapRooms].setTile(x-3, floor - 1);
-                        rooms[roomNum % Constants::MapRooms].setTile(x-3, floor);
-//this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x-2, floor - 2);
-//Problem                                
-this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x - 2, floor - 2);
-//Problem this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x - 2, floor - 2);
-                                    // this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x - 2, 2);
+// rooms[roomNum % Constants::MapRooms].setTile(x-3, floor - 1);
+// rooms[roomNum % Constants::MapRooms].setTile(x-3, floor);
 
-                        rooms[roomNum % Constants::MapRooms].setTile(x+2, floor - 1);
+//this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x-2, floor - 2);
+//Problem this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x - 2, floor - 2);
+//Problem this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x - 2, floor - 2);
+// this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x - 2, 2);
+
+// rooms[roomNum % Constants::MapRooms].setTile(x+2, floor - 1);
                     }
 
                     firePit--;

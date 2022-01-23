@@ -9,4 +9,9 @@
 - Add a way to generate a treasure chest sometimes in levels that will give a heart.
 - Have collision damage actually working
 - Add a quick story intro explaining that after the fall of Astarok, people from the village are hosting an event each year to elect a champion by competing to know who can get the furthest in the Trials of Astarok
-- Make it so to jusy make the score go up. Not go down if moving back
+- Make it so to just make the score go up. Not go down if moving back
+- Fix a bug that make the start of the level do a weird garbled gfx for a second.
+- Make it so that holding jump doesn't auto-jump
+- Remove the current Game Over screen and just use the new Trial Over gfx we now have
+- Add basic sfx
+- Reuse the explosion gfx when we defeat an ennemy

@@ -1,4 +1,5 @@
 #include "AISprite.h"
+
 #include "../data/SpriteData.h"
 #include "../../SquarioGame.h"
 
@@ -12,12 +13,12 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
 
     init(data, img, mask, tX * Constants::TileSize, tY * Constants::TileSize);
 
-    if (data == Data::Bolt) {
+    if (this->getType() == ObjectTypes::STBolt) {
         vx = -4;
         vy = 2;
     }
 
-    if (data == Data::Fireball) {
+    if (this->getType() == ObjectTypes::STFireball) {
         vx = 0;
         vy = Constants::Fireball_NotMoving;
     }
@@ -83,8 +84,6 @@ void AISprite::detectJump() {
     }
 
 }
-
-#include "AISprite.h"
 
 void AISprite::detectWall() {
 

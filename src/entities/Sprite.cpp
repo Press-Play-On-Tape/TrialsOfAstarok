@@ -144,11 +144,11 @@ void Sprite::move() {
 
     if (this->getType() == ObjectTypes::STSquario) {
 
-       if (this->vx == 0 && this->vy == 0) {
-           if (arduboy->getFrameCount(6) == 0) {
-            this->frame = (this->frame + 1) % 3;
-           }
-        }
+        if (this->vx == 0 && this->vy == 0) {
+            if (this->game->arduboy->getFrameCount(6) == 0) {
+               this->frame = (this->frame + 1) % 3;
+            }
+         }
 
     }
  

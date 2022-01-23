@@ -51,10 +51,10 @@ void seed() {
         if (arduboy.justPressed(A_BUTTON)) {
 
             randomSeed(seedVars.getSeedValue());
-            for (uint8_t &a : Constants::GameSeeds) {
+            for (uint8_t &a : game.seeds) {
                 a = random(255);
             }
-            
+
             gameState = GameState::Game_Init;
 
         }

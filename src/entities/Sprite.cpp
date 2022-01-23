@@ -7,32 +7,13 @@ uint8_t Sprite::getType()       { return pgm_read_byte(this->spriteData + Sprite
 int16_t Sprite::getRightX()     { return this->x + this->getWidth() - 1; }
 int16_t Sprite::getTopY()       { return this->y; }
 int16_t Sprite::getBottomY()    { return this->y + this->getHeight() - 1; }
+int16_t Sprite::getLeftX()      { return this->x; }
 
-
-int16_t Sprite::getLeftX() { 
-
-    if (this->getType() == ObjectTypes::STSquario) {
-        #ifdef COLLISION
-            return this->x + 2; 
-        #else
-            return this->x;
-        #endif
-    }
-    else {
-        return this->x;
-    }
-
-}
 
 uint8_t Sprite::getWidth() { 
 
     if (this->getType() == ObjectTypes::STSquario) {
-        return 10;
-        #ifdef COLLISION
-            return 10; 
-        #else
-            return 12;
-        #endif
+        return 12; 
     }
     else {
         return pgm_read_byte(&this->spriteImg[0]); 
@@ -62,7 +43,6 @@ void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mas
     this->yInit = tY;
     this->vx = 0; 
     this->vy = 0;
-    this->currentFrame = 0;
     this->facing = Direction::Right;
 
 }
@@ -74,7 +54,6 @@ void Sprite::clear() {
     this->y = -1;
     this->vx = 0;
     this->vy = 0;
-    this->currentFrame = 0;
 
 }
 
@@ -83,7 +62,7 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     int16_t nX = tX / Constants::TileSize;
     int16_t nY = tY / Constants::TileSize;
 
-    //if (this->getLeftX() + this->getWidth() >= (tX / Constants::TileSize) * Constants::TileSize) {
+    // if (this->getLeftX() + this->getWidth() >= (tX / Constants::TileSize) * Constants::TileSize) {
 
         if (this->game->level.isTile(nX, nY)) return 0xFF;  
 
@@ -120,11 +99,15 @@ bool Sprite::collisionCheckX(Direction direction) {
         switch (direction) {
 
             case Left:
-                if (this->collide(this->getLeftX() - 1, this->getTopY() + (tY * Constants::TileSize)) || this->collide(this->getLeftX() - 1, this->getTopY() + ((tY + 1) * Constants::TileSize) - 1)) return true;
+                if (this->collide(x - 1, y + (tY * Constants::TileSize)) || this->collide(x - 1, y + ((tY + 1) * Constants::TileSize) - 1)) {
+                    return true;
+                }
                 break;
 
             case Right:
-                if (this->collide(this->getLeftX() + this->getWidth(), this->getTopY() + (tY * Constants::TileSize)) || this->collide(this->getLeftX() + this->getWidth(), this->getTopY() + ((tY + 1) * Constants::TileSize) - 1)) return true;
+                if (this->collide(x + this->getWidth(), y + (tY * Constants::TileSize)) || this->collide(x + this->getWidth(), y + ((tY + 1) * Constants::TileSize) - 1)) {
+                    return true;
+                }
                 break;
 
             default: break;
@@ -138,19 +121,18 @@ bool Sprite::collisionCheckX(Direction direction) {
 
 bool Sprite::collisionCheckY(Direction direction) {
 
-//    for (uint8_t tX = 0; tX < (this->getWidth() / Constants::TileSize); tX++) {
-    for (uint8_t tX = 0; tX < 1; tX++) {
+    for (uint8_t tX = 0; tX < (this->getWidth() / Constants::TileSize); tX++) {
 
         switch (direction) {
 
             case Up:
-                if (this->collide(this->getLeftX() + (tX * Constants::TileSize), this->getTopY() - 1) || this->collide(this->getLeftX() + ((tX + 1) * Constants::TileSize) - 1, this->getTopY() - 1)) {
+                if (this->collide(x + (tX * Constants::TileSize), y - 1) || this->collide(x + ((tX + 1) * Constants::TileSize) - 1, y - 1)) {
                     return true;
                 }
                 break;
 
             case Down:
-                if (this->collide(this->getLeftX() + (tX * Constants::TileSize), this->getTopY() + this->getHeight()) || this->collide(this->getLeftX() + ((tX + 1) * Constants::TileSize) - 1, this->getTopY() + this->getHeight())) {
+                if (this->collide(x + (tX * Constants::TileSize), y + this->getHeight()) || this->collide(x + ((tX + 1) * Constants::TileSize) - 1, y + this->getHeight())) {
                     return true;
                 }
                 break;
@@ -213,6 +195,7 @@ void Sprite::move() {
             if (vy > 0) { // Down
                 for (int a = 0; a < vy; a++) {
                     if (isFalling()) {
+// Serial.println("Down");
                         y++;
                     }
                     else { 
@@ -234,9 +217,11 @@ void Sprite::move() {
                     if (this->collisionCheckY(Direction::Up)) { 
                         headCollision(); 
                         vy = 0; 
+// Serial.println("Not going Up");
                         break; 
                     }
                     else {
+// Serial.println("Going Up");
                         y--;
                     }
                 }
@@ -249,9 +234,13 @@ void Sprite::move() {
                     if (this->getRightX() > this->game->level.maxXPixel()) break;
 
                     if (this->collisionCheckX(Direction::Right)) {
+                        vx = 0;
+// Serial.println("No Right");
                         break;
                     }
                     else { 
+
+// Serial.println("Right");
                         this->x++;
                         if (vy == 0 && !isFalling()) {
                             this->frame = (this->frame + 1) % 4;
@@ -270,6 +259,7 @@ void Sprite::move() {
                     if (x < this->game->level.minXPixel() + 1) break;
 
                     if (this->collisionCheckX(Direction::Left)) {
+                        vx = 0;
                         break;
                     }
                     else {
@@ -294,7 +284,7 @@ void Sprite::move() {
 bool Sprite::jump() {
 
     if (this->collisionCheckY(Direction::Down)) { 
-        this->vy = -6; 
+        this->vy = -5; 
         this->jumpBoost = 0;
         return true; 
     }
@@ -326,13 +316,13 @@ void Sprite::draw() {
        case ObjectTypes::STSquario:
 
             if (this->isFalling()) {
-                Sprites::drawExternalMask(x - this->game->camera.x, y - 1 - this->game->camera.y, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
             }
             else if (this->vx == 0 && this->vy == 0) {
-                Sprites::drawExternalMask(x - this->game->camera.x, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->camera.x, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
             break;
 

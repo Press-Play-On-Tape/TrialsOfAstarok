@@ -4,6 +4,7 @@
 
 #define _DEBUG
 #define NO_DEATH
+#define COLLISION
 
 #define _ORIG_GAME_MUSHROOM
 

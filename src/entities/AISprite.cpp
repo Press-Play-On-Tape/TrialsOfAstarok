@@ -44,13 +44,22 @@ bool AISprite::getActive() {
 
 void AISprite::think() {
 
-    if (this->getIntelligence() & 0b00000100) {
+    if (this->getIntelligence() & AI_SEEK) {
         this->seek();
-        if (this->getIntelligence() & 0b00001000) this->detectJump();
+        if (this->getIntelligence() & AI_DETECT_JUMP) this->detectJump();
     }
     else {
-        if (this->getIntelligence() & 0b00000001) this->detectWall();
-        if (this->getIntelligence() & 0b00000010) this->detectGap();
+        if (this->getIntelligence() & AI_DETECT_WALL) this->detectWall();
+        if (this->getIntelligence() & AI_DETECT_GAP) this->detectGap();
+    }
+
+    switch (this->getType()) {
+
+        case ObjectTypes::STSmileo:
+        case ObjectTypes::STStarmano:
+            this->detectFirepit();
+            break;
+        
     }
 
     this->move();
@@ -89,7 +98,9 @@ void AISprite::detectWall() {
 
     if (this->facing == Direction::Left) {
         if (this->collisionCheckX(Direction::Left)) { 
-            this->facing = Direction::Right; vx = 0; return; 
+            this->facing = Direction::Right; 
+            vx = 0; 
+            return; 
         }
         else {
             vx = this->getSpeed() * -1;
@@ -98,7 +109,9 @@ void AISprite::detectWall() {
 
     if (this->facing == Direction::Right) {
         if (this->collisionCheckX(Direction::Right)) { 
-            this->facing = Direction::Left; vx = 0; return; 
+            this->facing = Direction::Left; 
+            vx = 0; 
+            return; 
         }
         else {
             vx = this->getSpeed();
@@ -110,8 +123,10 @@ void AISprite::detectWall() {
 void AISprite::detectGap() {
 
     if (this->facing == Direction::Left) {
-        if (!this->collide(x-1, this->getBottomY() + 1)) { 
-            this->facing = Direction::Right; vx = 0; return; 
+        if (!this->collide(x - 1, this->getBottomY() + 1)) { 
+            this->facing = Direction::Right; 
+            vx = 0; 
+            return; 
         }
         else {
             vx = this->getSpeed() * -1;
@@ -119,12 +134,42 @@ void AISprite::detectGap() {
     }
 
     if (this->facing == Direction::Right) {
-        if (!this->collide(this->getRightX()+1, this->getBottomY() + 1)) { 
-            this->facing = Direction::Left; vx = 0; return; 
+        if (!this->collide(this->getRightX() + 1, this->getBottomY() + 1)) { 
+            this->facing = Direction::Left; 
+            vx = 0; 
+            return; 
         }
         else {
             vx = this->getSpeed();
         }
     }
+
+}
+
+void AISprite::detectFirepit() {
+
+    int8_t offset = this->facing == Direction::Left ? -1 : 1;
+
+    Rect thisSprite = { this->getLeftX() + (offset * 2), this->getTopY(), this->getWidth(), this->getHeight() };
+
+    for (AISprite &mobileObject : this->game->mobs) { 
+
+        if (mobileObject.getType() == ObjectTypes::STFirepit) {
+
+            Rect firepit = { mobileObject.getLeftX(), mobileObject.getTopY(), mobileObject.getWidth(), mobileObject.getHeight() };
+
+            if (this->arduboy->collide(thisSprite, firepit)) {
+                
+                this->facing = this->facing == Direction::Left ? Direction::Right : Direction::Left; 
+                this->vx = 0; 
+                return; 
+
+            }
+
+        }
+
+    }
+
+    vx = this->getSpeed() * offset;
 
 }

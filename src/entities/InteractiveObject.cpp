@@ -20,3 +20,9 @@ void InteractiveObject::deactivate() {
     this->y = -1;
 
 }
+
+ObjectTypes InteractiveObject::getType() {
+
+    return this->type;
+
+}

@@ -97,18 +97,18 @@ void SquarioGame::drawMap_Background() {
 
     if (this->mapNumber % 2 == MapLevel::AboveGround) {
 
-        Sprites::drawOverwrite(0 - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
-        Sprites::drawOverwrite(64 - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
-        Sprites::drawOverwrite(128 - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
+        for (uint8_t i = 0; i <= 128; i += 64) {
+            Sprites::drawOverwrite(i - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
+        }
 
     }
     else {
 
-        for (uint8_t a = 0; a <= 128; a += 64) {
+        for (uint8_t i = 0; i <= 128; i += 64) {
 
-            Sprites::drawOverwrite(a + 2 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
-            Sprites::drawOverwrite(a + 22 - backgroundXOffset, backgroundYOffset + 6, Images::Underground_Brick, 0);
-            Sprites::drawOverwrite(a + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
+            Sprites::drawOverwrite(i + 2 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
+            Sprites::drawOverwrite(i + 22 - backgroundXOffset, backgroundYOffset + 6, Images::Underground_Brick, 0);
+            Sprites::drawOverwrite(i + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
 
         }
 
@@ -204,20 +204,11 @@ void SquarioGame::drawPlayer() {
     }
 
     if (this->event == EventType::StartLevel) { 
-
-        if ( this->mapNumber % 2 == 0) {
-        
-            Sprites::drawExternalMask(this->player.x - this->camera.x, this->player.y - this->camera.y - 4, 
-                                    pgm_read_word_near(&Images::Puffs[(28 - this->eventCounter) / 4]), 
-                                    pgm_read_word_near(&Images::Puff_Masks[(28 - this->eventCounter) / 4]), 
-                                    0,0);
-        }
-        else {
-
-            Sprites::drawErase(this->player.x - this->camera.x, this->player.y - this->camera.y - 4, 
-                                    pgm_read_word_near(&Images::Puffs[(28 - this->eventCounter) / 4]), 
-                                    0);
-        }
+    
+        Sprites::drawExternalMask(this->player.x - this->camera.x - 2, this->player.y - this->camera.y - 4, 
+                                  pgm_read_word_near(&Images::Puffs[(28 - this->eventCounter) / 4]), 
+                                  pgm_read_word_near(&Images::Puff_Masks[(28 - this->eventCounter) / 4]), 
+                                  this->mapNumber % 2 == 0 ? 0 : 1, 0);
 
     }
 
@@ -249,14 +240,8 @@ void SquarioGame::draw() {
 
     }
 
-if (arduboy->pressed(A_BUTTON)){
-
-//    if (this->player.facing == Direction::Left) {
-        arduboy->drawRect(this->player.x - this->camera.x + 2, this->player.y - this->camera.y, this->player.getWidth() - 2, this->player.getHeight(), BLACK);
-    // }
-    // else {
-    //     arduboy->drawRect(this->player.x - this->camera.x, this->player.y - this->camera.y, this->player.getWidth(), this->player.getHeight(), BLACK);
-    // }
-}
+// if (arduboy->pressed(A_BUTTON)){
+//   arduboy->drawRect(this->player.x - this->camera.x + 2, this->player.y - this->camera.y, this->player.getWidth() - 2, this->player.getHeight(), BLACK);
+// }
 
 }

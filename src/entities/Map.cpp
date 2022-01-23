@@ -3,7 +3,7 @@
 
 void Map::generateRoom(uint8_t roomNum) {
    
-    randomSeed(this->game->Seeds[ (this->game->mapNumber + roomNum) % Constants::GameSeeds ] * this->game->mapNumber + roomNum);
+    randomSeed(this->game->seeds[(this->game->mapNumber + roomNum) % Constants::GameSeeds] * this->game->mapNumber + roomNum);
     rooms[roomNum%Constants::MapRooms].clearRoom();
     uint8_t floor = random(Constants::RoomHeight - 3, Constants::RoomHeight);
 
@@ -37,6 +37,20 @@ void Map::generateRoom(uint8_t roomNum) {
                         rooms[roomNum % Constants::MapRooms].clearTile(x, floor);
                         this->game->addMob(Data::Fireball, Images::Fireball, Images::Fireball_Mask, tSpawnBarrier + x, floor);
                         this->game->addMob(Data::Firepit, Images::Firepit, Images::Firepit_Mask, tSpawnBarrier + x, floor - 1);
+
+                        // Serial.print(tSpawnBarrier + x);
+                        // Serial.print(" ");
+                        // Serial.println(floor - 1);
+
+// rooms[roomNum % Constants::MapRooms].setTile(x-3, floor - 1);
+// rooms[roomNum % Constants::MapRooms].setTile(x-3, floor);
+
+//this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x-2, floor - 2);
+//Problem this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x - 2, floor - 2);
+//Problem this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x - 2, floor - 2);
+// this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x - 2, 2);
+
+// rooms[roomNum % Constants::MapRooms].setTile(x+2, floor - 1);
                     }
 
                     firePit--;
@@ -45,7 +59,7 @@ void Map::generateRoom(uint8_t roomNum) {
                 else if (random(10) == 0) { 
                     gap = random(2,5);
                 }
-                else if (random(5) == 5) {
+                else if (random(5) == 0) {
                     if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
                     else floor--;
                 }
@@ -139,12 +153,12 @@ void Map::addObject(byte type, int tX, int tY) {
   }
   else {
    
-    objects[ObjectIndex].x = tX;
-    objects[ObjectIndex].y = tY;
-    objects[ObjectIndex].type = type;
-    ObjectIndex++;
+    objects[this->objectIndex].x = tX;
+    objects[this->objectIndex].y = tY;
+    objects[this->objectIndex].type = type;
+    this->objectIndex++;
 
-    if (ObjectIndex == Constants::MapObjects) ObjectIndex = 0;
+    if (this->objectIndex == Constants::MapObjects) this->objectIndex = 0;
 
   }
 
@@ -176,7 +190,7 @@ void Map::newMap() {
 
     // Reset Variables
 
-    ObjectIndex = 0; 
+    this->objectIndex = 0; 
     this->lastLoadLocation = 0; 
     this->firstRoom = 0; 
     SpawnBarrier = 0;
@@ -186,7 +200,7 @@ void Map::newMap() {
 
     // Seed for level length
 
-    randomSeed(this->game->Seeds[ this->game->mapNumber % Constants::GameSeeds ] * this->game->mapNumber);
+    randomSeed(this->game->seeds[ this->game->mapNumber % Constants::GameSeeds ] * this->game->mapNumber);
     int lowEnd = Constants::MinLevelWidth + random(this->game->mapNumber);
     int highEnd = random(lowEnd, lowEnd + this->game->mapNumber);
     this->lastRoom = random(lowEnd, highEnd);

@@ -49,7 +49,7 @@ void SquarioGame::startLevel() {
     adjustCamera();
 
     this->event = EventType::StartLevel;
-    this->eventCounter = 28;
+    this->eventCounter = Constants::EventCounter_Death;
 
 }
 
@@ -97,7 +97,29 @@ void SquarioGame::processButtons() {
     }
 
     if (arduboy->pressed(B_BUTTON)) {
-        if (this->player.jump()) SFX = Sounds::SFX_Jump;
+
+        if (!this->player.isFalling()) {
+            if (this->player.jump()) SFX = Sounds::SFX_Jump;
+        }
+        else {
+
+            if (this->player.jumpBoost < 4) {
+
+                this->player.jumpBoost++;
+
+                if (this->player.jumpBoost % 2 == 0) this->player.vy-=2;
+
+            }
+            else if (this->player.jumpBoost < 10) {
+
+                this->player.jumpBoost++;
+
+                if (this->player.jumpBoost % 2 == 0) this->player.vy--;
+
+            }
+
+        }
+
     }
 
     // if (arduboy->pressed(A_BUTTON)) {
@@ -112,15 +134,15 @@ void SquarioGame::adjustCamera() {
     int16_t maxY = this->level.maxYPixel() - HEIGHT;
     int16_t minX = this->level.minXPixel();
 
-    this->cameraX = this->player.x - (WIDTH /2); // Center X on player
-    this->cameraY = this->player.y - 9;
+    this->camera.x = this->player.x - (WIDTH /2); // Center X on player
+    this->camera.y = this->player.y - 9;
 
 
     // Constrain for map edges ..
 
-    if (this->cameraY > maxY) this->cameraY = maxY;
-    if (this->cameraX > maxX) this->cameraX = maxX;
-    if (this->cameraX < minX) this->cameraX = minX;
+    if (this->camera.y > maxY) this->camera.y = maxY;
+    if (this->camera.x > maxX) this->camera.x = maxX;
+    if (this->camera.x < minX) this->camera.x = minX;
 
 
     // Reload map data ..
@@ -131,17 +153,33 @@ void SquarioGame::adjustCamera() {
 
 void SquarioGame::cycle(GameState &gameState) {
 
-    int MapPixelHeight = this->level.maxYPixel();
-    processButtons();
+    int mapPixelHeight = this->level.maxYPixel();
+    this->processButtons();
 
     switch (this->event) {
 
         case EventType::Death_Init:
         case EventType::Death:
-            if (this->eventCounter > 25) this->player.y--;
-            else this->player.y+=2;
-            if (this->player.y > MapPixelHeight) this->eventCounter = 0;
-            else this->eventCounter--;
+
+            switch (this->eventCounter) {
+
+                case Constants::EventCounter_Death - 2 ... Constants::EventCounter_Death:  // bump up before going down
+                    this->player.y--;
+                    break;
+
+                case 1 ... Constants::EventCounter_Death - 3:
+                    this->player.y+=2;
+                    break;
+
+            }
+
+            if (this->player.y > mapPixelHeight) {
+                this->eventCounter = 0;
+            }
+            else {
+                this->eventCounter--;
+            }
+
             break;
 
         case EventType::Playing:
@@ -169,7 +207,7 @@ void SquarioGame::cycle(GameState &gameState) {
 
         if (obj.x >= 0) {
 
-            switch (obj.type) {
+            switch (obj.getType()) {
 
                 case ObjectTypes::STAboveGroundExit:
                 case ObjectTypes::STUnderGroundExit:
@@ -189,17 +227,19 @@ void SquarioGame::cycle(GameState &gameState) {
     }
 
 
+    // Have we touched another object?
+
     for (AISprite &obj : this->mobs) {
 
         if (obj.getActive()) {
 
-            if (obj.y > MapPixelHeight) {
+            if (obj.y > mapPixelHeight) {
                 obj.deactivate();
             }
 
             obj.think();
 
-            if (obj.y > MapPixelHeight) {
+            if (obj.y > mapPixelHeight) {
                 obj.deactivate();
             }
             else if (testCollision(&player, &obj)) {
@@ -214,26 +254,60 @@ void SquarioGame::cycle(GameState &gameState) {
                         SFX = Sounds::SFX_Mushroom;
                         break;
 
+                    default: break;
+
                 }
 
-                if (this->player.isFalling()) {
+                if (this->player.isFalling()) { // And therefore landing on top of an object
 
-                    obj.deactivate();
-                    this->score += Constants::Points_Skill;
-                    SFX = Sounds::SFX_Hit;
-                    //SJH if (arduboy->pressed(A_BUTTON)) { this->player.vy = -10;}
-                    //SJH else { this->player.vy = -4; } 
-                    this->player.vy = -4; //SJH         
+                    switch (type) {
+
+                        case ObjectTypes::STFireball:
+                        case ObjectTypes::STFirepit:
+
+                            #ifndef NO_DEATH
+                            if (this->eventCounter == 0) {
+                                this->lives--; 
+                                this->event = EventType::Death_Init; 
+                                this->eventCounter = Constants::EventCounter_Death;   
+                            }
+                            #endif
+
+                            break;
+
+                        default:
+                            
+                            obj.deactivate();
+                            this->score += Constants::Points_Skill;
+                            SFX = Sounds::SFX_Hit;
+
+
+                            // Get a bounce if we are pressing 'A' ..
+
+                            if (arduboy->pressed(A_BUTTON)) { 
+                                this->player.vy = -10;
+                            }
+                            else { 
+                                this->player.vy = -4; 
+                            } 
+
+                            break;
+
+
+                    }
+
 
                 }
                 else if (this->eventCounter == 0) {
 
                     if (this->player.getHeight() == Constants::TileSize) { 
-                    //SJH this->lives--; 
-                    //SJH this->event = EventType::Death_Init; 
+                        #ifndef NO_DEATH
+                        this->lives--; 
+                        this->event = EventType::Death_Init; 
+                        #endif
                     }
 
-                    this->eventCounter = 30;
+                    this->eventCounter = Constants::EventCounter_Death;
 
                 }
             }
@@ -244,10 +318,10 @@ void SquarioGame::cycle(GameState &gameState) {
 
         case EventType::Playing:
 
-            if (this->player.y > MapPixelHeight) { 
+            if (this->player.y > mapPixelHeight) { 
                 this->lives--; 
                 this->event = EventType::Death_Init; 
-                this->eventCounter = 25; 
+                this->eventCounter = Constants::EventCounter_Death - 3; 
             }
 
             if (this->eventCounter > 0) this->eventCounter--;
@@ -279,8 +353,8 @@ void SquarioGame::cycle(GameState &gameState) {
 
 bool SquarioGame::testCollision(Sprite * player, AISprite * sprite) {
 
-    Rect rect1 = { player->x + 2, player->y, player->getWidth() - 2, player->getHeight()};
-    Rect rect2 = { sprite->x, sprite->y, sprite->getWidth(), sprite->getHeight()};
+    Rect rect1 = { player->getLeftX(), player->getTopY(), player->getWidth(), player->getHeight()};
+    Rect rect2 = { sprite->getLeftX(), sprite->getTopY(), sprite->getWidth(), sprite->getHeight()};
 
     return arduboy->collide(rect1, rect2);
 
@@ -304,6 +378,7 @@ void SquarioGame::die(GameState &gameState) {
         }
 
         // Move to High Score mode .. 
+
         if (arduboy->justPressed(A_BUTTON)) {
             gameState = GameState::HighScore_Check;
             this->event = EventType::Off;
@@ -319,7 +394,8 @@ void SquarioGame::addMob(const uint8_t *data, const uint8_t * img, const uint8_t
 
     for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
 
-        if (!this->mobs[a].getActive()) { this->mobs[a].activate(data, img, mask, x, y); 
+        if (!this->mobs[a].getActive()) {
+            this->mobs[a].activate(data, img, mask, x, y); 
             return; 
         }
 

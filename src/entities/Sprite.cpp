@@ -5,7 +5,10 @@ uint8_t Sprite::getFlags()      { return pgm_read_byte(this->spriteData + Sprite
 uint8_t Sprite::getType()       { return pgm_read_byte(this->spriteData + SpriteType); }
 
 int16_t Sprite::getRightX()     { return this->x + this->getWidth() - 1; }
+int16_t Sprite::getTopY()       { return this->y; }
 int16_t Sprite::getBottomY()    { return this->y + this->getHeight() - 1; }
+int16_t Sprite::getLeftX()      { return this->x; }
+
 
 uint8_t Sprite::getWidth() { 
 
@@ -40,7 +43,6 @@ void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mas
     this->yInit = tY;
     this->vx = 0; 
     this->vy = 0;
-    this->currentFrame = 0;
     this->facing = Direction::Right;
 
 }
@@ -52,8 +54,6 @@ void Sprite::clear() {
     this->y = -1;
     this->vx = 0;
     this->vy = 0;
-    this->currentFrame = 0;
-    this->relatedSprite = nullptr;
 
 }
 
@@ -62,7 +62,11 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     int16_t nX = tX / Constants::TileSize;
     int16_t nY = tY / Constants::TileSize;
 
-    if (this->game->level.isTile(nX, nY)) return 0xFF;
+    // if (this->getLeftX() + this->getWidth() >= (tX / Constants::TileSize) * Constants::TileSize) {
+
+        if (this->game->level.isTile(nX, nY)) return 0xFF;  
+
+    //}
 
     uint8_t object = this->game->level.checkObject(nX, nY);
 
@@ -95,11 +99,15 @@ bool Sprite::collisionCheckX(Direction direction) {
         switch (direction) {
 
             case Left:
-                if (this->collide(x - 1, y + (tY * Constants::TileSize)) || this->collide(x - 1, y + ((tY + 1) * Constants::TileSize) - 1)) return true;
+                if (this->collide(x - 1, y + (tY * Constants::TileSize)) || this->collide(x - 1, y + ((tY + 1) * Constants::TileSize) - 1)) {
+                    return true;
+                }
                 break;
 
             case Right:
-                if (this->collide(x + this->getWidth(), y+(tY * Constants::TileSize)) || this->collide(x + this->getWidth(), y + ((tY + 1) * Constants::TileSize) - 1)) return true;
+                if (this->collide(x + this->getWidth(), y + (tY * Constants::TileSize)) || this->collide(x + this->getWidth(), y + ((tY + 1) * Constants::TileSize) - 1)) {
+                    return true;
+                }
                 break;
 
             default: break;
@@ -183,9 +191,11 @@ void Sprite::move() {
             if (vy == 0) { // Start fall
                 if (isFalling()) applyGravity();
             }
+
             if (vy > 0) { // Down
                 for (int a = 0; a < vy; a++) {
                     if (isFalling()) {
+// Serial.println("Down");
                         y++;
                     }
                     else { 
@@ -204,8 +214,14 @@ void Sprite::move() {
             if (vy < 0) { // Up
                 applyGravity();
                 for (int a = 0; a > vy; a--) {
-                    if (this->collisionCheckY(Direction::Up)) { headCollision(); vy = 0; break; }
+                    if (this->collisionCheckY(Direction::Up)) { 
+                        headCollision(); 
+                        vy = 0; 
+// Serial.println("Not going Up");
+                        break; 
+                    }
                     else {
+// Serial.println("Going Up");
                         y--;
                     }
                 }
@@ -218,9 +234,13 @@ void Sprite::move() {
                     if (this->getRightX() > this->game->level.maxXPixel()) break;
 
                     if (this->collisionCheckX(Direction::Right)) {
+                        vx = 0;
+// Serial.println("No Right");
                         break;
                     }
                     else { 
+
+// Serial.println("Right");
                         this->x++;
                         if (vy == 0 && !isFalling()) {
                             this->frame = (this->frame + 1) % 4;
@@ -239,6 +259,7 @@ void Sprite::move() {
                     if (x < this->game->level.minXPixel() + 1) break;
 
                     if (this->collisionCheckX(Direction::Left)) {
+                        vx = 0;
                         break;
                     }
                     else {
@@ -262,13 +283,15 @@ void Sprite::move() {
 
 bool Sprite::jump() {
 
-  if (this->collisionCheckY(Direction::Down)) { 
+    if (this->collisionCheckY(Direction::Down)) { 
+        this->vy = -5; 
+        this->jumpBoost = 0;
+        return true; 
+    }
 
-    vy = -10; return true; }
-  return false;
+    return false;
 
 }
-
 
 void Sprite::headCollision() {
 
@@ -293,36 +316,36 @@ void Sprite::draw() {
        case ObjectTypes::STSquario:
 
             if (this->isFalling()) {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
             }
             else if (this->vx == 0 && this->vy == 0) {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
             break;
 
         case ObjectTypes::STFirepit:
-            Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, arduboy->getFrameCount(24) / 8, arduboy->getFrameCount(24) / 8);
+            Sprites::drawExternalMask(x - this->game->camera.x, y + 1 - this->game->camera.y, this->spriteImg, this->spriteMask, arduboy->getFrameCount(24) / 8, arduboy->getFrameCount(24) / 8);
             break;
 
         case ObjectTypes::STSmileo:
         case ObjectTypes::STTriangleo:
-            Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
+            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
             break;
 
         case ObjectTypes::STFireball:
-            Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
+            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
             break;
 
         default:
 
             if (this->game->mapNumber % 2 == MapLevel::AboveGround) {
-                Sprites::drawErase(x - this->game->cameraX, y -  this->game->cameraY, this->spriteImg, 0);
+                Sprites::drawErase(x - this->game->camera.x, y -  this->game->camera.y, this->spriteImg, 0);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
+                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
             }
 
             break;

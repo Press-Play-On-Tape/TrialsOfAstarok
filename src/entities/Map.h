@@ -31,7 +31,7 @@ class Map {
         SquarioGame           * game;
         Room                  rooms[Constants::MapRooms];
         InteractiveObject     objects[Constants::MapObjects];
-        int16_t               ObjectIndex;
-        int16_t               RandomChance;
-        int16_t               firstRoom, lastRoom, mapHeight, lastLoadLocation, SpawnBarrier;
+        uint16_t              objectIndex;
+        uint8_t               firstRoom, lastRoom, mapHeight, SpawnBarrier;
+        int16_t               lastLoadLocation;
 };

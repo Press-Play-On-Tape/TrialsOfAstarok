@@ -49,7 +49,7 @@ void SquarioGame::startLevel() {
     adjustCamera();
 
     this->event = EventType::StartLevel;
-    this->eventCounter = 28;
+    this->eventCounter = Constants::EventCounter_Death;
 
 }
 
@@ -132,16 +132,32 @@ void SquarioGame::adjustCamera() {
 void SquarioGame::cycle(GameState &gameState) {
 
     int MapPixelHeight = this->level.maxYPixel();
-    processButtons();
+    this->processButtons();
 
     switch (this->event) {
 
         case EventType::Death_Init:
         case EventType::Death:
-            if (this->eventCounter > 25) this->player.y--;
-            else this->player.y+=2;
-            if (this->player.y > MapPixelHeight) this->eventCounter = 0;
-            else this->eventCounter--;
+
+            switch (this->eventCounter) {
+
+                case Constants::EventCounter_Death - 2 ... Constants::EventCounter_Death:  // bump up before going down
+                    this->player.y--;
+                    break;
+
+                case 1 ... Constants::EventCounter_Death - 3:
+                    this->player.y+=2;
+                    break;
+
+            }
+
+            if (this->player.y > MapPixelHeight) {
+                this->eventCounter = 0;
+            }
+            else {
+                this->eventCounter--;
+            }
+
             break;
 
         case EventType::Playing:
@@ -214,26 +230,56 @@ void SquarioGame::cycle(GameState &gameState) {
                         SFX = Sounds::SFX_Mushroom;
                         break;
 
+                    default: break;
+
                 }
 
-                if (this->player.isFalling()) {
+                if (this->player.isFalling()) { // And therefore landing on top of an object
 
-                    obj.deactivate();
-                    this->score += Constants::Points_Skill;
-                    SFX = Sounds::SFX_Hit;
-                    //SJH if (arduboy->pressed(A_BUTTON)) { this->player.vy = -10;}
-                    //SJH else { this->player.vy = -4; } 
-                    this->player.vy = -4; //SJH         
+                    switch (type) {
+
+                        case ObjectTypes::STFireball:
+                        case ObjectTypes::STFirepit:
+
+                            if (this->eventCounter == 0) {
+                                this->lives--; 
+                                this->event = EventType::Death_Init; 
+                                this->eventCounter = Constants::EventCounter_Death;   
+                            }
+
+                            break;
+
+                        default:
+                            
+                            obj.deactivate();
+                            this->score += Constants::Points_Skill;
+                            SFX = Sounds::SFX_Hit;
+
+
+                            // Get a bounce if we are pressing 'A' ..
+
+                            if (arduboy->pressed(A_BUTTON)) { 
+                                this->player.vy = -10;
+                            }
+                            else { 
+                                this->player.vy = -4; 
+                            } 
+
+                            break;
+
+
+                    }
+
 
                 }
                 else if (this->eventCounter == 0) {
 
                     if (this->player.getHeight() == Constants::TileSize) { 
-                    //SJH this->lives--; 
-                    //SJH this->event = EventType::Death_Init; 
+                        this->lives--; 
+                        this->event = EventType::Death_Init; 
                     }
 
-                    this->eventCounter = 30;
+                    this->eventCounter = Constants::EventCounter_Death;
 
                 }
             }
@@ -247,7 +293,7 @@ void SquarioGame::cycle(GameState &gameState) {
             if (this->player.y > MapPixelHeight) { 
                 this->lives--; 
                 this->event = EventType::Death_Init; 
-                this->eventCounter = 25; 
+                this->eventCounter = Constants::EventCounter_Death - 3; 
             }
 
             if (this->eventCounter > 0) this->eventCounter--;
@@ -279,8 +325,8 @@ void SquarioGame::cycle(GameState &gameState) {
 
 bool SquarioGame::testCollision(Sprite * player, AISprite * sprite) {
 
-    Rect rect1 = { player->x + 2, player->y, player->getWidth() - 2, player->getHeight()};
-    Rect rect2 = { sprite->x, sprite->y, sprite->getWidth(), sprite->getHeight()};
+    Rect rect1 = { player->getLeftX(), player->getTopY(), player->getWidth(), player->getHeight()};
+    Rect rect2 = { sprite->getLeftX(), sprite->getTopY(), sprite->getWidth(), sprite->getHeight()};
 
     return arduboy->collide(rect1, rect2);
 

@@ -23,7 +23,9 @@ class Sprite {
 
         uint8_t getWidth();
         uint8_t getHeight();
+        int16_t getLeftX();
         int16_t getRightX();
+        int16_t getTopY();
         int16_t getBottomY();
 
         uint8_t getFlags();

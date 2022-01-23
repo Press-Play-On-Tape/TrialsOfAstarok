@@ -5,12 +5,25 @@ uint8_t Sprite::getFlags()      { return pgm_read_byte(this->spriteData + Sprite
 uint8_t Sprite::getType()       { return pgm_read_byte(this->spriteData + SpriteType); }
 
 int16_t Sprite::getRightX()     { return this->x + this->getWidth() - 1; }
+int16_t Sprite::getTopY()       { return this->y; }
 int16_t Sprite::getBottomY()    { return this->y + this->getHeight() - 1; }
+
+
+int16_t Sprite::getLeftX() { 
+
+    if (this->getType() == ObjectTypes::STSquario) {
+        return this->x + 2; 
+    }
+    else {
+        return this->x;
+    }
+
+}
 
 uint8_t Sprite::getWidth() { 
 
     if (this->getType() == ObjectTypes::STSquario) {
-        return 12; 
+        return 10; 
     }
     else {
         return pgm_read_byte(&this->spriteImg[0]); 
@@ -62,6 +75,9 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     int16_t nX = tX / Constants::TileSize;
     int16_t nY = tY / Constants::TileSize;
 
+    if (this->x + this->getWidth() < (tX / Constants::TileSize) * Constants::TileSize) return 0;
+
+
     if (this->game->level.isTile(nX, nY)) return 0xFF;
 
     uint8_t object = this->game->level.checkObject(nX, nY);
@@ -95,11 +111,11 @@ bool Sprite::collisionCheckX(Direction direction) {
         switch (direction) {
 
             case Left:
-                if (this->collide(x - 1, y + (tY * Constants::TileSize)) || this->collide(x - 1, y + ((tY + 1) * Constants::TileSize) - 1)) return true;
+                if (this->collide(this->getLeftX() - 1, this->getTopY() + (tY * Constants::TileSize)) || this->collide(this->getLeftX() - 1, this->getTopY() + ((tY + 1) * Constants::TileSize) - 1)) return true;
                 break;
 
             case Right:
-                if (this->collide(x + this->getWidth(), y+(tY * Constants::TileSize)) || this->collide(x + this->getWidth(), y + ((tY + 1) * Constants::TileSize) - 1)) return true;
+                if (this->collide(this->getLeftX() + this->getWidth(), this->getTopY() + (tY * Constants::TileSize)) || this->collide(this->getLeftX() + this->getWidth(), this->getTopY() + ((tY + 1) * Constants::TileSize) - 1)) return true;
                 break;
 
             default: break;
@@ -113,18 +129,19 @@ bool Sprite::collisionCheckX(Direction direction) {
 
 bool Sprite::collisionCheckY(Direction direction) {
 
-    for (uint8_t tX = 0; tX < (this->getWidth() / Constants::TileSize); tX++) {
+//    for (uint8_t tX = 0; tX < (this->getWidth() / Constants::TileSize); tX++) {
+    for (uint8_t tX = 0; tX < 1; tX++) {
 
         switch (direction) {
 
             case Up:
-                if (this->collide(x + (tX * Constants::TileSize), y - 1) || this->collide(x + ((tX + 1) * Constants::TileSize) - 1, y - 1)) {
+                if (this->collide(this->getLeftX() + (tX * Constants::TileSize), this->getTopY() - 1) || this->collide(this->getLeftX() + ((tX + 1) * Constants::TileSize) - 1, this->getTopY() - 1)) {
                     return true;
                 }
                 break;
 
             case Down:
-                if (this->collide(x + (tX * Constants::TileSize), y + this->getHeight()) || this->collide(x + ((tX + 1) * Constants::TileSize) - 1, y + this->getHeight())) {
+                if (this->collide(this->getLeftX() + (tX * Constants::TileSize), this->getTopY() + this->getHeight()) || this->collide(this->getLeftX() + ((tX + 1) * Constants::TileSize) - 1, this->getTopY() + this->getHeight())) {
                     return true;
                 }
                 break;
@@ -183,6 +200,7 @@ void Sprite::move() {
             if (vy == 0) { // Start fall
                 if (isFalling()) applyGravity();
             }
+
             if (vy > 0) { // Down
                 for (int a = 0; a < vy; a++) {
                     if (isFalling()) {
@@ -204,7 +222,11 @@ void Sprite::move() {
             if (vy < 0) { // Up
                 applyGravity();
                 for (int a = 0; a > vy; a--) {
-                    if (this->collisionCheckY(Direction::Up)) { headCollision(); vy = 0; break; }
+                    if (this->collisionCheckY(Direction::Up)) { 
+                        headCollision(); 
+                        vy = 0; 
+                        break; 
+                    }
                     else {
                         y--;
                     }

@@ -15,3 +15,5 @@
 - Remove the current Game Over screen and just use the new Trial Over gfx we now have
 - Add basic sfx
 - Reuse the explosion gfx when we defeat an ennemy
+- Would be great if we could make it less weird for the buttons to use to when going from screen to screen, start screen to Game, game over to high screen, etc... (right now it feels like sometime we are forced to use A and sometimes force to use B without real reasons, could be just me.
+- Maybe make a selector to select Game Start or High Score on the title screen instead of just a button to get to the high score screen

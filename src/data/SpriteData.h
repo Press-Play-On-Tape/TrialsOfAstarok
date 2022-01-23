@@ -4,7 +4,7 @@
 
 namespace Data {
 
-    PROGMEM const uint8_t SmallSquario[] {
+    PROGMEM const uint8_t Squario[] {
          ObjectTypes::STSquario, 0, 0, 0,    // Flags, Speed, AI Setting
     };
 

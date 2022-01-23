@@ -21,7 +21,6 @@ class SquarioGame {
         SquarioGame(Arduboy2Ext *arduboy);
 
     public:  // Variables
-        int16_t               health; //SJH needed?
         EventType             event;
         uint8_t               eventCounter;
         byte                  Seeds[ Constants::GameSeeds ];
@@ -49,7 +48,7 @@ class SquarioGame {
 
     private:  // Methods
         void startLevel();
-        bool testCollision(Sprite * sprite1, AISprite * sprite2);
+        bool testCollision(Sprite * player, AISprite * sprite);
         void die(GameState &gameState);
         void drawMap_Background();
         void drawMap_Foreground();

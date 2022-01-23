@@ -221,15 +221,6 @@ void SquarioGame::drawPlayer() {
 
     }
 
-    if (this->health) {
-
-        for (uint8_t a = 0; a < this->health; a++) {
-            arduboy->drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+11-(a*2)-this->cameraY, 6, WHITE);
-            arduboy->drawFastHLine(this->player.x + 1 - this->cameraX, this->player.y+10-(a*2)-this->cameraY, 6, WHITE);
-        }
-
-    }
-
 }
 
 void SquarioGame::draw() {
@@ -257,5 +248,15 @@ void SquarioGame::draw() {
         default: break;
 
     }
+
+if (arduboy->pressed(A_BUTTON)){
+
+//    if (this->player.facing == Direction::Left) {
+        arduboy->drawRect(this->player.x - this->cameraX + 2, this->player.y - this->cameraY, this->player.getWidth() - 2, this->player.getHeight(), BLACK);
+    // }
+    // else {
+    //     arduboy->drawRect(this->player.x - this->cameraX, this->player.y - this->cameraY, this->player.getWidth(), this->player.getHeight(), BLACK);
+    // }
+}
 
 }

@@ -25,13 +25,12 @@ SquarioGame::SquarioGame(Arduboy2Ext *arduboy) {
 
 void SquarioGame::newGame() {
 
-    this->health = 0;
     this->score = 0;
     this->distancePoints = 0;
     this->coins = 0;
     this->lives = 1;
     this->mapNumber = 1;
-    this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 24, spawnY());
+    this->player.init(Data::Squario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 24, spawnY());
 
     startLevel();
 
@@ -41,7 +40,7 @@ void SquarioGame::startLevel() {
 
     SFX = NULL;
     this->level.newMap();
-    this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 24, spawnY());
+    this->player.init(Data::Squario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 24, spawnY());
 
     while (this->player.isFalling()) {
         this->player.move();
@@ -213,10 +212,6 @@ void SquarioGame::cycle(GameState &gameState) {
                         obj.deactivate();
                         this->score += Constants::Points_Mushroom;
                         SFX = Sounds::SFX_Mushroom;
-                        // if (this->player.getType() == ObjectTypes::STSquario) {
-                        //     this->player.init(Data::STBigSquario, Images::SpriteImages[ObjectTypes::STBigSquario], Images::SpriteMasks[ObjectTypes::STBigSquario], this->player.x, this->player.y-8);
-                        // }
-                        //else if (this->health < 5) this->health++;
                         break;
 
                 }
@@ -231,25 +226,11 @@ void SquarioGame::cycle(GameState &gameState) {
                     this->player.vy = -4; //SJH         
 
                 }
-                else if (!this->eventCounter) {
+                else if (this->eventCounter == 0) {
 
-                    if (this->health > 0) {
-
-                        this->health--;
-
-                    }
-                    else {
-
-                        if (this->player.getHeight() == Constants::TileSize) { 
-                        //SJH this->lives--; 
-                        //SJH this->event = EventType::Death_Init; 
-                        }
-
-                        if (this->player.getHeight() > Constants::TileSize) {
-                            this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], this->player.x, this->player.y+8);
-                            SFX = Sounds::SFX_Hit;
-                        }
-
+                    if (this->player.getHeight() == Constants::TileSize) { 
+                    //SJH this->lives--; 
+                    //SJH this->event = EventType::Death_Init; 
                     }
 
                     this->eventCounter = 30;
@@ -296,10 +277,10 @@ void SquarioGame::cycle(GameState &gameState) {
 
 }
 
-bool SquarioGame::testCollision(Sprite * sprite1, AISprite * sprite2) {
+bool SquarioGame::testCollision(Sprite * player, AISprite * sprite) {
 
-    Rect rect1 = { sprite1->x, sprite1->y, sprite1->getWidth(), sprite1->getHeight()};
-    Rect rect2 = { sprite2->x, sprite2->y, sprite2->getWidth(), sprite2->getHeight()};
+    Rect rect1 = { player->x + 2, player->y, player->getWidth() - 2, player->getHeight()};
+    Rect rect2 = { sprite->x, sprite->y, sprite->getWidth(), sprite->getHeight()};
 
     return arduboy->collide(rect1, rect2);
 
@@ -309,8 +290,7 @@ void SquarioGame::die(GameState &gameState) {
 
     if (this->lives > 0) {
 
-        this->health = 0;
-        this->player.init(Data::SmallSquario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 10, spawnY());
+        this->player.init(Data::Squario, Images::SpriteImages[ObjectTypes::STSquario], Images::SpriteMasks[ObjectTypes::STSquario], 10, spawnY());
         startLevel();
 
     }

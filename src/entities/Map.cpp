@@ -217,12 +217,18 @@ bool Map::isTile(int x, int y) {
 
 }
 
-byte Map::checkObject(int x, int y) {
-  if (y < 0) return 0;
-  for (int a = 0; a < Constants::MapObjects; a++) {
-    if ((objects[a].x == x) && (objects[a].y == y)) return objects[a].type;
-  }
-  return 0;
+
+// Return first object found at coordinates x, y ..
+
+uint8_t Map::checkObject(int x, int y) {
+
+    if (y < 0) return 0;
+
+    for (InteractiveObject &obj : this->objects) {
+        if ((obj.x == x) && (obj.y == y)) return obj.type;
+    }
+
+    return 0;
 }
 
 int16_t Map::minXPixel() { return this->firstRoom * Constants::RoomWidth * Constants::TileSize; }

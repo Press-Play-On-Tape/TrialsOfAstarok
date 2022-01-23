@@ -3,7 +3,8 @@
 #include "../utils/Arduboy2Ext.h"
 #include "../utils/Constants.h"
 #include "../utils/Enums.h"
-#include "../../SquarioGame.h"
+
+class SquarioGame;
 
 class Sprite {
 

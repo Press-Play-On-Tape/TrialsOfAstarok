@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "../../SquarioGame.h"
 
 void Map::generateRoom(uint8_t roomNum) {
    

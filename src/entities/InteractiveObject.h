@@ -2,7 +2,8 @@
 
 #include "../utils/Arduboy2Ext.h"
 #include "../utils/Constants.h"
-#include "../../SquarioGame.h"
+
+class SquarioGame;
 
 class InteractiveObject {
 

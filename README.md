@@ -19,4 +19,4 @@
 - Maybe make a selector to select Game Start or High Score on the title screen instead of just a button to get to the high score screen
 - Make sure the player is facing the right way at all time. When jumping i noticed the player is stuck facing the way he was at first but doesn't face properly when facing the other way during that same jump.
 - Sometimes we change level even when not going thru the doors
-- Add a way to reset the scores. Maybe just make it so we same only the top 3 scores and display the rune combinations and the scores for each instead of initials?
+- Add a way to reset the scores. Maybe just make it so we show only the top 3 scores and display the rune combinations and the scores for each instead of initials?

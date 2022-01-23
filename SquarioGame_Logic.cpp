@@ -61,7 +61,7 @@ uint8_t SquarioGame::spawnY() {
 }
 
 void SquarioGame::processButtons() {
-
+Serial.println(this->player.vy);
     uint8_t MaxSpeed = 3; //SJHarduboy->pressed(A_BUTTON) ? 4 : 3;
 
     if (!arduboy->pressed(LEFT_BUTTON) && !arduboy->pressed(RIGHT_BUTTON)) {
@@ -97,7 +97,22 @@ void SquarioGame::processButtons() {
     }
 
     if (arduboy->pressed(B_BUTTON)) {
-        if (this->player.jump()) SFX = Sounds::SFX_Jump;
+
+        if (!this->player.isFalling()) {
+            if (this->player.jump()) SFX = Sounds::SFX_Jump;
+        }
+        else {
+
+            if (this->player.jumpBoost < 10) {
+
+                this->player.jumpBoost++;
+
+                if (this->player.jumpBoost % 2 == 0) this->player.vy--;
+
+            }
+
+        }
+
     }
 
     // if (arduboy->pressed(A_BUTTON)) {
@@ -112,15 +127,15 @@ void SquarioGame::adjustCamera() {
     int16_t maxY = this->level.maxYPixel() - HEIGHT;
     int16_t minX = this->level.minXPixel();
 
-    this->cameraX = this->player.x - (WIDTH /2); // Center X on player
-    this->cameraY = this->player.y - 9;
+    this->camera.x = this->player.x - (WIDTH /2); // Center X on player
+    this->camera.y = this->player.y - 9;
 
 
     // Constrain for map edges ..
 
-    if (this->cameraY > maxY) this->cameraY = maxY;
-    if (this->cameraX > maxX) this->cameraX = maxX;
-    if (this->cameraX < minX) this->cameraX = minX;
+    if (this->camera.y > maxY) this->camera.y = maxY;
+    if (this->camera.x > maxX) this->camera.x = maxX;
+    if (this->camera.x < minX) this->camera.x = minX;
 
 
     // Reload map data ..
@@ -241,11 +256,13 @@ void SquarioGame::cycle(GameState &gameState) {
                         case ObjectTypes::STFireball:
                         case ObjectTypes::STFirepit:
 
+                            #ifndef NO_DEATH
                             if (this->eventCounter == 0) {
                                 this->lives--; 
                                 this->event = EventType::Death_Init; 
                                 this->eventCounter = Constants::EventCounter_Death;   
                             }
+                            #endif
 
                             break;
 
@@ -275,8 +292,10 @@ void SquarioGame::cycle(GameState &gameState) {
                 else if (this->eventCounter == 0) {
 
                     if (this->player.getHeight() == Constants::TileSize) { 
+                        #ifndef NO_DEATH
                         this->lives--; 
                         this->event = EventType::Death_Init; 
+                        #endif
                     }
 
                     this->eventCounter = Constants::EventCounter_Death;

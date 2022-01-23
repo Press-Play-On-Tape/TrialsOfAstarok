@@ -12,7 +12,11 @@ int16_t Sprite::getBottomY()    { return this->y + this->getHeight() - 1; }
 int16_t Sprite::getLeftX() { 
 
     if (this->getType() == ObjectTypes::STSquario) {
-        return this->x + 2; 
+        #ifdef COLLISION
+            return this->x + 2; 
+        #else
+            return this->x;
+        #endif
     }
     else {
         return this->x;
@@ -23,7 +27,12 @@ int16_t Sprite::getLeftX() {
 uint8_t Sprite::getWidth() { 
 
     if (this->getType() == ObjectTypes::STSquario) {
-        return 10; 
+        return 10;
+        #ifdef COLLISION
+            return 10; 
+        #else
+            return 12;
+        #endif
     }
     else {
         return pgm_read_byte(&this->spriteImg[0]); 
@@ -66,7 +75,6 @@ void Sprite::clear() {
     this->vx = 0;
     this->vy = 0;
     this->currentFrame = 0;
-    this->relatedSprite = nullptr;
 
 }
 
@@ -75,10 +83,11 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     int16_t nX = tX / Constants::TileSize;
     int16_t nY = tY / Constants::TileSize;
 
-    if (this->x + this->getWidth() < (tX / Constants::TileSize) * Constants::TileSize) return 0;
+    //if (this->getLeftX() + this->getWidth() >= (tX / Constants::TileSize) * Constants::TileSize) {
 
+        if (this->game->level.isTile(nX, nY)) return 0xFF;  
 
-    if (this->game->level.isTile(nX, nY)) return 0xFF;
+    //}
 
     uint8_t object = this->game->level.checkObject(nX, nY);
 
@@ -284,13 +293,15 @@ void Sprite::move() {
 
 bool Sprite::jump() {
 
-  if (this->collisionCheckY(Direction::Down)) { 
+    if (this->collisionCheckY(Direction::Down)) { 
+        this->vy = -6; 
+        this->jumpBoost = 0;
+        return true; 
+    }
 
-    vy = -10; return true; }
-  return false;
+    return false;
 
 }
-
 
 void Sprite::headCollision() {
 
@@ -315,36 +326,36 @@ void Sprite::draw() {
        case ObjectTypes::STSquario:
 
             if (this->isFalling()) {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x, y - 1 - this->game->camera.y, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
             }
             else if (this->vx == 0 && this->vy == 0) {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - 1 - this->game->cameraY, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawExternalMask(x - this->game->camera.x, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
             break;
 
         case ObjectTypes::STFirepit:
-            Sprites::drawExternalMask(x - this->game->cameraX, y + 1 - this->game->cameraY, this->spriteImg, this->spriteMask, arduboy->getFrameCount(24) / 8, arduboy->getFrameCount(24) / 8);
+            Sprites::drawExternalMask(x - this->game->camera.x, y + 1 - this->game->camera.y, this->spriteImg, this->spriteMask, arduboy->getFrameCount(24) / 8, arduboy->getFrameCount(24) / 8);
             break;
 
         case ObjectTypes::STSmileo:
         case ObjectTypes::STTriangleo:
-            Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
+            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
             break;
 
         case ObjectTypes::STFireball:
-            Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
+            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
             break;
 
         default:
 
             if (this->game->mapNumber % 2 == MapLevel::AboveGround) {
-                Sprites::drawErase(x - this->game->cameraX, y -  this->game->cameraY, this->spriteImg, 0);
+                Sprites::drawErase(x - this->game->camera.x, y -  this->game->camera.y, this->spriteImg, 0);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, 0, 0);
+                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
             }
 
             break;

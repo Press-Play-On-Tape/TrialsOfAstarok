@@ -32,11 +32,12 @@ class Sprite {
         uint8_t getType();
         uint8_t getFrame();
 
-        int16_t               x, y, vx, vy, xInit, yInit;
+        int16_t               x, y, xInit, yInit;
+        int8_t                vx, vy;
+        uint8_t               jumpBoost;
         int16_t               currentFrame;
         Direction             facing;
         SquarioGame           * game;
-        Sprite                * relatedSprite;
         Arduboy2Ext           * arduboy;
 
     private:

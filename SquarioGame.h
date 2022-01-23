@@ -23,18 +23,18 @@ class SquarioGame {
     public:  // Variables
         EventType             event;
         uint8_t               eventCounter;
-        byte                  Seeds[ Constants::GameSeeds ];
+        byte                  seeds[Constants::GameSeeds];
         uint16_t              coins;
         uint8_t               lives;
         uint16_t              totalScore;
         uint16_t              score;
         uint16_t              distancePoints;
         uint16_t              mapNumber;
-        int16_t               cameraX, cameraY;
+        Point                 camera;
         const uint8_t *       SFX;
 
         Sprite                player;
-        AISprite              mobs[ Constants::SpriteCap ];
+        AISprite              mobs[Constants::SpriteCap];
         Map                   level;
         Arduboy2Ext           * arduboy;
 

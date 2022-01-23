@@ -3,7 +3,7 @@
 
 void Map::generateRoom(uint8_t roomNum) {
    
-    randomSeed(this->game->Seeds[ (this->game->mapNumber + roomNum) % Constants::GameSeeds ] * this->game->mapNumber + roomNum);
+    randomSeed(this->game->seeds[(this->game->mapNumber + roomNum) % Constants::GameSeeds] * this->game->mapNumber + roomNum);
     rooms[roomNum%Constants::MapRooms].clearRoom();
     uint8_t floor = random(Constants::RoomHeight - 3, Constants::RoomHeight);
 
@@ -45,7 +45,7 @@ void Map::generateRoom(uint8_t roomNum) {
                 else if (random(10) == 0) { 
                     gap = random(2,5);
                 }
-                else if (random(5) == 5) {
+                else if (random(5) == 0) {
                     if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
                     else floor--;
                 }
@@ -186,7 +186,7 @@ void Map::newMap() {
 
     // Seed for level length
 
-    randomSeed(this->game->Seeds[ this->game->mapNumber % Constants::GameSeeds ] * this->game->mapNumber);
+    randomSeed(this->game->seeds[ this->game->mapNumber % Constants::GameSeeds ] * this->game->mapNumber);
     int lowEnd = Constants::MinLevelWidth + random(this->game->mapNumber);
     int highEnd = random(lowEnd, lowEnd + this->game->mapNumber);
     this->lastRoom = random(lowEnd, highEnd);

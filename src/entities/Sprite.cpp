@@ -309,12 +309,7 @@ void Sprite::draw() {
 
         case ObjectTypes::STSmileo:
         case ObjectTypes::STTriangleo:
-            if (this->game->mapNumber % 2 == MapLevel::AboveGround) {
-                Sprites::drawErase(x - this->game->cameraX, y -  this->game->cameraY, this->spriteImg, this->facing == Direction::Right);
-            }
-            else {
-                Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
-            }
+            Sprites::drawExternalMask(x - this->game->cameraX, y - this->game->cameraY, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
             break;
 
         case ObjectTypes::STFireball:

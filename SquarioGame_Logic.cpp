@@ -166,18 +166,16 @@ void SquarioGame::cycle(GameState &gameState) {
 
     // Have we touched an end of level thingy?
 
-    for (uint8_t a = 0; a < Constants::MapObjects; a++) {
+    for (InteractiveObject &obj : this->level.objects) {
 
-        if (this->level.objects[a].x >= 0) {
+        if (obj.x >= 0) {
 
-            uint8_t type = this->level.objects[a].type;
-
-            switch (type) {
+            switch (obj.type) {
 
                 case ObjectTypes::STAboveGroundExit:
                 case ObjectTypes::STUnderGroundExit:
 
-                    if (this->level.objects[a].collide(player.x + player.getWidth(), player.y)) {
+                    if (obj.collide(player.x + player.getWidth(), player.y)) {
                         this->SFX = Sounds::SFX_Pipe;
                         this->event = EventType::LevelExit;
                         this->eventCounter = 0;
@@ -192,27 +190,27 @@ void SquarioGame::cycle(GameState &gameState) {
     }
 
 
-    for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
+    for (AISprite &obj : this->mobs) {
 
-        if (this->mobs[a].getActive()) {
+        if (obj.getActive()) {
 
-            if (this->mobs[a].y > MapPixelHeight) {
-                this->mobs[a].deactivate();
+            if (obj.y > MapPixelHeight) {
+                obj.deactivate();
             }
 
-            this->mobs[a].think();
+            obj.think();
 
-            if (this->mobs[a].y > MapPixelHeight) {
-                this->mobs[a].deactivate();
+            if (obj.y > MapPixelHeight) {
+                obj.deactivate();
             }
-            else if (testCollision(&player, &this->mobs[a])) {
+            else if (testCollision(&player, &obj)) {
                     
-                uint8_t type = this->mobs[a].getType();
+                uint8_t type = obj.getType();
 
                 switch (type) {
 
                     case ObjectTypes::STMushroom:
-                        this->mobs[a].deactivate();
+                        obj.deactivate();
                         this->score += Constants::Points_Mushroom;
                         SFX = Sounds::SFX_Mushroom;
                         // if (this->player.getType() == ObjectTypes::STSquario) {
@@ -225,7 +223,7 @@ void SquarioGame::cycle(GameState &gameState) {
 
                 if (this->player.isFalling()) {
 
-                    this->mobs[a].deactivate();
+                    obj.deactivate();
                     this->score += Constants::Points_Skill;
                     SFX = Sounds::SFX_Hit;
                     //SJH if (arduboy->pressed(A_BUTTON)) { this->player.vy = -10;}

@@ -2,6 +2,18 @@
 
 #include "Constants.h"
 
+struct TitleScreenVars {
+
+    TitleScreenMode index = TitleScreenMode::Play;
+
+    void reset() {
+
+        index = TitleScreenMode::Play;
+
+    }
+
+};
+
 struct HighScoreVars {
 
     char initials[3];

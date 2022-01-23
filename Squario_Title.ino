@@ -3,9 +3,13 @@
 void TitleScreen() {
 
 
-    Sprites::drawOverwrite(16, 4, Images::Title_Top, 0);
-    Sprites::drawOverwrite(27, 33, Images::Title_Bottom, 0);
-    Sprites::drawSelfMasked(35, 17, Images::Text_Trials, 0);
+    Sprites::drawOverwrite(24, 4, Images::Title, 0);
+    Sprites::drawOverwrite(15, 0, Images::Underground_Chain, 0);
+    Sprites::drawOverwrite(110, 0, Images::Underground_Chain, 0);
+    Sprites::drawOverwrite(0, 27, Images::Underground_Brick, 0);
+    Sprites::drawOverwrite(109, 27, Images::Underground_Brick, 0);
+   
+    Sprites::drawOverwrite(titleScreenVars.index == TitleScreenMode::Play ? 35 : 65, 59, Images::Title_Highlight, 0);
 
     if (soundOn) {
         Sprites::drawExternalMask(119, 56, Images::Sound_On, Images::Sound_Mask, 0, 0);
@@ -15,16 +19,36 @@ void TitleScreen() {
     }
 
     if (arduboy.justPressed(A_BUTTON)) {
-        gameState = GameState::Seed_Init;
+
+        switch (titleScreenVars.index) {
+
+            case TitleScreenMode::Play:
+                gameState = GameState::Seed_Init;
+                break;
+
+            case TitleScreenMode::HighScore:
+                gameState = GameState::HighScore_DisplayAll;
+                break;
+
+        }
+
     }
 
-    if (arduboy.justPressed(LEFT_BUTTON) || arduboy.justPressed(RIGHT_BUTTON)) {
+    if (arduboy.justPressed(UP_BUTTON) || arduboy.justPressed(DOWN_BUTTON)) {
         soundOn = !soundOn;
         EEPROM.update(Constants::EEPROM_Sounds, soundOn);
     }
 
-    if (arduboy.justPressed(B_BUTTON)) {
-        gameState = GameState::HighScore_DisplayAll;
+    if (arduboy.justPressed(LEFT_BUTTON)) {
+
+        titleScreenVars.index = TitleScreenMode::Play;
+        
+    }
+
+    if (arduboy.justPressed(RIGHT_BUTTON)) {
+
+        titleScreenVars.index = TitleScreenMode::HighScore;
+        
     }
 
 }

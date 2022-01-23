@@ -4,38 +4,7 @@
 
 void SquarioGame::drawScorePanel(Font4x6 &font4x6) {
 
-    arduboy->drawRect(22, 19, 83, 39, BLACK);
-    arduboy->fillRect(23, 20, 81, 37, WHITE);
-    Sprites::drawExternalMask(15, 8, Images::Scores, Images::Scores_Mask, 0, 0);
-
-    font4x6.setTextColor(BLACK);
-    font4x6.setCursor(28, 31); font4x6.print(F("Score"));
-    font4x6.setCursor(28, 39); font4x6.print(F("Dist"));
-    font4x6.setCursor(28, 47); font4x6.print(F("Total"));
-
-    uint8_t digits[6] = {};
-    extractDigits(digits, this->score);
-
-    font4x6.setCursor(70, 31);
-    for (uint8_t i = 0; i < 6; i++) {
-        font4x6.print(static_cast<char>(digits[5 - i] + 48));
-    }
-
-    extractDigits(digits, this->distancePoints);
-
-    font4x6.setCursor(70, 39);
-    for (uint8_t i = 0; i < 6; i++) {
-        font4x6.print(static_cast<char>(digits[5 - i] + 48));
-    }
-
-    extractDigits(digits, this->totalScore);
-
-    font4x6.setCursor(70, 47);
-    for (uint8_t i = 0; i < 6; i++) {
-        font4x6.print(static_cast<char>(digits[5 - i] + 48));
-    }
-
-    font4x6.setTextColor(WHITE);
+    Sprites::drawExternalMask(15, 15, Images::GameOver, Images::GameOver_Mask, 0, 0);
 
 }
 
@@ -57,7 +26,7 @@ void SquarioGame::drawMobs() {
 
 void SquarioGame::drawHUD() {
 
-    uint16_t tmpScore = this->score + this->distancePoints + this->player.x / Constants::TileSize; 
+    uint16_t tmpScore = this->score + this->player.x / Constants::TileSize; 
     uint8_t digits[6] = {};
     extractDigits(digits, tmpScore);
 
@@ -106,7 +75,7 @@ void SquarioGame::drawMap_Background() {
 
         for (uint8_t i = 0; i <= 128; i += 64) {
 
-            Sprites::drawOverwrite(i + 2 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
+            Sprites::drawOverwrite(i + 7 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
             Sprites::drawOverwrite(i + 22 - backgroundXOffset, backgroundYOffset + 6, Images::Underground_Brick, 0);
             Sprites::drawOverwrite(i + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
 

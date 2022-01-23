@@ -39,7 +39,9 @@ namespace Constants {
 
     constexpr uint8_t Fireball_NotMoving = 127;
     constexpr int8_t Fireball_StartPos = -16;
+
     constexpr uint8_t EventCounter_Death = 50;
+    constexpr uint8_t EventCounter_LevelStart = 28;
 
     
 

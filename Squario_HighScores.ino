@@ -86,7 +86,7 @@ void highScores() {
 
     // Render screen ..
 
-    Sprites::drawOverwrite(16, 4, Images::Title_Top, 0);
+    // Sprites::drawOverwrite(16, 4, Images::Title_Top, 0);
     Sprites::drawSelfMasked(35, 17, Images::Text_HighScores, 0);
 
     for (int i = 0; i < Constants::NumberOfScores; i++) {

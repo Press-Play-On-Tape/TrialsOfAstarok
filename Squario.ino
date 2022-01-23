@@ -22,6 +22,7 @@ const unsigned int *SFXNoteSet;
 int SFX_Counter = -1;
 unsigned long duration = 0, lastNote = 0;
 
+TitleScreenVars titleScreenVars;
 HighScoreVars highScoreVars;
 SeedVars seedVars;
 

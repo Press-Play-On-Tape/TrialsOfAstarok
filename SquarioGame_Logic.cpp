@@ -375,6 +375,7 @@ void SquarioGame::die(GameState &gameState) {
             this->distancePoints += this->player.x / Constants::TileSize;
             this->totalScore += this->distancePoints;
             this->event = EventType::Death;
+            Serial.println(this->totalScore);
         }
 
         // Move to High Score mode .. 

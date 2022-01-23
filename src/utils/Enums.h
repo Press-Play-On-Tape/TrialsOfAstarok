@@ -1,31 +1,36 @@
 #pragma once
 
 enum GameState {
-  Title,
-  Seed_Init,
-  Seed,
-  Game_Init,
-  Game_Play,
-  HighScore_Check,
-  HighScore_Enter,
-  HighScore_DisplayAll,
+	Title,
+	Seed_Init,
+	Seed,
+	Game_Init,
+	Game_Play,
+	HighScore_Check,
+	HighScore_Enter,
+	HighScore_DisplayAll,
+};
+
+enum TitleScreenMode {
+	Play,
+	HighScore
 };
 
 enum MapLevel {
-  BelowGround,
-  AboveGround,
+	BelowGround,
+	AboveGround,
 };
 
 enum Hearts {
-  FilledIn,
-  Outline,
+	FilledIn,
+	Outline,
 };
 
 enum SpriteDataLayout {
-  SpriteType,
-  SpriteFlags,
-  SpriteSpeed,
-  SpriteIntelligence,
+	SpriteType,
+	SpriteFlags,
+	SpriteSpeed,
+	SpriteIntelligence,
 };
 
 enum Direction { Up, Down, Left, Right };

@@ -14,7 +14,6 @@ class AISprite : public Sprite {
         void detectJump();
         void detectWall();
         void detectGap();
-        void detectFirepit();
         uint8_t getSpeed();
         uint8_t getIntelligence();
 

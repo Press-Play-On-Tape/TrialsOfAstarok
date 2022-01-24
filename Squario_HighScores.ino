@@ -1,12 +1,12 @@
 #include "src/utils/Arduboy2Ext.h"
 #include <EEPROM.h>
 
-void initEEPROM() {
+void initEEPROM(bool forceOverwrite) {
 
     uint8_t c1 = EEPROM.read(Constants::EEPROM_Start_C1);
     uint8_t c2 = EEPROM.read(Constants::EEPROM_Start_C2);
 
-    if (c1 != 'S' || c2 != 'Q') {
+    if (c1 != 'S' || c2 != 'Q' || forceOverwrite) {
 
         EEPROM.update(Constants::EEPROM_Start_C1, 'S');
         EEPROM.update(Constants::EEPROM_Start_C2, 'Q');  
@@ -152,8 +152,26 @@ void highScores() {
 
         case GameState::HighScore_DisplayAll:
 
-            if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+            if (arduboy.pressed(A_BUTTON) && arduboy.pressed(B_BUTTON)) {
+                
+                highScoreVars.resetCounter++;
+
+                if (highScoreVars.resetCounter == 64) {
+                    initEEPROM(true);
+                    highScoreVars.resetCounter = 0;
+                }
+
+            }
+            else if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+
                 gameState = GameState::Title;
+                highScoreVars.resetCounter = 0;
+
+            }
+            else {
+
+                highScoreVars.resetCounter = 0;
+
             }
 
             break;

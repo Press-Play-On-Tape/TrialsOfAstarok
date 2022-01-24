@@ -14,7 +14,7 @@ class Map {
         void newMap();
         void loadMap();
         void generateRoom(uint8_t roomNum);
-        void addObject(uint8_t type, int x, int y);
+        void addObject(ObjectTypes type, int x, int y);
         void handleObject (int x, int y);
         uint8_t checkObject(int x, int y);
         bool isTile(int x, int y);

@@ -18,7 +18,7 @@ void TitleScreen() {
         Sprites::drawExternalMask(119, 56, Images::Sound_Off, Images::Sound_Mask, 0, 0);
     }
 
-    if (arduboy.justPressed(A_BUTTON)) {
+    if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
 
         switch (titleScreenVars.index) {
 

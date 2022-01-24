@@ -71,10 +71,7 @@ void SquarioGame::processButtons() {
 
     if (arduboy->pressed(LEFT_BUTTON))  { 
     
-        if (!this->player.isFalling()) {
-            this->player.facing = Direction::Left;
-        }
-
+        this->player.facing = Direction::Left;
         this->player.vx--; 
     
         if (this->player.vx < MaxSpeed * -1) {
@@ -85,10 +82,7 @@ void SquarioGame::processButtons() {
 
     if (arduboy->pressed(RIGHT_BUTTON)) { 
 
-        if (!this->player.isFalling()) {
-            this->player.facing = Direction::Right;
-        }
-
+        this->player.facing = Direction::Right;
         this->player.vx++; 
 
         if (this->player.vx > MaxSpeed) {
@@ -96,12 +90,17 @@ void SquarioGame::processButtons() {
         }
     }
 
-    if (arduboy->pressed(B_BUTTON)) {
+    if (arduboy->justPressed(B_BUTTON)) {
 
         if (!this->player.isFalling()) {
             if (this->player.jump()) SFX = Sounds::SFX_Jump;
         }
-        else {
+
+    }
+
+    if (arduboy->pressed(B_BUTTON)) {
+
+        if (this->player.isFalling()) {
 
             if (this->player.jumpBoost < 4) {
 
@@ -233,16 +232,39 @@ void SquarioGame::cycle(GameState &gameState) {
 
         if (obj.getActive()) {
 
-            if (obj.y > mapPixelHeight) {
-                obj.deactivate();
+            switch (obj.getType()) {
+
+                case ObjectTypes::STFireball:
+                    obj.move();
+                    break;
+
+                default:
+
+                    if (obj.y > mapPixelHeight) {
+                        obj.deactivate();
+                    }
+
+                    obj.think();
+
+                    if (obj.y > mapPixelHeight) {
+                        obj.deactivate();
+                    }
+
+                    break;
+
             }
 
-            obj.think();
+            // if (obj.y > mapPixelHeight) {
+            //     obj.deactivate();
+            // }
 
-            if (obj.y > mapPixelHeight) {
-                obj.deactivate();
-            }
-            else if (testCollision(&player, &obj)) {
+            // obj.think();
+
+            // if (obj.y > mapPixelHeight) {
+            //     obj.deactivate();
+            // }
+            // else if (testCollision(&player, &obj)) {
+            if (obj.getActive() && testCollision(&player, &obj)) {
                     
                 uint8_t type = obj.getType();
 
@@ -263,7 +285,6 @@ void SquarioGame::cycle(GameState &gameState) {
                     switch (type) {
 
                         case ObjectTypes::STFireball:
-                        case ObjectTypes::STFirepit:
 
                             #ifndef NO_DEATH
                             if (this->eventCounter == 0) {
@@ -284,18 +305,16 @@ void SquarioGame::cycle(GameState &gameState) {
 
                             // Get a bounce if we are pressing 'A' ..
 
-                            if (arduboy->pressed(A_BUTTON)) { 
-                                this->player.vy = -10;
+                            if (arduboy->pressed(B_BUTTON)) { 
+                                this->player.vy = -8;
                             }
                             else { 
-                                this->player.vy = -4; 
+                                this->player.vy = -3; 
                             } 
 
                             break;
 
-
                     }
-
 
                 }
                 else if (this->eventCounter == 0) {
@@ -375,12 +394,12 @@ void SquarioGame::die(GameState &gameState) {
             this->distancePoints += this->player.x / Constants::TileSize;
             this->totalScore += this->distancePoints;
             this->event = EventType::Death;
-            Serial.println(this->totalScore);
         }
+
 
         // Move to High Score mode .. 
 
-        if (arduboy->justPressed(A_BUTTON)) {
+        if (arduboy->justPressed(A_BUTTON) || arduboy->justPressed(B_BUTTON)) {
             gameState = GameState::HighScore_Check;
             this->event = EventType::Off;
         }
@@ -389,14 +408,20 @@ void SquarioGame::die(GameState &gameState) {
 
 }
 
-void SquarioGame::addMob(const uint8_t *data, const uint8_t * img, const uint8_t * mask, int x, int y) {
+void SquarioGame::addMob(const uint8_t *data, const uint8_t * img, const uint8_t * mask, int x, uint8_t y, uint8_t maxHeight) {
 
     int distances[Constants::SpriteCap];
 
     for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
 
         if (!this->mobs[a].getActive()) {
+
             this->mobs[a].activate(data, img, mask, x, y); 
+
+            if (maxHeight != 255) {
+                this->mobs[a].maxHeight = maxHeight * Constants::TileSize;
+            }
+
             return; 
         }
 
@@ -416,6 +441,10 @@ void SquarioGame::addMob(const uint8_t *data, const uint8_t * img, const uint8_t
     }
 
     this->mobs[candidate].activate(data, img, mask, x, y);
+
+    if (maxHeight != 255) {
+        this->mobs[candidate].maxHeight = maxHeight * Constants::TileSize;
+    }
 
     return;
 

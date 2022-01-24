@@ -30,7 +30,7 @@ void setup() {
 
     arduboy.boot();
     arduboy.setFrameRate(30);
-    initEEPROM();
+    initEEPROM(false);
 
 }
 

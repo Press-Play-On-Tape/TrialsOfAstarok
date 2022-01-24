@@ -59,7 +59,7 @@ void seed() {
             seedVars.incIndex();
         }
 
-        if (arduboy.justPressed(A_BUTTON)) {
+        if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
 
             randomSeed(seedVars.getSeedValue());
             for (uint8_t &a : game.seeds) {

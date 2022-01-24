@@ -56,7 +56,6 @@ enum ObjectTypes {
   STUnderGroundExit,
   STSign,
   STFireball,
-  STFirepit,
 };
 
 enum EventType {

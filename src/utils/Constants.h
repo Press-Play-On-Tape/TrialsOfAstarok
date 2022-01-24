@@ -3,7 +3,7 @@
 #include "Arduboy2Ext.h"
 
 #define _DEBUG
-#define _NO_DEATH
+#define NO_DEATH
 #define NEW_ROOM
 #define _ORIG_GAME_MUSHROOM
 
@@ -38,7 +38,7 @@ namespace Constants {
     constexpr uint8_t NumberOfScores     = 3;
 
     constexpr uint8_t Fireball_NotMoving = 127;
-    constexpr int8_t Fireball_StartPos = -16;
+    constexpr int8_t Fireball_StartPos = -20;
 
     constexpr uint8_t EventCounter_Death = 50;
     constexpr uint8_t EventCounter_LevelStart = 28;

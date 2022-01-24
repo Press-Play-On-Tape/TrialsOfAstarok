@@ -53,15 +53,6 @@ void AISprite::think() {
         if (this->getIntelligence() & AI_DETECT_GAP) this->detectGap();
     }
 
-    switch (this->getType()) {
-
-        case ObjectTypes::STSmileo:
-        case ObjectTypes::STStarmano:
-            this->detectFirepit();
-            break;
-        
-    }
-
     this->move();
 
 }
@@ -143,33 +134,5 @@ void AISprite::detectGap() {
             vx = this->getSpeed();
         }
     }
-
-}
-
-void AISprite::detectFirepit() {
-
-    int8_t offset = this->facing == Direction::Left ? -1 : 1;
-
-    Rect thisSprite = { this->getLeftX() + (offset * 2), this->getTopY(), this->getWidth(), this->getHeight() };
-
-    for (AISprite &mobileObject : this->game->mobs) { 
-
-        if (mobileObject.getType() == ObjectTypes::STFirepit) {
-
-            Rect firepit = { mobileObject.getLeftX(), mobileObject.getTopY(), mobileObject.getWidth(), mobileObject.getHeight() };
-
-            if (this->arduboy->collide(thisSprite, firepit)) {
-                
-                this->facing = this->facing == Direction::Left ? Direction::Right : Direction::Left; 
-                this->vx = 0; 
-                return; 
-
-            }
-
-        }
-
-    }
-
-    vx = this->getSpeed() * offset;
 
 }

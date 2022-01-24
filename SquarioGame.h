@@ -42,7 +42,7 @@ class SquarioGame {
         void newGame();
         void cycle(GameState &gameState);
         void draw();
-        void addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask,  int x, int y);
+        void addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask, int16_t x, uint8_t y, uint8_t maxHeight = 255);
         uint8_t getSpareMobCount();
         void drawScorePanel(Font4x6 &font4x6);
 

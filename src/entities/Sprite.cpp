@@ -73,7 +73,7 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     switch (object) {
 
         case ObjectTypes::STTriangleo ... ObjectTypes::STUnderGroundExit:
-        case ObjectTypes::STFireball ... ObjectTypes::STFirepit:
+        case ObjectTypes::STFireball:
             return object;
 
         case STSign:
@@ -169,11 +169,21 @@ void Sprite::move() {
             }
 
             if (this->vy != Constants::Fireball_NotMoving) {
-                this->y = this->y + (this->vy / 4);                
-                this->vy++;
+
+                if (this->y - 32 > this->maxHeight) {
+
+                    this->y = this->y + (this->vy / 4);
+
+                }
+                else {
+                
+                    this->y = this->y + (this->vy / 4);                
+                    this->vy++;
+
+                }
             }
 
-            if (this->vy == -Constants::Fireball_StartPos) {
+            if (this->y > this->yInit) {
                 this->vy = Constants::Fireball_NotMoving;
                 this->y = this->yInit;
             }
@@ -324,10 +334,6 @@ void Sprite::draw() {
             else {
                 Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
             }
-            break;
-
-        case ObjectTypes::STFirepit:
-            Sprites::drawExternalMask(x - this->game->camera.x, y + 1 - this->game->camera.y, this->spriteImg, this->spriteMask, arduboy->getFrameCount(24) / 8, arduboy->getFrameCount(24) / 8);
             break;
 
         case ObjectTypes::STSmileo:

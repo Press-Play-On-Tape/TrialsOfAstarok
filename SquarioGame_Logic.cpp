@@ -49,7 +49,7 @@ void SquarioGame::startLevel() {
     adjustCamera();
 
     this->event = EventType::StartLevel;
-    this->eventCounter = Constants::EventCounter_Death;
+    this->eventCounter = Constants::EventCounter_LevelStart;
 
 }
 
@@ -102,14 +102,14 @@ void SquarioGame::processButtons() {
 
         if (this->player.isFalling()) {
 
-            if (this->player.jumpBoost < 4) {
+            if (this->player.jumpBoost < 6) {
 
                 this->player.jumpBoost++;
 
                 if (this->player.jumpBoost % 2 == 0) this->player.vy-=2;
 
             }
-            else if (this->player.jumpBoost < 10) {
+            else if (this->player.jumpBoost < 12) {
 
                 this->player.jumpBoost++;
 

@@ -219,6 +219,16 @@ void SquarioGame::cycle(GameState &gameState) {
 
                     break;
 
+                case ObjectTypes::STCoin:
+
+                    if (obj.collide(player.x + player.getWidth(), player.y)) {
+                        obj.deactivate();
+                        this->score += Constants::Points_Coin;
+                        SFX = Sounds::SFX_Coin;
+                    }
+
+                    break;
+
             }
 
         }
@@ -268,12 +278,6 @@ void SquarioGame::cycle(GameState &gameState) {
                         SFX = Sounds::SFX_Mushroom;
                         break;
 
-                    case ObjectTypes::STCoin:
-                        obj.deactivate();
-                        this->score += Constants::Points_Coin;
-                        SFX = Sounds::SFX_Coin;
-                        break;
-
                     default: break;
 
                 }
@@ -320,6 +324,8 @@ void SquarioGame::cycle(GameState &gameState) {
                 }
                 else if (this->eventCounter == 0) {
 
+
+
                     if (this->player.getHeight() == Constants::TileSize) { 
                         #ifndef NO_DEATH
                         this->lives--; 
@@ -327,6 +333,8 @@ void SquarioGame::cycle(GameState &gameState) {
                         this->eventCounter = Constants::EventCounter_Death;
                         #endif
                     }
+
+//                    this->eventCounter = Constants::EventCounter_Death;
                 }
             }
         }

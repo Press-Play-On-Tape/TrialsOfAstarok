@@ -123,6 +123,10 @@ void SquarioGame::drawMap_Background() {
                         Sprites::drawOverwrite(x * Constants::TileSize - this->camera.x - 4, y * Constants::TileSize - this->camera.y - 4, Images::SignPost, this->mapNumber % 2);
                         break;
 
+                    case ObjectTypes::STCoin:
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, Images::Coins_Masks, arduboy->getFrameCount(16) / 4, arduboy->getFrameCount(16) / 4);
+                        break;
+
                     default: break;
                 }
 

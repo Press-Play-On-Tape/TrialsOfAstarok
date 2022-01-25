@@ -98,7 +98,7 @@ void Map::generateRoom(uint8_t roomNum) {
                                     break;
 
                                 case 19 ... 25:
-                                    this->game->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, tSpawnBarrier + x, floor - 1);
+                                    this->addObject(ObjectTypes::STCoin, tSpawnBarrier + x, floor - 1);
                                     break;
 
                                 default:

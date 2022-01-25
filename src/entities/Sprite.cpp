@@ -345,6 +345,10 @@ void Sprite::draw() {
             Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
             break;
 
+        case ObjectTypes::STCoin:
+            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, arduboy->getFrameCount(16) / 4, arduboy->getFrameCount(16) / 4);
+            break;
+
         default:
 
             if (this->game->mapNumber % 2 == MapLevel::AboveGround) {

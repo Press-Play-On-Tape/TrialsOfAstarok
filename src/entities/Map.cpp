@@ -78,14 +78,10 @@ void Map::generateRoom(uint8_t roomNum) {
                             yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
                             this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, yLocation);
 
-                            // Serial.print(tSpawnBarrier + x);
-                            // Serial.print(" ");
-                            // Serial.println("yloc");
-
                         }
                         else {
 
-                            switch (random(20)) {
+                            switch (random(28)) {
 
                                 case 0 ... 9:
                                     this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, yLocation);
@@ -99,6 +95,10 @@ void Map::generateRoom(uint8_t roomNum) {
                                     if (roomNum > 8) {
                                         this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, yLocation);
                                     }
+                                    break;
+
+                                case 19 ... 25:
+                                    this->game->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, tSpawnBarrier + x, floor - 1);
                                     break;
 
                                 default:

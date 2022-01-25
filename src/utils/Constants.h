@@ -28,6 +28,7 @@ namespace Constants {
 
     constexpr uint8_t Points_Mushroom    = 100;
     constexpr uint8_t Points_Skill       = 20;
+    constexpr uint8_t Points_Coin        = 20;
 
     constexpr uint16_t EEPROM_Start_C1   = EEPROM_STORAGE_SPACE_START + 500;
     constexpr uint16_t EEPROM_Start_C2   = EEPROM_Start_C1 + 1;

@@ -49,7 +49,7 @@ void SquarioGame::startLevel() {
     adjustCamera();
 
     this->event = EventType::StartLevel;
-    this->eventCounter = Constants::EventCounter_Death;
+    this->eventCounter = Constants::EventCounter_LevelStart;
 
 }
 
@@ -102,14 +102,14 @@ void SquarioGame::processButtons() {
 
         if (this->player.isFalling()) {
 
-            if (this->player.jumpBoost < 4) {
+            if (this->player.jumpBoost < 6) {
 
                 this->player.jumpBoost++;
 
                 if (this->player.jumpBoost % 2 == 0) this->player.vy-=2;
 
             }
-            else if (this->player.jumpBoost < 10) {
+            else if (this->player.jumpBoost < 12) {
 
                 this->player.jumpBoost++;
 
@@ -226,7 +226,6 @@ void SquarioGame::cycle(GameState &gameState) {
     }
 
 
-    // Have we touched another object?
 
     for (AISprite &obj : this->mobs) {
 
@@ -254,16 +253,9 @@ void SquarioGame::cycle(GameState &gameState) {
 
             }
 
-            // if (obj.y > mapPixelHeight) {
-            //     obj.deactivate();
-            // }
 
-            // obj.think();
+            // Have we touched another object?
 
-            // if (obj.y > mapPixelHeight) {
-            //     obj.deactivate();
-            // }
-            // else if (testCollision(&player, &obj)) {
             if (obj.getActive() && testCollision(&player, &obj)) {
                     
                 uint8_t type = obj.getType();
@@ -274,6 +266,12 @@ void SquarioGame::cycle(GameState &gameState) {
                         obj.deactivate();
                         this->score += Constants::Points_Mushroom;
                         SFX = Sounds::SFX_Mushroom;
+                        break;
+
+                    case ObjectTypes::STCoin:
+                        obj.deactivate();
+                        this->score += Constants::Points_Coin;
+                        SFX = Sounds::SFX_Coin;
                         break;
 
                     default: break;
@@ -294,6 +292,9 @@ void SquarioGame::cycle(GameState &gameState) {
                             }
                             #endif
 
+                            break;
+
+                        case ObjectTypes::STCoin:
                             break;
 
                         default:
@@ -323,11 +324,9 @@ void SquarioGame::cycle(GameState &gameState) {
                         #ifndef NO_DEATH
                         this->lives--; 
                         this->event = EventType::Death_Init; 
+                        this->eventCounter = Constants::EventCounter_Death;
                         #endif
                     }
-
-                    this->eventCounter = Constants::EventCounter_Death;
-
                 }
             }
         }

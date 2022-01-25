@@ -13,7 +13,7 @@ namespace Constants {
     constexpr uint8_t GameSeeds         = 4;
     constexpr uint8_t MinLevelWidth     = 12;
 
-    constexpr uint8_t RoomWidth         = 8; //16;
+    constexpr uint8_t RoomWidth         = 16;
     constexpr uint8_t RoomHeight        = 16;
     
     #ifdef NEW_ROOM
@@ -28,6 +28,7 @@ namespace Constants {
 
     constexpr uint8_t Points_Mushroom    = 100;
     constexpr uint8_t Points_Skill       = 20;
+    constexpr uint8_t Points_Coin        = 20;
 
     constexpr uint16_t EEPROM_Start_C1   = EEPROM_STORAGE_SPACE_START + 500;
     constexpr uint16_t EEPROM_Start_C2   = EEPROM_Start_C1 + 1;
@@ -43,6 +44,11 @@ namespace Constants {
     constexpr uint8_t EventCounter_Death = 50;
     constexpr uint8_t EventCounter_LevelStart = 28;
 
+    constexpr uint8_t NoPlatform = 255;
+
+    constexpr uint8_t UpperPlatform[] = { 3, 4, 4, 0,
+                                          3, 4, 4, 3,
+                                          3, 3, 4, 4  };
     
 
 }

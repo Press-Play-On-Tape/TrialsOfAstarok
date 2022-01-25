@@ -49,4 +49,10 @@ namespace Data {
         0, 0,         // Speed, AI Setting
     };
 
+    PROGMEM const uint8_t Coin[] {
+        ObjectTypes::STCoin, 
+        0b00,         // Flags
+        0, 0,         // Speed, AI Setting
+    };
+
 };

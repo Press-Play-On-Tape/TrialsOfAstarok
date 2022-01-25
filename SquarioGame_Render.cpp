@@ -173,7 +173,7 @@ void SquarioGame::drawPlayer() {
     }
 
     if (this->event == EventType::StartLevel) { 
-    
+
         Sprites::drawExternalMask(this->player.x - this->camera.x - 2, this->player.y - this->camera.y - 4, 
                                   pgm_read_word_near(&Images::Puffs[(28 - this->eventCounter) / 4]), 
                                   pgm_read_word_near(&Images::Puff_Masks[(28 - this->eventCounter) / 4]), 
@@ -191,18 +191,18 @@ void SquarioGame::draw() {
         case EventType::Death:
         case EventType::Playing:   
             drawMap_Background(); 
-            drawHUD();
             drawMobs(); 
             if (!(this->eventCounter % 2)) drawPlayer();
             drawMap_Foreground(); 
+            drawHUD();
             break;
 
         case EventType::StartLevel:   
             drawMap_Background(); 
             drawPlayer(); 
-            drawHUD();
             drawMobs(); 
             drawMap_Foreground(); 
+            drawHUD();
             break;
 
         default: break;

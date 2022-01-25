@@ -1,12 +1,17 @@
 #include "Map.h"
 #include "../../SquarioGame.h"
 
+
+
 void Map::generateRoom(uint8_t roomNum) {
    
     randomSeed(this->game->seeds[(this->game->mapNumber + roomNum) % Constants::GameSeeds] * this->game->mapNumber + roomNum);
-    rooms[roomNum%Constants::MapRooms].clearRoom();
+    rooms[roomNum % Constants::MapRooms].clearRoom();
     uint8_t floor = random(Constants::RoomHeight - 3, Constants::RoomHeight);
 
+    uint8_t upperPlatform_X = Constants::NoPlatform;
+    uint8_t upperPlatform_Row = 0;
+    uint8_t upperPlatform_Floor = 0;
     int8_t gap = 0;
     int tSpawnBarrier = roomNum * Constants::RoomWidth;
 
@@ -19,6 +24,26 @@ void Map::generateRoom(uint8_t roomNum) {
 
     for (int x = 0; x < Constants::RoomWidth; x++) {
 
+        // Should we launch an upper platform?
+
+        if (upperPlatform_X == Constants::NoPlatform) {
+
+            if (x >= 3 && x < 9 && random(0, 8) == 0) {
+                upperPlatform_X = 0;
+                upperPlatform_Floor = floor;
+                upperPlatform_Row = random(0, 3);
+            }
+
+        }
+
+        if (upperPlatform_X != Constants::NoPlatform) {
+
+            if (Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] > 0) {
+                rooms[roomNum % Constants::MapRooms].setTile(x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X]);
+            }
+
+        }
+
         if (gap == 0) {
 
 
@@ -30,39 +55,59 @@ void Map::generateRoom(uint8_t roomNum) {
 
             if (roomNum && (roomNum < this->lastRoom)) {
 
-                if (random(10) == 0) { 
-                    gap = random(2,5);
-                }
-                else if (random(5) == 0) {
-                    if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
-                    else floor--;
+                if (upperPlatform_X == Constants::NoPlatform) {
+                        
+                    if (random(10) == 0) { 
+                        gap = random(2,5);
+                    }
+                    else if (random(5) == 0) {
+                        if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
+                        else floor--;
+                    }
+
                 }
 
                 if (tSpawnBarrier > SpawnBarrier) {
 
                     if (!random(8)) {
 
-                        switch (random(20)) {
+                        uint8_t yLocation = floor - 2;
 
-                            case 0 ... 9:
-                                this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, floor - 2);
-                                break;
+                        if (upperPlatform_X > 0 && upperPlatform_X < 3 && random(0, 2) == 0) {
 
-                            case 10 ... 15:
-                                this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, floor - 2);
-                                break;
+                            yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
+                            this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, yLocation);
 
-                            case 16 ... 18:
-                                if (roomNum > 8) {
-                                    this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, floor - 2);
-                                }
-                                break;
+                        }
+                        else {
 
-                            default:
-                                if (roomNum > 8) {
-                                    this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
-                                }
-                                break;
+                            switch (random(28)) {
+
+                                case 0 ... 9:
+                                    this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, yLocation);
+                                    break;
+
+                                case 10 ... 15:
+                                    this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, yLocation);
+                                    break;
+
+                                case 16 ... 18:
+                                    if (roomNum > 8) {
+                                        this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, yLocation);
+                                    }
+                                    break;
+
+                                case 19 ... 25:
+                                    this->game->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, tSpawnBarrier + x, floor - 1);
+                                    break;
+
+                                default:
+                                    if (roomNum > 8) {
+                                        this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
+                                    }
+                                    break;
+
+                            }
 
                         }
 
@@ -97,6 +142,19 @@ void Map::generateRoom(uint8_t roomNum) {
 
                 this->game->addMob(Data::Fireball, Images::Fireball, Images::Fireball_Mask, tSpawnBarrier + x, 16, floor - random(1, 4));
 
+            }
+
+        }
+
+
+        // Increase upper platform counter if a platform is being rendered ..
+
+        if (upperPlatform_X != Constants::NoPlatform) {
+
+            upperPlatform_X++;
+
+            if (upperPlatform_X == 4) {
+                upperPlatform_X = Constants::NoPlatform;
             }
 
         }

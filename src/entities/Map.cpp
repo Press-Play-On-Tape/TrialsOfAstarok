@@ -32,7 +32,6 @@ void Map::generateRoom(uint8_t roomNum) {
                 upperPlatform_X = 0;
                 upperPlatform_Floor = floor;
                 upperPlatform_Row = random(0, 4);
-                Serial.println(upperPlatform_Row);
             }
 
         }
@@ -259,7 +258,7 @@ void Map::newMap() {
     SpawnBarrier = 0;
 
     for (uint8_t a = 0; a < Constants::MapObjects; a++) objects[a].deactivate();
-    for (uint8_t a = 0; a < Constants::SpriteCap; a++) this->game->mobs[a].deactivate();
+    for (uint8_t a = 0; a < Constants::SpriteCap; a++) this->game->mobs[a].deactivate(false);
 
     // Seed for level length
 

@@ -129,11 +129,11 @@ struct SeedVars {
 
     uint16_t getSeedValue() {
 
-        return this->seed[0] * 1296 + 
-               this->seed[1] * 216 +
-               this->seed[2] * 36 +
-               this->seed[3] * 6 +
-               this->seed[4];
+        return (this->seed[0] * 1296 + 
+                this->seed[1] * 216 +
+                this->seed[2] * 36 +
+                this->seed[3] * 6 +
+                this->seed[4]) + 1;
                
     }
 

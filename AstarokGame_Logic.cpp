@@ -269,6 +269,10 @@ void AstarokGame::cycle(GameState &gameState) {
 
     for (AISprite &obj : this->mobs) {
 
+        // Adjust explode counter if explostion is in action ..
+
+        obj.updateExplosion();
+
         if (obj.getActive()) {
 
             switch (obj.getType()) {
@@ -280,13 +284,13 @@ void AstarokGame::cycle(GameState &gameState) {
                 default:
 
                     if (obj.y > mapPixelHeight) {
-                        obj.deactivate();
+                        obj.deactivate(true);
                     }
 
                     obj.think();
 
                     if (obj.y > mapPixelHeight) {
-                        obj.deactivate();
+                        obj.deactivate(true);
                     }
 
                     break;
@@ -303,7 +307,7 @@ void AstarokGame::cycle(GameState &gameState) {
                 switch (type) {
 
                     case ObjectTypes::Mushroom:
-                        obj.deactivate();
+                        obj.deactivate(false);
                         this->score += Constants::Points_Mushroom;
                         // SFX = Sounds::SFX_Mushroom;
                         break;
@@ -324,6 +328,7 @@ void AstarokGame::cycle(GameState &gameState) {
                                 this->event = EventType::Death_Init; 
                                 this->eventCounter = Constants::EventCounter_Death;   
                                 this->sound->tones(Sounds::Dying);
+                                obj.deactivate(true);
                             }
                             #endif
 
@@ -333,8 +338,8 @@ void AstarokGame::cycle(GameState &gameState) {
                             break;
 
                         default:
-                            
-                            obj.deactivate();
+
+                            obj.deactivate(true);
                             this->score += Constants::Points_Skill;
                             this->sound->tones(Sounds::LandOnTop);
 
@@ -354,8 +359,6 @@ void AstarokGame::cycle(GameState &gameState) {
 
                 }
                 else if (this->eventCounter == 0) {
-
-
 
                     if (this->player.getHeight() == Constants::TileSize) { 
                         #ifndef NO_DEATH

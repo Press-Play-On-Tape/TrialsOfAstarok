@@ -170,7 +170,7 @@ void Sprite::move() {
 
             if (this->vy != Constants::Fireball_NotMoving) {
 
-                if (this->y - 32 > this->maxHeight) {
+                if (this->y - 32 > static_cast<int16_t>(this->maxHeight)) {
 
                     this->y = this->y + (this->vy / 4);
 

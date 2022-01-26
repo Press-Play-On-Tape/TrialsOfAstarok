@@ -60,15 +60,26 @@ void seed() {
 
         if (justPressed & RIGHT_BUTTON) { 
             if (seedVars.incIndex()) sound.tones(Sounds::ButtonPress);
-            seedVars.incIndex();
         }
 
         if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
 
             randomSeed(seedVars.getSeedValue());
-            for (uint8_t &a : game.seeds) {
-                a = random(255);
-            }
+            for (uint8_t a = 0; a < Constants::GameSeeds; a++ ) game.seeds[a] = random(255);
+
+// Serial.print("Seed with: ");
+// Serial.print(seedVars.getSeedValue());
+// Serial.print(" ");
+
+//   randomSeed( seedVars.getSeedValue() );
+//   for ( uint8_t a = 0; a < Constants::GameSeeds; a++ ) {
+//     uint8_t b = random(255);
+//     Serial.print(b);
+//     Serial.print(" ");
+//     game.seeds[a] = random( b );
+//   }
+//     Serial.println(" ");
+
 
             sound.tones(Sounds::ButtonPress);
             gameState = GameState::Game_Init;

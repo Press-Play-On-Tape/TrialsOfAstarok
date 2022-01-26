@@ -10,13 +10,22 @@ void AstarokGame::drawScorePanel() {
 
 void AstarokGame::drawMobs() {
 
-    for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
+    for (AISprite &obj : this->mobs) {
 
-        if (this->mobs[a].getActive()) {
+        if (obj.getActive() || obj.explodeCounter > 16) {
 
-            if (this->mobs[a].getRightX() - this->camera.x > 0 && this->mobs[a].x - this->camera.x < 128) {
-                this->mobs[a].draw();
+            if (obj.getRightX() - this->camera.x > 0 && obj.x - this->camera.x < 128) {
+                obj.draw();
             }
+
+        }
+
+        if (obj.explodeCounter > 0) {
+
+            Sprites::drawExternalMask(obj.x - this->camera.x - 2, obj.y - this->camera.y - 2, 
+                                      pgm_read_word_near(&Images::Puffs[(21 - obj.explodeCounter) / 3]), 
+                                      pgm_read_word_near(&Images::Puff_Masks[(21 - obj.explodeCounter) / 3]), 
+                                      this->mapNumber % 2 == 0 ? 0 : 1, 0);
 
         }
 

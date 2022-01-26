@@ -27,12 +27,43 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
 
 }
 
-void AISprite::deactivate() {
+void AISprite::updateExplosion() {
 
-    this->spriteData = nullptr;
+    if (this->explodeCounter > 0) {
+
+        this->explodeCounter--;
+
+        if (this->explodeCounter == 0) {
+
+            this->active = false;
+            this->explodeCounter = 0;
+            this->spriteData = nullptr;
+            this->facing = Direction::Up;
+            this->clear();
+
+        }
+
+    }
+
+}
+
+void AISprite::deactivate(bool explode) {
+
     this->active = false;
-    this->facing = Direction::Up;
-    this->clear();
+
+    if (!explode) {
+
+        this->explodeCounter = 0;
+        this->spriteData = nullptr;
+        this->facing = Direction::Up;
+        this->clear();
+
+    }
+    else {
+
+        this->explodeCounter = 21;
+
+    }
 
 }
 

@@ -28,7 +28,7 @@ void titleScreen() {
                 break;
 
             case TitleScreenMode::HighScore:
-                gameState = GameState::HighScore_DisplayAll;
+                gameState = GameState::HighScore_NoFlash;
                 break;
 
         }

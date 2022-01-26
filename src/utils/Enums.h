@@ -8,8 +8,8 @@ enum GameState {
 	Game_Init,
 	Game_Play,
 	HighScore_Check,
-	HighScore_Enter,
-	HighScore_DisplayAll,
+	HighScore_Flash,
+	HighScore_NoFlash,
 };
 
 enum TitleScreenMode {

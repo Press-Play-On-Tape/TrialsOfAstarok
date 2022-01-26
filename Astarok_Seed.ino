@@ -67,20 +67,6 @@ void seed() {
             randomSeed(seedVars.getSeedValue());
             for (uint8_t a = 0; a < Constants::GameSeeds; a++ ) game.seeds[a] = random(255);
 
-// Serial.print("Seed with: ");
-// Serial.print(seedVars.getSeedValue());
-// Serial.print(" ");
-
-//   randomSeed( seedVars.getSeedValue() );
-//   for ( uint8_t a = 0; a < Constants::GameSeeds; a++ ) {
-//     uint8_t b = random(255);
-//     Serial.print(b);
-//     Serial.print(" ");
-//     game.seeds[a] = random( b );
-//   }
-//     Serial.println(" ");
-
-
             sound.tones(Sounds::ButtonPress);
             gameState = GameState::Game_Init;
 

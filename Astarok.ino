@@ -2,7 +2,6 @@
 #include <SPI.h>
 
 #include "AstarokGame.h"
-#include "src/fonts/Font4x6.h"
 #include "src/images/Images.h"
 #include "src/utils/Arduboy2Ext.h"
 #include "src/utils/Constants.h"
@@ -13,7 +12,6 @@
 Arduboy2Ext arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
 AstarokGame game(&arduboy, &sound);
-Font4x6 font4x6;
 GameState gameState = GameState::Title_Init;
 
 TitleScreenVars titleScreenVars;
@@ -21,7 +19,7 @@ HighScoreVars highScoreVars;
 SeedVars seedVars;
 
 #ifndef DEBUG
-    ARDUBOY_NO_USB 
+    //ARDUBOY_NO_USB 
 #endif
 
 void setup() {
@@ -91,22 +89,22 @@ void loop() {
         case GameState::HighScore_Check:
 
             highScoreVars.reset();
-            highScoreVars.slot = checkHighScoreSlot(game.totalScore);
+            checkHighScoreSlot(game.totalScore);
 
             if (highScoreVars.slot != Constants::EEPROM_No_Slot) {
-                writeHighScoreEntry(highScoreVars);
-                gameState = GameState::HighScore_Enter;
+                game.arduboy->resetFrameCount();
+                gameState = GameState::HighScore_Flash;
             } 
             else {
-                gameState = GameState::HighScore_DisplayAll;
+                gameState = GameState::HighScore_NoFlash;
             }
 
             highScores();
             arduboy.display(true);
             break;
 
-        case GameState::HighScore_Enter:
-        case GameState::HighScore_DisplayAll:
+        case GameState::HighScore_Flash:
+        case GameState::HighScore_NoFlash:
 
             highScores();
             arduboy.display(true);

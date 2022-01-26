@@ -16,16 +16,14 @@ struct TitleScreenVars {
 
 struct HighScoreVars {
 
-    char initials[3];
+    char seeds[5];
+    uint16_t score;
     uint8_t index = 0;
     uint8_t slot = Constants::EEPROM_No_Slot;
     uint8_t resetCounter = 0;
 
     void reset() {
 
-        this->initials[0] = 'A';
-        this->initials[1] = 'A';
-        this->initials[2] = 'A';
         this->index = 0;
         this->resetCounter = 0;
         this->slot = Constants::EEPROM_No_Slot;

@@ -8,7 +8,6 @@
 #include "src/utils/Enums.h"
 #include "src/utils/Constants.h"
 #include "src/utils/Utils.h"
-#include "src/fonts/Font4x6.h"
 
 #include "src/entities/Sprite.h"
 #include "src/entities/AISprite.h"

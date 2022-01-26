@@ -6,10 +6,10 @@ void initEEPROM(bool forceOverwrite) {
     uint8_t c1 = EEPROM.read(Constants::EEPROM_Start_C1);
     uint8_t c2 = EEPROM.read(Constants::EEPROM_Start_C2);
 
-    if (c1 != 'S' || c2 != 'Q' || forceOverwrite) {
+    if (c1 != 'A' || c2 != 'T' || forceOverwrite) {
 
-        EEPROM.update(Constants::EEPROM_Start_C1, 'S');
-        EEPROM.update(Constants::EEPROM_Start_C2, 'Q');  
+        EEPROM.update(Constants::EEPROM_Start_C1, 'A');
+        EEPROM.update(Constants::EEPROM_Start_C2, 'T');  
 
         uint16_t score = 30;
         uint8_t sounds = 1;
@@ -22,10 +22,12 @@ void initEEPROM(bool forceOverwrite) {
 
         for (uint8_t i = 0; i < Constants::NumberOfScores; i++) {
 
-            EEPROM.put(Constants::EEPROM_Scores + (5 * i), score = score - 10);
-            EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 2, 65 + i);
-            EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 3, 65 + i);
-            EEPROM.update(Constants::EEPROM_Scores + (5 * i) + 4, 65 + i);
+            EEPROM.put(Constants::EEPROM_Scores + (7 * i), score = score - 10);
+            EEPROM.update(Constants::EEPROM_Scores + (7 * i) + 2, 0);
+            EEPROM.update(Constants::EEPROM_Scores + (7 * i) + 3, 0);
+            EEPROM.update(Constants::EEPROM_Scores + (7 * i) + 4, 0);
+            EEPROM.update(Constants::EEPROM_Scores + (7 * i) + 5, 0);
+            EEPROM.update(Constants::EEPROM_Scores + (7 * i) + 6, 0);
 
         }
 
@@ -35,21 +37,31 @@ void initEEPROM(bool forceOverwrite) {
 
 
 // Returns the new slot the provided high score should occupy ..
-uint8_t checkHighScoreSlot(uint16_t score) {
+void checkHighScoreSlot(uint16_t score) {
 
     uint16_t tmpScore = 0;
 
     for (uint8_t i = 0; i < Constants::NumberOfScores; i++) {
 
-        EEPROM.get(Constants::EEPROM_Scores + (5 * i), tmpScore);
+        EEPROM.get(Constants::EEPROM_Scores + (7 * i), tmpScore);
 
         if (tmpScore < score) {
-            return i;
+            
+            highScoreVars.slot = i;
+            highScoreVars.score = game.totalScore;
+
+            for (uint8_t i = 0; i < 5; i++) {
+                highScoreVars.seeds[i] = seedVars.seed[i];
+            }
+            
+            writeHighScoreEntry(highScoreVars);
+            return;
+
         }
 
     }
 
-    return Constants::EEPROM_No_Slot;
+    highScoreVars.slot = Constants::EEPROM_No_Slot;
 
 }
 
@@ -60,9 +72,9 @@ void writeHighScoreEntry(HighScoreVars &highScoreVars) {
 
     for (uint8_t j = Constants::NumberOfScores - 1; j > highScoreVars.slot; j--) {          
 
-        for (uint8_t k = 0; k < 5; k++) {
+        for (uint8_t k = 0; k < 7; k++) {
 
-            EEPROM.write(Constants::EEPROM_Scores + (5 * j) + k, (char)EEPROM.read(Constants::EEPROM_Scores + (5 * (j - 1)) + k));
+            EEPROM.write(Constants::EEPROM_Scores + (7 * j) + k, (char)EEPROM.read(Constants::EEPROM_Scores + (7 * (j - 1)) + k));
 
         }
 
@@ -71,10 +83,12 @@ void writeHighScoreEntry(HighScoreVars &highScoreVars) {
 
     // Write score and initials to the nominated slot ..
 
-    EEPROM.put(Constants::EEPROM_Scores + (5 * highScoreVars.slot), game.totalScore);
-    EEPROM.update(Constants::EEPROM_Scores + (5 * highScoreVars.slot) + 2, highScoreVars.initials[0]);
-    EEPROM.update(Constants::EEPROM_Scores + (5 * highScoreVars.slot) + 3, highScoreVars.initials[1]);
-    EEPROM.update(Constants::EEPROM_Scores + (5 * highScoreVars.slot) + 4, highScoreVars.initials[2]);
+    EEPROM.put(Constants::EEPROM_Scores + (7 * highScoreVars.slot), game.totalScore);
+    EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 2, highScoreVars.seeds[0]);
+    EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 3, highScoreVars.seeds[1]);
+    EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 4, highScoreVars.seeds[2]);
+    EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 5, highScoreVars.seeds[3]);
+    EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 6, highScoreVars.seeds[4]);
 
 }
 
@@ -83,67 +97,46 @@ void highScores() {
     uint16_t score;
 
 
-
     // Render screen ..
 
-    // Sprites::drawOverwrite(16, 4, Images::Title_Top, 0);
-    Sprites::drawSelfMasked(35, 17, Images::Text_HighScores, 0);
+    Sprites::drawOverwrite(1, 0, Images::Underground_Chain, 0);
+    Sprites::drawOverwrite(9, 1, Images::TopThree, 0);
+    Sprites::drawOverwrite(65, 0, Images::Underground_Chain, 0);
 
-    for (int i = 0; i < Constants::NumberOfScores; i++) {
+    for (uint8_t x = 74; x < 128; x = x + 4) {
+
+        Sprites::drawOverwrite(x, 1, Images::HighScore_Pattern, 0);
+
+    }
+
+    for (uint8_t i = 0; i < Constants::NumberOfScores; i++) {
 
         // If we are not editing this slot, the render it normally ..
-        if (i != highScoreVars.slot) {
+        
+        if (gameState == GameState::HighScore_NoFlash || i != highScoreVars.slot || arduboy.getFrameCountHalf(32)) {
 
-            EEPROM.get(Constants::EEPROM_Scores + (5 * i), score);
+            EEPROM.get(Constants::EEPROM_Scores + (7 * i), score);
 
-            font4x6.setCursor(33, 34 + (i * 9));
-            font4x6.print((char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 2));
-            font4x6.print((char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 3));
-            font4x6.print((char)EEPROM.read(Constants::EEPROM_Scores + (5 * i) + 4));
+            for (uint8_t j = 0; j < 5; j++) {
+                Sprites::drawOverwrite(1 + (j * 14), 15 + (i * 17), Images::Rune_Frame, 0);
+                Sprites::drawOverwrite(4 + (j * 14), 15 + (i * 17) + 4, Images::Runes, EEPROM.read(Constants::EEPROM_Scores + (7 * i) + 2 + j));
+            }
 
-        }
-        else {
+            // Render score always ..
 
-            // Render in edit mode ..
-
-            score = game.totalScore;
-            font4x6.setCursor(33, 34 + (i * 9));
-            font4x6.print(highScoreVars.initials[0]);
-            font4x6.setCursor(38, 34 + (i * 9));
-            font4x6.print(highScoreVars.initials[1]);
-            font4x6.setCursor(43, 34 + (i * 9));
-            font4x6.print(highScoreVars.initials[2]);
-
-
-            // Render edit bars top and bottom ..
-
-            for (uint8_t j = 0; j < 3; j++) {
-
-                if (j == highScoreVars.index && arduboy.getFrameCountHalf(32)) {
-                    arduboy.drawFastHLine(33 + (j * 5), 33 + (i * 9), 4, WHITE);
-                    arduboy.drawFastHLine(33 + (j * 5), 42 + (i * 9), 4, WHITE);
-                }
-
+            uint8_t digits[6] = {};
+            extractDigits(digits, score);
+            
+            for (uint8_t j = 0; j < 6; j++) {
+                Sprites::drawSelfMasked(69 + ((6 - j) * 5), 15 + (i * 17) + 4, Images::Numbers, digits[j]);
             }
 
         }
 
-        // Render score always ..
-
-        uint8_t digits[6] = {};
-        extractDigits(digits, score);
-
-        font4x6.setCursor(64, 34 + (i * 9));
-        
-        for (uint8_t i = 0; i < 6; i++) {
-            font4x6.print(static_cast<char>(digits[5 - i] + 48));
-        }
-
     }
 
-    arduboy.drawPixel(24, 62, WHITE);
-    arduboy.drawPixel(102, 62, WHITE);
-    arduboy.drawFastHLine(25, 63, 77);
+    Sprites::drawOverwrite(105, 16, Images::Outside_Exit_00, 0);
+    Sprites::drawOverwrite(108, 53, Images::HighScore_Pattern_2, 0);
 
 
     // Handle player input ..
@@ -151,111 +144,28 @@ void highScores() {
     uint8_t justPressed = arduboy.justPressedButtons();
     uint8_t pressed = arduboy.pressedButtons();
 
-    switch (gameState) {
+    if ((pressed & LEFT_BUTTON) && (pressed & RIGHT_BUTTON)) {
+        
+        highScoreVars.resetCounter++;
 
-        case GameState::HighScore_DisplayAll:
-
-            if ((pressed & A_BUTTON) && (pressed & B_BUTTON)) {
-                
-                highScoreVars.resetCounter++;
-
-                if (highScoreVars.resetCounter == 64) {
-                    initEEPROM(true);
-                    highScoreVars.resetCounter = 0;
-                }
-
-            }
-            else if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
-
-                gameState = GameState::Title_Init;
-                highScoreVars.resetCounter = 0;
-
-            }
-            else {
-
-                highScoreVars.resetCounter = 0;
-
-            }
-
-            break;
-
-        case GameState::HighScore_Enter:
-
-            if (justPressed & LEFT_BUTTON) {
-
-                if (highScoreVars.index > 0) {
-                    highScoreVars.index--;
-                }
-
-            }
-
-            if (justPressed & RIGHT_BUTTON) {
-
-                if (highScoreVars.index < 2) {
-                    highScoreVars.index++;
-                }
-
-            }
-
-            if ((justPressed & UP_BUTTON) || ((pressed & UP_BUTTON) && arduboy.getFrameCountHalf(4))) {
-
-                if (justPressed & UP_BUTTON) { arduboy.resetFrameCount(); }
-                highScoreVars.initials[highScoreVars.index]++;
-
-                //A-Za-z0-9.!
-                if (highScoreVars.initials[highScoreVars.index] == '[') highScoreVars.initials[highScoreVars.index] = 'a';
-                if (highScoreVars.initials[highScoreVars.index] == '{') highScoreVars.initials[highScoreVars.index] = '0';
-                if (highScoreVars.initials[highScoreVars.index] == ':') highScoreVars.initials[highScoreVars.index] = '.';
-                if (highScoreVars.initials[highScoreVars.index] == '/') highScoreVars.initials[highScoreVars.index] = '!';
-                if (highScoreVars.initials[highScoreVars.index] == '"') highScoreVars.initials[highScoreVars.index] = 'A';
-            }
-
-            if ((justPressed & DOWN_BUTTON) || ((pressed & DOWN_BUTTON) && arduboy.getFrameCountHalf(4))) {
-
-                if (justPressed & DOWN_BUTTON) { arduboy.resetFrameCount(); }
-                highScoreVars.initials[highScoreVars.index]--;
-
-                if (highScoreVars.initials[highScoreVars.index] == '@') highScoreVars.initials[highScoreVars.index] = '!';
-                if (highScoreVars.initials[highScoreVars.index] == ' ') highScoreVars.initials[highScoreVars.index] = '.';
-                if (highScoreVars.initials[highScoreVars.index] == '-') highScoreVars.initials[highScoreVars.index] = '9';
-                if (highScoreVars.initials[highScoreVars.index] == '/') highScoreVars.initials[highScoreVars.index] = 'z';
-                if (highScoreVars.initials[highScoreVars.index] == '`') highScoreVars.initials[highScoreVars.index] = 'Z';
-            }
-
-            if (justPressed & A_BUTTON) {
-
-                // If on characters 0 or 1 move cursor right ..
-
-                if (highScoreVars.index < 2) {
-                    highScoreVars.index++;
-                } 
-                else {
-
-                    // write score and initials to current slot
-                    EEPROM.put(Constants::EEPROM_Scores + (5 * highScoreVars.slot), game.totalScore);
-                    EEPROM.update(Constants::EEPROM_Scores + (5 * highScoreVars.slot) + 2, highScoreVars.initials[0]);
-                    EEPROM.update(Constants::EEPROM_Scores + (5 * highScoreVars.slot) + 3, highScoreVars.initials[1]);
-                    EEPROM.update(Constants::EEPROM_Scores + (5 * highScoreVars.slot) + 4, highScoreVars.initials[2]);
-
-                    highScoreVars.initials[0] = ' ';
-                    highScoreVars.initials[1] = ' ';
-                    highScoreVars.initials[2] = ' ';
-
-                    gameState = GameState::HighScore_DisplayAll;
-                    highScoreVars.reset();
-
-                    //if (soundOn) { 
-                        /*arduboy.tunes.tone(1046, 250);*/
-                    //}
-                    return;
-                }
-
-            }
-
-            break;
-
-        default: break;            
+        if (highScoreVars.resetCounter == 64) {
+            initEEPROM(true);
+            highScoreVars.resetCounter = 0;
+        }
 
     }
+    else if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
+
+        gameState = GameState::Title_Init;
+        highScoreVars.resetCounter = 0;
+
+    }
+    else {
+
+        highScoreVars.resetCounter = 0;
+
+    }
+
+    if (arduboy.frameCount >= 126 && gameState == GameState::HighScore_Flash) gameState = GameState::HighScore_NoFlash;
 
 }

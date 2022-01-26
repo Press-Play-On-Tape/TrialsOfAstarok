@@ -2,7 +2,7 @@
 
 #include "Arduboy2Ext.h"
 
-#define DEBUG
+#define _DEBUG
 #define _NO_DEATH
 #define _ORIG_GAME_MUSHROOM
 

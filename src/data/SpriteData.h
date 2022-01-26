@@ -9,42 +9,42 @@
 
 namespace Data {
 
-    PROGMEM const uint8_t Squario[] {
-         ObjectTypes::STSquario, 0, 0, 0,    // Flags, Speed, AI Setting
+    PROGMEM const uint8_t Astarok[] {
+         ObjectTypes::Player, 0, 0, 0,    // Flags, Speed, AI Setting
     };
 
     PROGMEM const uint8_t Triangleo[] {
-        ObjectTypes::STTriangleo, 
+        ObjectTypes::Triangleo, 
         0b10,       // Flags
         1, AI_DETECT_WALL | AI_DETECT_GAP,    // Speed, AI Setting (0b11)
     };
 
     PROGMEM const uint8_t Starmano[] {
-        ObjectTypes::STStarmano, 
+        ObjectTypes::Starmano, 
         0b10,       // Flags
         2, AI_SEEK | AI_DETECT_JUMP | AI_DETECT_WALL | AI_DETECT_GAP,  // Speed, AI Setting (0b1111)
     };
 
     PROGMEM const uint8_t Smileo[] {
-        ObjectTypes::STSmileo, 
+        ObjectTypes::Smileo, 
         0b10,       // Flags
         2, AI_DETECT_WALL,     // Speed, AI Setting (0b1)
     };
 
     PROGMEM const uint8_t Mushroom[] {
-        ObjectTypes::STMushroom, 
+        ObjectTypes::Mushroom, 
         0b10,       // Flags
         1, AI_DETECT_WALL,     // Speed, AI Setting (0b1)
     };
 
     PROGMEM const uint8_t Bolt[] {
-        ObjectTypes::STBolt, 
+        ObjectTypes::Bolt, 
         0b11,         // Flags
         2, 0,         // Speed, AI Setting
     };
 
     PROGMEM const uint8_t Fireball[] {
-        ObjectTypes::STFireball, 
+        ObjectTypes::Fireball, 
         0b00,         // Flags
         0, 0,         // Speed, AI Setting
     };

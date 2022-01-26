@@ -2,9 +2,8 @@
 
 #include "Arduboy2Ext.h"
 
-#define _DEBUG
-#define NO_DEATH
-#define NEW_ROOM
+#define DEBUG
+#define _NO_DEATH
 #define _ORIG_GAME_MUSHROOM
 
 namespace Constants {
@@ -16,11 +15,7 @@ namespace Constants {
     constexpr uint8_t RoomWidth         = 16;
     constexpr uint8_t RoomHeight        = 16;
     
-    #ifdef NEW_ROOM
     constexpr uint8_t RoomBytes         = RoomWidth;
-    #else
-    constexpr uint8_t RoomBytes         = (RoomHeight/8) * RoomWidth;
-    #endif
 
     constexpr uint8_t MapRooms          = 3; // SJH was 3
     constexpr uint8_t MapObjects        = 30;
@@ -46,9 +41,17 @@ namespace Constants {
 
     constexpr uint8_t NoPlatform = 255;
 
-    constexpr uint8_t UpperPlatform[] = { 3, 4, 4, 0,
-                                          3, 4, 4, 3,
-                                          3, 3, 4, 4  };
+    // constexpr uint8_t UpperPlatform[] = { 3, 3, 3, 3, 3, 3,
+    //                                       3, 4, 4, 0, 0, 0,                                             
+    //                                       3, 4, 4, 3, 0, 0, 
+    //                                       3, 3, 4, 4, 0, 0,
+    //                                       };
+
+    constexpr uint8_t UpperPlatform[] = { 3, 3, 3, 3, 3, 3,  
+                                          3, 3, 3, 3, 3, 3,  
+                                          3, 3, 3, 3, 3, 3,  
+                                          3, 3, 3, 3, 3, 3, 
+                                          };
     
 
 }

@@ -1,10 +1,10 @@
 #include "AISprite.h"
 
 #include "../data/SpriteData.h"
-#include "../../SquarioGame.h"
+#include "../../AstarokGame.h"
 
-uint8_t AISprite::getSpeed()        { return pgm_read_byte(this->spriteData + SpriteSpeed); }
-uint8_t AISprite::getIntelligence() { return pgm_read_byte(this->spriteData + SpriteIntelligence); }
+uint8_t AISprite::getSpeed()            { return pgm_read_byte(this->spriteData + SpriteSpeed); }
+uint8_t AISprite::getIntelligence()     { return pgm_read_byte(this->spriteData + SpriteIntelligence); }
 
 void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
 
@@ -13,12 +13,12 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
 
     init(data, img, mask, tX * Constants::TileSize, tY * Constants::TileSize);
 
-    if (this->getType() == ObjectTypes::STBolt) {
+    if (this->getType() == ObjectTypes::Bolt) {
         vx = -4;
         vy = 2;
     }
 
-    if (this->getType() == ObjectTypes::STFireball) {
+    if (this->getType() == ObjectTypes::Fireball) {
         vx = 0;
         vy = Constants::Fireball_NotMoving;
     }
@@ -88,6 +88,7 @@ void AISprite::detectJump() {
 void AISprite::detectWall() {
 
     if (this->facing == Direction::Left) {
+
         if (this->collisionCheckX(Direction::Left)) { 
             this->facing = Direction::Right; 
             vx = 0; 
@@ -96,9 +97,11 @@ void AISprite::detectWall() {
         else {
             vx = this->getSpeed() * -1;
         }
+
     }
 
     if (this->facing == Direction::Right) {
+
         if (this->collisionCheckX(Direction::Right)) { 
             this->facing = Direction::Left; 
             vx = 0; 
@@ -107,6 +110,7 @@ void AISprite::detectWall() {
         else {
             vx = this->getSpeed();
         }
+
     }
 
 }
@@ -114,6 +118,7 @@ void AISprite::detectWall() {
 void AISprite::detectGap() {
 
     if (this->facing == Direction::Left) {
+
         if (!this->collide(x - 1, this->getBottomY() + 1)) { 
             this->facing = Direction::Right; 
             vx = 0; 
@@ -122,9 +127,11 @@ void AISprite::detectGap() {
         else {
             vx = this->getSpeed() * -1;
         }
+
     }
 
     if (this->facing == Direction::Right) {
+
         if (!this->collide(this->getRightX() + 1, this->getBottomY() + 1)) { 
             this->facing = Direction::Left; 
             vx = 0; 
@@ -133,6 +140,7 @@ void AISprite::detectGap() {
         else {
             vx = this->getSpeed();
         }
+
     }
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 enum GameState {
+	Title_Init,
 	Title,
 	Seed_Init,
 	Seed,
@@ -35,28 +36,24 @@ enum SpriteDataLayout {
 
 enum Direction { Up, Down, Left, Right };
 
-
-
-
-
-
-
 enum ObjectTypes {
-  STSquario = 0,  // Sprites
-  STTriangleo,
-  STStarmano,
-  STSmileo,
-  STBolt,
-  STMushroom = 5,
-  STQBlock,  // Interactive Tiles
-  STBQBlock,
-  STMushBlock,
-  STBricks = 9,
-  STAboveGroundExit,
-  STUnderGroundExit,
-  STSign,
-  STFireball,
-  STCoin,
+  Player = 0,  // Sprites
+  Triangleo,
+  Starmano,
+  Smileo,
+  Bolt,
+  Mushroom = 5,
+  QBlock,  // Interactive Tiles
+  BQBlock,
+  MushBlock,
+  Bricks = 9,
+  AboveGroundExit,
+  UnderGroundExit,
+  Sign,
+  Fireball,
+  Coin,
+  Chest_Closed,
+  Chest_Open,
 };
 
 enum EventType {

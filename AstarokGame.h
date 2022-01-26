@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ArduboyTones.h>
 #include "src/utils/Arduboy2Ext.h"
 #include "src/data/SpriteData.h"
 #include "src/images/Images.h"
@@ -15,10 +16,10 @@
 #include "src/entities/Room.h"
 #include "src/entities/Map.h"
 
-class SquarioGame {
+class AstarokGame {
 
     public:  // Constructor
-        SquarioGame(Arduboy2Ext *arduboy);
+        AstarokGame(Arduboy2Ext *arduboy, ArduboyTones *sound);
 
     public:  // Variables
         EventType             event;
@@ -31,12 +32,12 @@ class SquarioGame {
         uint16_t              distancePoints;
         uint16_t              mapNumber;
         Point                 camera;
-        const uint8_t *       SFX;
 
         Sprite                player;
         AISprite              mobs[Constants::SpriteCap];
         Map                   level;
         Arduboy2Ext           * arduboy;
+        ArduboyTones          * sound;
 
     public:  // Methods
         void newGame();
@@ -44,7 +45,7 @@ class SquarioGame {
         void draw();
         void addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask, int16_t x, uint8_t y, uint8_t maxHeight = 255);
         uint8_t getSpareMobCount();
-        void drawScorePanel(Font4x6 &font4x6);
+        void drawScorePanel();
 
     private:  // Methods
         void startLevel();

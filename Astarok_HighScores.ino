@@ -148,11 +148,14 @@ void highScores() {
 
     // Handle player input ..
 
+    uint8_t justPressed = arduboy.justPressedButtons();
+    uint8_t pressed = arduboy.pressedButtons();
+
     switch (gameState) {
 
         case GameState::HighScore_DisplayAll:
 
-            if (arduboy.pressed(A_BUTTON) && arduboy.pressed(B_BUTTON)) {
+            if ((pressed & A_BUTTON) && (pressed & B_BUTTON)) {
                 
                 highScoreVars.resetCounter++;
 
@@ -162,9 +165,9 @@ void highScores() {
                 }
 
             }
-            else if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+            else if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
 
-                gameState = GameState::Title;
+                gameState = GameState::Title_Init;
                 highScoreVars.resetCounter = 0;
 
             }
@@ -178,31 +181,25 @@ void highScores() {
 
         case GameState::HighScore_Enter:
 
-            if (arduboy.justPressed(LEFT_BUTTON)) {
+            if (justPressed & LEFT_BUTTON) {
 
                 if (highScoreVars.index > 0) {
                     highScoreVars.index--;
                 }
-                else if (soundOn) { 
-                    /*arduboy.tunes.tone(1046, 250);*/
-                }
 
             }
 
-            if (arduboy.justPressed(RIGHT_BUTTON)) {
+            if (justPressed & RIGHT_BUTTON) {
 
                 if (highScoreVars.index < 2) {
                     highScoreVars.index++;
                 }
-                else if (soundOn) { 
-                    /*arduboy.tunes.tone(1046, 250);*/
-                }
 
             }
 
-            if (arduboy.justPressed(UP_BUTTON) || (arduboy.pressed(UP_BUTTON) && arduboy.getFrameCountHalf(4))) {
+            if ((justPressed & UP_BUTTON) || ((pressed & UP_BUTTON) && arduboy.getFrameCountHalf(4))) {
 
-                if (arduboy.justPressed(UP_BUTTON)) { arduboy.resetFrameCount(); }
+                if (justPressed & UP_BUTTON) { arduboy.resetFrameCount(); }
                 highScoreVars.initials[highScoreVars.index]++;
 
                 //A-Za-z0-9.!
@@ -213,9 +210,9 @@ void highScores() {
                 if (highScoreVars.initials[highScoreVars.index] == '"') highScoreVars.initials[highScoreVars.index] = 'A';
             }
 
-            if (arduboy.justPressed(DOWN_BUTTON) || (arduboy.pressed(DOWN_BUTTON) && arduboy.getFrameCountHalf(4))) {
+            if ((justPressed & DOWN_BUTTON) || ((pressed & DOWN_BUTTON) && arduboy.getFrameCountHalf(4))) {
 
-                if (arduboy.justPressed(DOWN_BUTTON)) { arduboy.resetFrameCount(); }
+                if (justPressed & DOWN_BUTTON) { arduboy.resetFrameCount(); }
                 highScoreVars.initials[highScoreVars.index]--;
 
                 if (highScoreVars.initials[highScoreVars.index] == '@') highScoreVars.initials[highScoreVars.index] = '!';
@@ -225,7 +222,7 @@ void highScores() {
                 if (highScoreVars.initials[highScoreVars.index] == '`') highScoreVars.initials[highScoreVars.index] = 'Z';
             }
 
-            if (arduboy.justPressed(A_BUTTON)) {
+            if (justPressed & A_BUTTON) {
 
                 // If on characters 0 or 1 move cursor right ..
 
@@ -247,9 +244,9 @@ void highScores() {
                     gameState = GameState::HighScore_DisplayAll;
                     highScoreVars.reset();
 
-                    if (soundOn) { 
+                    //if (soundOn) { 
                         /*arduboy.tunes.tone(1046, 250);*/
-                    }
+                    //}
                     return;
                 }
 

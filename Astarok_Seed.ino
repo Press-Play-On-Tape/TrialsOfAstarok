@@ -40,32 +40,37 @@ void seed() {
     Sprites::drawSelfMasked(33 + (seedVars.index * 14), 26, Images::ArrowUp, 0);
     Sprites::drawSelfMasked(33 + (seedVars.index* 14), 47, Images::ArrowDown, 0);
 
+    uint8_t justPressed = arduboy.justPressedButtons();
 
     if (seedVars.spinIndex == 0) {
 
-        if (arduboy.justPressed(UP_BUTTON)) {
+        if (justPressed & UP_BUTTON) {
             seedVars.incValue();
+            sound.tones(Sounds::ButtonPress);
         }
 
-        if (arduboy.justPressed(DOWN_BUTTON)) { 
+        if (justPressed & DOWN_BUTTON) { 
             seedVars.decValue();
+            sound.tones(Sounds::ButtonPress);
         }
 
-        if (arduboy.justPressed(LEFT_BUTTON)) { 
-            seedVars.decIndex();
+        if (justPressed & LEFT_BUTTON) { 
+            if (seedVars.decIndex()) sound.tones(Sounds::ButtonPress);
         }
 
-        if (arduboy.justPressed(RIGHT_BUTTON)) { 
+        if (justPressed & RIGHT_BUTTON) { 
+            if (seedVars.incIndex()) sound.tones(Sounds::ButtonPress);
             seedVars.incIndex();
         }
 
-        if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+        if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
 
             randomSeed(seedVars.getSeedValue());
             for (uint8_t &a : game.seeds) {
                 a = random(255);
             }
 
+            sound.tones(Sounds::ButtonPress);
             gameState = GameState::Game_Init;
 
         }

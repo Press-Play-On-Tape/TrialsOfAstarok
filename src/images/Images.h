@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Chests.h"
 #include "Coins.h"
 #include "Player.h"
 #include "Puffs.h"

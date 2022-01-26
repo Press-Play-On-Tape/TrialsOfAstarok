@@ -1,5 +1,5 @@
 #include "Sprite.h"
-#include "../../SquarioGame.h"
+#include "../../AstarokGame.h"
 
 uint8_t Sprite::getFlags()      { return pgm_read_byte(this->spriteData + SpriteFlags); }
 uint8_t Sprite::getType()       { return pgm_read_byte(this->spriteData + SpriteType); }
@@ -12,7 +12,7 @@ int16_t Sprite::getLeftX()      { return this->x; }
 
 uint8_t Sprite::getWidth() { 
 
-    if (this->getType() == ObjectTypes::STSquario) {
+    if (this->getType() == ObjectTypes::Player) {
         return 12; 
     }
     else {
@@ -23,7 +23,7 @@ uint8_t Sprite::getWidth() {
 
 uint8_t Sprite::getHeight() { 
 
-    if (this->getType() == ObjectTypes::STSquario) {
+    if (this->getType() == ObjectTypes::Player) {
         return 12; 
     }
     else {
@@ -72,11 +72,11 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
 
     switch (object) {
 
-        case ObjectTypes::STTriangleo ... ObjectTypes::STUnderGroundExit:
-        case ObjectTypes::STFireball:
+        case ObjectTypes::Triangleo ... ObjectTypes::UnderGroundExit:
+        case ObjectTypes::Fireball:
             return object;
 
-        case STSign:
+        case ObjectTypes::Sign:
             return 0;
 
     }
@@ -150,7 +150,7 @@ void Sprite::move() {
 
     // Handle player frame if stationary ..
 
-    if (this->getType() == ObjectTypes::STSquario) {
+    if (this->getType() == ObjectTypes::Player) {
 
         if (this->vx == 0 && this->vy == 0) {
             if (this->game->arduboy->getFrameCount(6) == 0) {
@@ -162,7 +162,7 @@ void Sprite::move() {
  
     switch (this->getType()) {
 
-        case ObjectTypes::STFireball:
+        case ObjectTypes::Fireball:
 
             if (this->vy == Constants::Fireball_NotMoving && random(0, 40) == 0) {
                 this->vy = Constants::Fireball_StartPos;
@@ -307,13 +307,13 @@ void Sprite::headCollision() {
 
   if (this->getFlags() & 0b10) return;
 
-  byte LeftCheck = this->collide(x, y - 1);
-  byte RightCheck = this->collide(this->getRightX(), y - 1);
+  byte leftCheck = this->collide(x, y - 1);
+  byte rightCheck = this->collide(this->getRightX(), y - 1);
 
-  if (LeftCheck == STQBlock || LeftCheck == STMushBlock) {
+  if (leftCheck == ObjectTypes::QBlock || leftCheck == ObjectTypes::MushBlock) {
     this->game->level.handleObject(x / Constants::TileSize, (y - 1) / Constants::TileSize);
   }
-  if (RightCheck == STQBlock || RightCheck == STMushBlock) {
+  if (rightCheck == ObjectTypes::QBlock || rightCheck == ObjectTypes::MushBlock) {
     this->game->level.handleObject(this->getRightX() / Constants::TileSize, (y - 1) / Constants::TileSize);
   }
   
@@ -323,7 +323,7 @@ void Sprite::draw() {
 
     switch (this->getType()) {
 
-       case ObjectTypes::STSquario:
+       case ObjectTypes::Player:
 
             if (this->isFalling()) {
                 Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
@@ -336,12 +336,12 @@ void Sprite::draw() {
             }
             break;
 
-        case ObjectTypes::STSmileo:
-        case ObjectTypes::STTriangleo:
+        case ObjectTypes::Smileo:
+        case ObjectTypes::Triangleo:
             Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
             break;
 
-        case ObjectTypes::STFireball:
+        case ObjectTypes::Fireball:
             Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
             break;
 

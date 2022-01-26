@@ -4,7 +4,7 @@
 #include "../utils/Constants.h"
 #include "../utils/Enums.h"
 
-class SquarioGame;
+class AstarokGame;
 
 class Sprite {
 
@@ -37,7 +37,7 @@ class Sprite {
         uint16_t              maxHeight = 0;        
         uint8_t               jumpBoost;
         Direction             facing;
-        SquarioGame           * game;
+        AstarokGame           * game;
         Arduboy2Ext           * arduboy;
 
     private:

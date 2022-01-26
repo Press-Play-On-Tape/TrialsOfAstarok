@@ -1,5 +1,5 @@
 #include "Map.h"
-#include "../../SquarioGame.h"
+#include "../../AstarokGame.h"
 
 
 
@@ -31,7 +31,8 @@ void Map::generateRoom(uint8_t roomNum) {
             if (x >= 3 && x < 9 && random(0, 8) == 0) {
                 upperPlatform_X = 0;
                 upperPlatform_Floor = floor;
-                upperPlatform_Row = random(0, 3);
+                upperPlatform_Row = random(0, 4);
+                Serial.println(upperPlatform_Row);
             }
 
         }
@@ -40,6 +41,10 @@ void Map::generateRoom(uint8_t roomNum) {
 
             if (Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] > 0) {
                 rooms[roomNum % Constants::MapRooms].setTile(x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X]);
+
+                if (upperPlatform_Row == 0 && upperPlatform_X == 1) {
+                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1);
+                }
             }
 
         }
@@ -76,34 +81,38 @@ void Map::generateRoom(uint8_t roomNum) {
                         if (upperPlatform_X > 0 && upperPlatform_X < 3 && random(0, 2) == 0) {
 
                             yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
-                            this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, yLocation);
+                            this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::Triangleo], Images::SpriteMasks[ObjectTypes::Triangleo], tSpawnBarrier + x, yLocation);
 
                         }
                         else {
-
-                            switch (random(28)) {
+//this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
+                            switch (random(29)) {
 
                                 case 0 ... 9:
-                                    this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::STTriangleo], Images::SpriteMasks[ObjectTypes::STTriangleo], tSpawnBarrier + x, yLocation);
+                                    this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::Triangleo], Images::SpriteMasks[ObjectTypes::Triangleo], tSpawnBarrier + x, yLocation);
                                     break;
 
                                 case 10 ... 15:
-                                    this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::STSmileo], Images::SpriteMasks[ObjectTypes::STSmileo], tSpawnBarrier + x, yLocation);
+                                    this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::Smileo], Images::SpriteMasks[ObjectTypes::Smileo], tSpawnBarrier + x, yLocation);
                                     break;
 
                                 case 16 ... 18:
                                     if (roomNum > 8) {
-                                        this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::STStarmano], Images::SpriteMasks[ObjectTypes::STStarmano], tSpawnBarrier + x, yLocation);
+                                        this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::Starmano], Images::SpriteMasks[ObjectTypes::Starmano], tSpawnBarrier + x, yLocation);
                                     }
                                     break;
 
                                 case 19 ... 25:
-                                    this->addObject(ObjectTypes::STCoin, tSpawnBarrier + x, floor - 1);
+                                    this->addObject(ObjectTypes::Coin, tSpawnBarrier + x, floor - 1);
+                                    break;
+
+                                case 26 ... 26:
+                                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
                                     break;
 
                                 default:
                                     if (roomNum > 8) {
-                                        this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::STBolt], Images::SpriteMasks[ObjectTypes::STBolt], tSpawnBarrier + x, 2);
+                                        this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::Bolt], Images::SpriteMasks[ObjectTypes::Bolt], tSpawnBarrier + x, 2);
                                     }
                                     break;
 
@@ -119,10 +128,10 @@ void Map::generateRoom(uint8_t roomNum) {
                         int y = random(max(floor - 7, ceiling + 2), floor - 3);
 
                         if (!random(4)) {
-                            addObject (STMushBlock, tSpawnBarrier + x, y);
+                            addObject (, tSpawnBarrier + x, y);
                         }
                         else {
-                            addObject(STQBlock, tSpawnBarrier + x, y);
+                            addObject(, tSpawnBarrier + x, y);
                         }
 
                     }
@@ -153,7 +162,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
             upperPlatform_X++;
 
-            if (upperPlatform_X == 4) {
+            if (upperPlatform_X == 6) {
                 upperPlatform_X = Constants::NoPlatform;
             }
 
@@ -166,7 +175,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
     if (roomNum == this->lastRoom) {
 
-        addExit(this->game->mapNumber % 2 == MapLevel::AboveGround ? ObjectTypes::STAboveGroundExit : ObjectTypes::STUnderGroundExit, maxXTile() - 2, floor - 1);
+        addExit(this->game->mapNumber % 2 == MapLevel::AboveGround ? ObjectTypes::AboveGroundExit : ObjectTypes::UnderGroundExit, maxXTile() - 2, floor - 1);
 
     }
 
@@ -182,7 +191,7 @@ void Map::addExit(ObjectTypes exitType, int x, int y) {
 
 void Map::addSign(int x, int y) {
 
-  addObject(ObjectTypes::STSign,  x,   y);
+  addObject(ObjectTypes::Sign,  x,   y);
 
 }
 
@@ -212,21 +221,21 @@ void Map::handleObject(int x, int y) {
 
             switch (objects[a].type) {
 
-                case STQBlock: 
+                case ObjectTypes::QBlock: 
                     this->game->coins++;
                     if (!(this->game->coins % 20)) {
                         this->game->lives++;
-                        this->game->SFX = Sounds::SFX_Life;
+                        //this->game->SFX = Sounds::SFX_Life;
                     }
                     else {
-                        this->game->SFX = Sounds::SFX_Coin;
+                        //this->game->SFX = Sounds::SFX_Coin;
                     }
-                    objects[a].type = STBQBlock;
+                    objects[a].type = ObjectTypes::BQBlock;
                     break;
 
-            // case STMushBlock:
-            //   this->game->addMob(Data::Mushroom, Images::SpriteImages[ObjectTypes::STMushroom], Images::SpriteMasks[ObjectTypes::STMushroom], x, y - 1);
-            //   objects[a].type = STBQBlock; break;
+            // case ObjectTypes::MushBlock:
+            //   this->game->addMob(Data::Mushroom, Images::SpriteImages[ObjectTypes::Mushroom], Images::SpriteMasks[ObjectTypes::Mushroom], x, y - 1);
+            //   objects[a].type = ObjectTypes::BQBlock; break;
 
             default:
                 break;

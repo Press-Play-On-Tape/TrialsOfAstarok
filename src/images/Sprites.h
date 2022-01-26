@@ -137,7 +137,7 @@ namespace Images {
     };
 
 // enum ObjectTypes {
-//   STSquario = 0,  // Sprites
+//   Player = 0,  // Sprites
 //   STTriangleo,
 //   STStarmano,
 //   STSmileo,

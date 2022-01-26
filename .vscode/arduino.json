@@ -1,6 +1,6 @@
 {
     "board": "arduino:avr:leonardo",
-    "sketch": "Squario.ino",
+    "sketch": "Astarok.ino",
     "output": "../build",
     "port": "/dev/cu.usbmodem14101"
 }

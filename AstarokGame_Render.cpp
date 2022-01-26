@@ -1,14 +1,14 @@
 #include "src/utils/Arduboy2Ext.h"
-#include "SquarioGame.h"
+#include "AstarokGame.h"
 #include <EEPROM.h>
 
-void SquarioGame::drawScorePanel(Font4x6 &font4x6) {
+void AstarokGame::drawScorePanel() {
 
     Sprites::drawExternalMask(15, 15, Images::GameOver, Images::GameOver_Mask, 0, 0);
 
 }
 
-void SquarioGame::drawMobs() {
+void AstarokGame::drawMobs() {
 
     for (uint8_t a = 0; a < Constants::SpriteCap; a++) {
 
@@ -24,7 +24,7 @@ void SquarioGame::drawMobs() {
 
 }
 
-void SquarioGame::drawHUD() {
+void AstarokGame::drawHUD() {
 
     uint16_t tmpScore = this->score + this->player.x / Constants::TileSize; 
     uint8_t digits[6] = {};
@@ -59,7 +59,7 @@ void SquarioGame::drawHUD() {
 
 }
 
-void SquarioGame::drawMap_Background() {
+void AstarokGame::drawMap_Background() {
 
     int16_t backgroundXOffset = (this->camera.x / 4) % 64;
     int16_t backgroundYOffset = (this->camera.y / 12) - 8;
@@ -83,21 +83,32 @@ void SquarioGame::drawMap_Background() {
 
     }
 
-    for (int x = this->camera.x / Constants::TileSize; x < (this->camera.x / Constants::TileSize) + 17; x++) {
+    for (int x = (this->camera.x / Constants::TileSize) - 12; x < (this->camera.x / Constants::TileSize) + 17; x++) {
 
         for (int y = this->camera.y / Constants::TileSize; y < (this->camera.y / Constants::TileSize) + 9; y++) {
 
             if (this->level.isTile(x, y)) {
 
-                if (this->mapNumber % 2 == MapLevel::AboveGround) {   
-                    Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, 
-                                              pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]),  
-                                              pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), MapLevel::AboveGround, 0);
+                if (y == 15 || this->level.isTile(x, y + 1)) {
+
+                    if (this->mapNumber % 2 == MapLevel::AboveGround) {   
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, 
+                                                Images::Tile_Brick, Images::Tile_Mask, MapLevel::AboveGround, 0);
+                                                // pgm_read_word_near(&Images::SpriteImages[ObjectTypes::Bricks]),  
+                                                // pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::Bricks]), MapLevel::AboveGround, 0);
+                    }
+                    else {
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, 
+                        Images::Tile_Brick, Images::Tile_Mask, MapLevel::BelowGround, 0);
+                                                // pgm_read_word_near(&Images::SpriteImages[ObjectTypes::Bricks]), 
+                                                // pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::Bricks]), 0, 0);
+                    }
+
                 }
                 else {
                     Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, 
-                                              pgm_read_word_near(&Images::SpriteImages[ObjectTypes::STBricks]), 
-                                              pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::STBricks]), 0, 0);
+                                              Images::Platform, Images::Platform_Mask, 0, 0);
+
                 }
 
             }
@@ -107,24 +118,37 @@ void SquarioGame::drawMap_Background() {
 
                 switch (tile) {
 
-                    case ObjectTypes::STQBlock ... ObjectTypes::STBricks:
+                    case ObjectTypes::QBlock ... ObjectTypes::Bricks:
                         Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, pgm_read_word_near(&Images::SpriteImages[tile]), pgm_read_word_near(&Images::SpriteMasks[tile]), 0, 0);
                         break;
 
-                    case ObjectTypes::STAboveGroundExit:
+                    case ObjectTypes::AboveGroundExit:
                         Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x - 36, y * Constants::TileSize - this->camera.y - 24, Images::Outside_Exit_00, Images::Outside_Exit_00_Mask, 0, 0);
                         break;
 
-                    case ObjectTypes::STUnderGroundExit:
+                    case ObjectTypes::UnderGroundExit:
                         Sprites::drawOverwrite(x * Constants::TileSize - this->camera.x - 13, y * Constants::TileSize - this->camera.y - 4, Images::Underground_Exit_00, 0);
                         break;
 
-                    case ObjectTypes::STSign:
+                    case ObjectTypes::Sign:
                         Sprites::drawOverwrite(x * Constants::TileSize - this->camera.x - 4, y * Constants::TileSize - this->camera.y - 4, Images::SignPost, this->mapNumber % 2);
                         break;
 
-                    case ObjectTypes::STCoin:
-                        Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, Images::Coins_Masks, arduboy->getFrameCount(16) / 4, arduboy->getFrameCount(16) / 4);
+                    case ObjectTypes::Coin:
+                        if (this->mapNumber % 2 == MapLevel::AboveGround) { 
+                            Sprites::drawErase(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
+                        }
+                        else {
+                            Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, Images::Coins_Masks, arduboy->getFrameCount(16) / 4, arduboy->getFrameCount(16) / 4);
+                        }
+                        break;
+
+                    case ObjectTypes::Chest_Closed:
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y - 3, Images::Chest_Closed, Images::Chest_Closed_Mask, 0, 0);
+                        break;
+
+                    case ObjectTypes::Chest_Open:
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y - 2, Images::Chest_Open, Images::Chest_Open_Mask, 0, 0);
                         break;
 
                     default: break;
@@ -138,7 +162,7 @@ void SquarioGame::drawMap_Background() {
 
 }
 
-void SquarioGame::drawMap_Foreground() {
+void AstarokGame::drawMap_Foreground() {
 
     for (int x = this->camera.x / Constants::TileSize; x < (this->camera.x / Constants::TileSize) + 17; x++) {
 
@@ -150,11 +174,11 @@ void SquarioGame::drawMap_Foreground() {
 
                 switch (tile) {
 
-                    case ObjectTypes::STAboveGroundExit:
+                    case ObjectTypes::AboveGroundExit:
                         Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x - 10, y * Constants::TileSize - this->camera.y - 24, Images::Outside_Exit_01, Images::Outside_Exit_01_Mask, 0, 0);
                         break;
 
-                    case ObjectTypes::STUnderGroundExit:
+                    case ObjectTypes::UnderGroundExit:
                         Sprites::drawOverwrite(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y - 4, Images::Underground_Exit_01, 0);
                         break;
 
@@ -170,7 +194,7 @@ void SquarioGame::drawMap_Foreground() {
 
 }
 
-void SquarioGame::drawPlayer() {
+void AstarokGame::drawPlayer() {
 
     if ((this->event == EventType::StartLevel && this->eventCounter < 12) || this->event != EventType::StartLevel) { 
         this->player.draw();
@@ -187,7 +211,7 @@ void SquarioGame::drawPlayer() {
 
 }
 
-void SquarioGame::draw() {
+void AstarokGame::draw() {
 
     switch (this->event) {
 

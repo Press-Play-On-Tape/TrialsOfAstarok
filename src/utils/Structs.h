@@ -78,23 +78,29 @@ struct SeedVars {
         
     }
 
-    void incIndex() {
+    bool incIndex() {
 
         if (this->index < 4) {
 
             this->index++;
+            return true;
 
         }
+
+        return false;
         
     }
 
-    void decIndex() {
+    bool decIndex() {
 
         if (this->index > 0) {
 
             this->index--;
+            return true;
             
         }
+
+        return false;
         
     }
 

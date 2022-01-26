@@ -1,7 +1,8 @@
 #include "src/utils/Arduboy2Ext.h"
 
-void TitleScreen() {
+void titleScreen() {
 
+    uint8_t justPressed = arduboy.justPressedButtons();
 
     Sprites::drawOverwrite(24, 4, Images::Title, 0);
     Sprites::drawOverwrite(15, 0, Images::Underground_Chain, 0);
@@ -11,14 +12,14 @@ void TitleScreen() {
    
     Sprites::drawOverwrite(titleScreenVars.index == TitleScreenMode::Play ? 35 : 65, 59, Images::Title_Highlight, 0);
 
-    if (soundOn) {
+    if (arduboy.audio.enabled()) {
         Sprites::drawExternalMask(119, 56, Images::Sound_On, Images::Sound_Mask, 0, 0);
     }
     else {
         Sprites::drawExternalMask(119, 56, Images::Sound_Off, Images::Sound_Mask, 0, 0);
     }
 
-    if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+    if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
 
         switch (titleScreenVars.index) {
 
@@ -34,21 +35,33 @@ void TitleScreen() {
 
     }
 
-    if (arduboy.justPressed(UP_BUTTON) || arduboy.justPressed(DOWN_BUTTON)) {
-        soundOn = !soundOn;
-        EEPROM.update(Constants::EEPROM_Sounds, soundOn);
+    if ((justPressed & UP_BUTTON) || (justPressed & DOWN_BUTTON)) {
+        
+        if (arduboy.audio.enabled()) {
+
+            arduboy.audio.off(); 
+            // arduboy.audio.saveOnOff();
+
+        }
+        else {
+
+            arduboy.audio.on(); 
+            // arduboy.audio.saveOnOff();
+
+        }
+
     }
 
-    if (arduboy.justPressed(LEFT_BUTTON)) {
+    if (justPressed & LEFT_BUTTON) {
 
         titleScreenVars.index = TitleScreenMode::Play;
-        
+
     }
 
-    if (arduboy.justPressed(RIGHT_BUTTON)) {
+    if (justPressed & RIGHT_BUTTON) {
 
         titleScreenVars.index = TitleScreenMode::HighScore;
-        
+
     }
 
 }

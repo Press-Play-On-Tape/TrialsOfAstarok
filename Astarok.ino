@@ -1,35 +1,40 @@
 #include <EEPROM.h>
 #include <SPI.h>
 
-#include "Squariogame.h"
+#include "AstarokGame.h"
 #include "src/fonts/Font4x6.h"
 #include "src/images/Images.h"
 #include "src/utils/Arduboy2Ext.h"
 #include "src/utils/Constants.h"
 #include "src/utils/Enums.h"
 #include "src/utils/Structs.h"
+#include <ArduboyTones.h>
 
 Arduboy2Ext arduboy;
-SquarioGame game(&arduboy);
+ArduboyTones sound(arduboy.audio.enabled);
+AstarokGame game(&arduboy, &sound);
 Font4x6 font4x6;
-
-GameState gameState = GameState::Title;
-bool soundOn = EEPROM.read(Constants::EEPROM_Sounds);
-
-uint8_t SoundCounter = 0;
-const uint8_t *SFX = 0;
-const unsigned int *SFXNoteSet;
-int SFX_Counter = -1;
-unsigned long duration = 0, lastNote = 0;
+GameState gameState = GameState::Title_Init;
 
 TitleScreenVars titleScreenVars;
 HighScoreVars highScoreVars;
 SeedVars seedVars;
 
+#ifndef DEBUG
+    ARDUBOY_NO_USB 
+#endif
+
 void setup() {
 
     arduboy.boot();
     arduboy.setFrameRate(30);
+	arduboy.flashlight();
+	arduboy.systemButtons();
+
+    #ifndef DEBUG
+    arduboy.audio.begin();
+    #endif
+
     initEEPROM(false);
 
 }
@@ -41,18 +46,22 @@ void loop() {
 
     switch (gameState) {
 
+        case GameState::Title_Init:
+
+            sound.tones(Sounds::Theme);
+            gameState = GameState::Title;
+            [[Fallthrough]]
+
         case GameState::Title:
 
-            TitleScreen();
+            titleScreen();
             arduboy.display(true);
             break;
 
         case GameState::Seed_Init:
 
             seed_Init();
-            seed();
-            arduboy.display(true);
-            break;
+            [[Fallthrough]]
 
         case GameState::Seed:
 
@@ -64,7 +73,7 @@ void loop() {
 
             game.newGame();
             gameState = GameState::Game_Play;
-            break;
+            [[Fallthrough]]
 
         case GameState::Game_Play:
 
@@ -73,7 +82,7 @@ void loop() {
             game.draw();
 
             if (game.event == EventType::Death) {
-                game.drawScorePanel(font4x6);
+                game.drawScorePanel();
             }
 
             arduboy.displayWithBackground(game.mapNumber % 2 ? MapLevel::AboveGround : MapLevel::BelowGround);

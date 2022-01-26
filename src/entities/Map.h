@@ -6,7 +6,7 @@
 #include "Room.h"
 #include "InteractiveObject.h"
 
-class SquarioGame;
+class AstarokGame;
 
 class Map {
 
@@ -28,7 +28,7 @@ class Map {
         int16_t maxXTile();
         int16_t maxYTile();
 
-        SquarioGame           * game;
+        AstarokGame           * game;
         Room                  rooms[Constants::MapRooms];
         InteractiveObject     objects[Constants::MapObjects];
         uint16_t              objectIndex;

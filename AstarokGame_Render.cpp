@@ -144,12 +144,13 @@ void AstarokGame::drawMap_Background() {
                         break;
 
                     case ObjectTypes::Coin:
-                        if (this->mapNumber % 2 == MapLevel::AboveGround) { 
+                        // if (this->mapNumber % 2 == MapLevel::AboveGround) { 
+                            Sprites::drawSelfMasked(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins_Masks, arduboy->getFrameCount(16) / 4);
                             Sprites::drawErase(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
-                        }
-                        else {
-                            Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, Images::Coins_Masks, arduboy->getFrameCount(16) / 4, arduboy->getFrameCount(16) / 4);
-                        }
+                        // }
+                        // else {
+                        //     Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, Images::Coins_Masks[2], arduboy->getFrameCount(16) / 4, arduboy->getFrameCount(16) / 4);
+                        // }
                         break;
 
                     case ObjectTypes::Chest_Closed:

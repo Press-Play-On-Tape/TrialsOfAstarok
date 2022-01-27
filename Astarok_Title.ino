@@ -5,11 +5,20 @@ void titleScreen() {
     uint8_t justPressed = arduboy.justPressedButtons();
 
     Sprites::drawOverwrite(24, 4, Images::Title, 0);
-    Sprites::drawOverwrite(15, 0, Images::Underground_Chain, 0);
-    Sprites::drawOverwrite(110, 0, Images::Underground_Chain, 0);
-    Sprites::drawOverwrite(0, 27, Images::Underground_Brick, 0);
-    Sprites::drawOverwrite(109, 27, Images::Underground_Brick, 0);
-   
+    Sprites::drawSelfMasked(35, 0, Images::Underground_Chain, 0);
+    Sprites::drawSelfMasked(90, 0, Images::Underground_Chain, 0);
+    Sprites::drawOverwrite(5, 12, Images::Underground_Brick, 0);
+    Sprites::drawOverwrite(104, 12, Images::Underground_Brick, 0);
+
+    Sprites::drawOverwrite(-10, 27, Images::Underground_Brick, 0);
+    Sprites::drawOverwrite(119, 27, Images::Underground_Brick, 0);
+
+    Sprites::drawOverwrite(5, 41, Images::Underground_Brick, 0);
+    Sprites::drawOverwrite(104, 41, Images::Underground_Brick, 0);
+
+    Sprites::drawOverwrite(11, 27, Images::Torch, arduboy.getFrameCount(16) / 4);
+    Sprites::drawOverwrite(111, 27, Images::Torch, arduboy.getFrameCount(16) / 4);
+
     Sprites::drawOverwrite(titleScreenVars.index == TitleScreenMode::Play ? 35 : 65, 59, Images::Title_Highlight, 0);
 
     if (arduboy.audio.enabled()) {

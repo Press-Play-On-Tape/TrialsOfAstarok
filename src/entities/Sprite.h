@@ -12,6 +12,8 @@ class Sprite {
         const uint8_t       * spriteData;
         const uint8_t       * spriteImg;
         const uint8_t       * spriteMask;
+        uint8_t               autoExpire;
+        bool                  active;
 
     public:
 
@@ -20,6 +22,7 @@ class Sprite {
         void move();
         bool jump();
         void draw();
+        void deactivate(bool explode);
 
         uint8_t getWidth();
         uint8_t getHeight();
@@ -32,7 +35,7 @@ class Sprite {
         uint8_t getType();
         uint8_t getFrame();
 
-        int16_t               x, y, xInit, yInit;
+        int16_t               x, y, yInit;
         int8_t                vx, vy;
         uint16_t              maxHeight = 0;        
         uint8_t               jumpBoost;
@@ -50,6 +53,6 @@ class Sprite {
         uint8_t collide(int16_t tX, int16_t tY);
         bool collisionCheckX(Direction direction);
         bool collisionCheckY(Direction direction);
-        void headCollision();
+        // void headCollision();
 
 };

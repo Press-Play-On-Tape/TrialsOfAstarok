@@ -19,7 +19,7 @@ HighScoreVars highScoreVars;
 SeedVars seedVars;
 
 #ifndef DEBUG
-    //ARDUBOY_NO_USB 
+    ARDUBOY_NO_USB 
 #endif
 
 void setup() {
@@ -83,6 +83,13 @@ void loop() {
                 game.drawScorePanel();
             }
 
+            arduboy.displayWithBackground(game.mapNumber % 2 ? MapLevel::AboveGround : MapLevel::BelowGround);
+            break;
+
+        case GameState::Game_Mini:
+
+            game.draw();
+            game.playMiniGame(gameState);
             arduboy.displayWithBackground(game.mapNumber % 2 ? MapLevel::AboveGround : MapLevel::BelowGround);
             break;
 

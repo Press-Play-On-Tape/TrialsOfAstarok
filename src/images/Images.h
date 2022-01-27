@@ -2,6 +2,7 @@
 
 #include "Chests.h"
 #include "Coins.h"
+#include "MiniGame.h"
 #include "Player.h"
 #include "Puffs.h"
 #include "Runes.h"

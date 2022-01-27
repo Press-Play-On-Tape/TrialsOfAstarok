@@ -21,14 +21,30 @@ struct HighScoreVars {
     uint8_t index = 0;
     uint8_t slot = Constants::EEPROM_No_Slot;
     uint8_t resetCounter = 0;
+    uint8_t spinIndex;
+    uint8_t spinCountdown;
 
     void reset() {
 
         this->index = 0;
         this->resetCounter = 0;
         this->slot = Constants::EEPROM_No_Slot;
+        this->spinCountdown = 100;
 
     }
+
+    void decSpinIndex() {
+
+        if (this->spinIndex > 0) {
+
+            this->spinIndex--;
+            
+        }
+
+        this->spinCountdown--;
+        
+    }
+
 
 };
 

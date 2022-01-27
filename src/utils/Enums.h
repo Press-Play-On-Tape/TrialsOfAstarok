@@ -7,6 +7,7 @@ enum GameState {
 	Seed,
 	Game_Init,
 	Game_Play,
+	Game_Mini,
 	HighScore_Check,
 	HighScore_Flash,
 	HighScore_NoFlash,
@@ -34,7 +35,7 @@ enum SpriteDataLayout {
 	SpriteIntelligence,
 };
 
-enum Direction { Up, Down, Left, Right };
+enum Direction { Up, Down, Left, Right, None };
 
 enum ObjectTypes {
   Player = 0,  // Sprites

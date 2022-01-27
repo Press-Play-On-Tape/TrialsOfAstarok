@@ -34,7 +34,7 @@ namespace Data {
     PROGMEM const uint8_t Mushroom[] {
         ObjectTypes::Mushroom, 
         0b10,       // Flags
-        1, AI_DETECT_WALL,     // Speed, AI Setting (0b1)
+        2, AI_DETECT_WALL,     // Speed, AI Setting (0b1)
     };
 
     PROGMEM const uint8_t Bolt[] {
@@ -45,6 +45,12 @@ namespace Data {
 
     PROGMEM const uint8_t Fireball[] {
         ObjectTypes::Fireball, 
+        0b00,         // Flags
+        0, 0,         // Speed, AI Setting
+    };
+
+    PROGMEM const uint8_t Coin[] {
+        ObjectTypes::Coin, 
         0b00,         // Flags
         0, 0,         // Speed, AI Setting
     };

@@ -96,6 +96,16 @@ void highScores() {
 
     uint16_t score;
 
+    // Rnadomly spin a rune ..
+
+    if (gameState == GameState::HighScore_NoFlash && highScoreVars.spinCountdown == 0) {
+
+        highScoreVars.index = random(0, 14);
+        highScoreVars.spinIndex = 17;
+        highScoreVars.spinCountdown = 100;
+
+    }
+
 
     // Render screen ..
 
@@ -118,8 +128,17 @@ void highScores() {
             EEPROM.get(Constants::EEPROM_Scores + (7 * i), score);
 
             for (uint8_t j = 0; j < 5; j++) {
-                Sprites::drawOverwrite(1 + (j * 14), 15 + (i * 17), Images::Rune_Frame, 0);
-                Sprites::drawOverwrite(4 + (j * 14), 15 + (i * 17) + 4, Images::Runes, EEPROM.read(Constants::EEPROM_Scores + (7 * i) + 2 + j));
+
+                if ((i * 5) + j == highScoreVars.index && highScoreVars.spinIndex > 0) {
+                    Sprites::drawOverwrite(1 + (j * 14), 15 + (i * 17), Images::Rune_Frame, 16 - highScoreVars.spinIndex);
+                }
+                else {
+                    Sprites::drawOverwrite(1 + (j * 14), 15 + (i * 17), Images::Rune_Frame, 0);
+                    Sprites::drawOverwrite(4 + (j * 14), 15 + (i * 17) + 4, Images::Runes, EEPROM.read(Constants::EEPROM_Scores + (7 * i) + 2 + j));
+                }
+
+                // Sprites::drawOverwrite(1 + (j * 14), 15 + (i * 17), Images::Rune_Frame, 0);
+                // Sprites::drawOverwrite(4 + (j * 14), 15 + (i * 17) + 4, Images::Runes, EEPROM.read(Constants::EEPROM_Scores + (7 * i) + 2 + j));
             }
 
             // Render score always ..
@@ -167,5 +186,6 @@ void highScores() {
     }
 
     if (arduboy.frameCount >= 126 && gameState == GameState::HighScore_Flash) gameState = GameState::HighScore_NoFlash;
+    highScoreVars.decSpinIndex();
 
 }

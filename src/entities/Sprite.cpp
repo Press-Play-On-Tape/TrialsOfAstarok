@@ -39,7 +39,6 @@ void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mas
     this->spriteMask = mask;
     this->x = tX; 
     this->y = tY;
-    this->xInit = tX; 
     this->yInit = tY;
     this->vx = 0; 
     this->vy = 0;
@@ -145,8 +144,59 @@ bool Sprite::collisionCheckY(Direction direction) {
 
 }
 
+void Sprite::deactivate(bool explode) {
+
+    this->active = false;
+
+    if (!explode) {
+
+        this->explodeCounter = 0;
+        this->spriteData = nullptr;
+        this->facing = Direction::Up;
+        this->clear();
+
+    }
+    else {
+
+        this->explodeCounter = 21;
+
+    }
+
+}
+
 void Sprite::move() {
 
+    
+    switch (this->getType()) {
+
+        case ObjectTypes::Player:
+
+            if (this->vx == 0 && this->vy == 0) {
+                if (this->game->arduboy->getFrameCount(6) == 0) {
+                this->frame = (this->frame + 1) % 3;
+                }
+            }
+
+            break;
+
+        case ObjectTypes::Mushroom:
+        case ObjectTypes::Coin:
+
+            if (this->autoExpire > 0) {
+    
+                this->autoExpire--;
+    
+                if (this->autoExpire == 0) {
+
+                    this->deactivate(false);
+
+                }
+
+            }
+
+            break;
+        
+    }
 
     // Handle player frame if stationary ..
 
@@ -205,7 +255,6 @@ void Sprite::move() {
             if (vy > 0) { // Down
                 for (int a = 0; a < vy; a++) {
                     if (isFalling()) {
-// Serial.println("Down");
                         y++;
                     }
                     else { 
@@ -225,13 +274,11 @@ void Sprite::move() {
                 applyGravity();
                 for (int a = 0; a > vy; a--) {
                     if (this->collisionCheckY(Direction::Up)) { 
-                        headCollision(); 
+                        //headCollision(); 
                         vy = 0; 
-// Serial.println("Not going Up");
                         break; 
                     }
                     else {
-// Serial.println("Going Up");
                         y--;
                     }
                 }
@@ -245,12 +292,10 @@ void Sprite::move() {
 
                     if (this->collisionCheckX(Direction::Right)) {
                         vx = 0;
-// Serial.println("No Right");
                         break;
                     }
                     else { 
 
-// Serial.println("Right");
                         this->x++;
                         if (vy == 0 && !isFalling()) {
                             this->frame = (this->frame + 1) % 4;
@@ -303,6 +348,7 @@ bool Sprite::jump() {
 
 }
 
+/*
 void Sprite::headCollision() {
 
   if (this->getFlags() & 0b10) return;
@@ -318,7 +364,7 @@ void Sprite::headCollision() {
   }
   
 }
-
+*/
 void Sprite::draw() {
 
     switch (this->getType()) {
@@ -345,14 +391,22 @@ void Sprite::draw() {
             Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
             break;
 
+        case ObjectTypes::Coin:
+
+            if (this->autoExpire > 20 || (this->autoExpire / 4) % 2 == 0) {
+                Sprites::drawSelfMasked(x - this->game->camera.x, y - this->game->camera.y, Images::Coins_Masks, arduboy->getFrameCount(16) / 4);
+                Sprites::drawErase(x - this->game->camera.x, y - this->game->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
+            }
+            break;
+
         default:
 
-            if (this->game->mapNumber % 2 == MapLevel::AboveGround) {
-                Sprites::drawErase(x - this->game->camera.x, y -  this->game->camera.y, this->spriteImg, 0);
-            }
-            else {
+            // if (this->game->mapNumber % 2 == MapLevel::AboveGround) {
+            //     Sprites::drawErase(x - this->game->camera.x, y -  this->game->camera.y, this->spriteImg, 0);
+            // }
+            // else {
                 Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
-            }
+            // }
 
             break;
     }

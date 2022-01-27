@@ -43,6 +43,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                 if (upperPlatform_Row == 0 && upperPlatform_X == 1) {
                     this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1);
+                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
                 }
             }
 
@@ -71,7 +72,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                 }
 
-                if (tSpawnBarrier > SpawnBarrier) {
+                if (tSpawnBarrier > spawnBarrier) {
 
                     if (!random(8)) {
 
@@ -178,7 +179,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
     }
 
-    if (tSpawnBarrier > SpawnBarrier) SpawnBarrier = tSpawnBarrier;
+    if (tSpawnBarrier > spawnBarrier) spawnBarrier = tSpawnBarrier;
 
 }
 
@@ -212,6 +213,7 @@ void Map::addObject(ObjectTypes type, int tX, int tY) {
 
 }
 
+/*
 void Map::handleObject(int x, int y) {
 
     for (int a = 0; a < Constants::MapObjects; a++) {
@@ -246,16 +248,15 @@ void Map::handleObject(int x, int y) {
     }
 
 }
-
+*/
 
 void Map::newMap() {
 
     // Reset Variables
 
     this->objectIndex = 0; 
-    this->lastLoadLocation = 0; 
     this->firstRoom = 0; 
-    SpawnBarrier = 0;
+    this->spawnBarrier = 0;
 
     for (uint8_t a = 0; a < Constants::MapObjects; a++) objects[a].deactivate();
     for (uint8_t a = 0; a < Constants::SpriteCap; a++) this->game->mobs[a].deactivate(false);

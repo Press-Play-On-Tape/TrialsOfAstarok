@@ -2,9 +2,8 @@
 
 #include "Arduboy2Ext.h"
 
-#define _DEBUG
+#define DEBUG
 #define _NO_DEATH
-#define _ORIG_GAME_MUSHROOM
 
 namespace Constants {
 
@@ -18,8 +17,10 @@ namespace Constants {
     constexpr uint8_t RoomBytes         = RoomWidth;
 
     constexpr uint8_t MapRooms          = 3; // SJH was 3
-    constexpr uint8_t MapObjects        = 30;
-    constexpr uint8_t SpriteCap         = 10;
+    // constexpr uint8_t MapObjects        = 30;
+    // constexpr uint8_t SpriteCap         = 10;
+    constexpr uint8_t MapObjects        = 20;
+    constexpr uint8_t SpriteCap         = 15;
 
     constexpr uint8_t Points_Mushroom    = 100;
     constexpr uint8_t Points_Skill       = 20;

@@ -24,13 +24,19 @@ class AstarokGame {
         EventType             event;
         uint8_t               eventCounter;
         byte                  seeds[Constants::GameSeeds];
-        uint16_t              coins;
+        //uint16_t              coins;
         uint8_t               lives;
         uint16_t              totalScore;
         uint16_t              score;
         uint16_t              distancePoints;
         uint16_t              mapNumber;
         Point                 camera;
+
+        Point                 chest;
+        Direction             ballDirection;
+        uint8_t               ballX;
+        uint8_t               ballIdx;
+        uint8_t               ballDelay;
 
         Sprite                player;
         AISprite              mobs[Constants::SpriteCap];
@@ -42,9 +48,10 @@ class AstarokGame {
         void newGame();
         void cycle(GameState &gameState);
         void draw();
-        void addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask, int16_t x, uint8_t y, uint8_t maxHeight = 255);
+        uint8_t addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask, int16_t x, uint8_t y, uint8_t maxHeight = 255);
         uint8_t getSpareMobCount();
         void drawScorePanel();
+        void playMiniGame(GameState &gameState);
 
     private:  // Methods
         void startLevel();

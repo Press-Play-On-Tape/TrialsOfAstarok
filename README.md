@@ -26,3 +26,5 @@
 - ~~Add a way to reset the scores.~~
 > A + B on high score screen 
 - Maybe just make it so we show only the top 3 scores and display the rune combinations and the scores for each instead of initials?
+- Fireball collision hit box needs to be smaller a little, when on a ledge, even if the player dont touch the fireball he still gets hit.
+- Sometimes after dying, player dont get a gameover and gets right back in the game... ( Weirdly enough it show all hearts full when that happens)

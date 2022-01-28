@@ -529,7 +529,7 @@ void AstarokGame::playMiniGame(GameState &gameState) {
 
     int16_t chestY = (this->chestObj->y * Constants::TileSize) - camera.y;
     uint8_t y = (chestY < 20 ? chestY + 15 : chestY - 15);
-    uint8_t x = (this->chestObj->x * Constants::TileSize) - 24;
+    uint8_t x = (this->chestObj->x * Constants::TileSize) - 8 - camera.x;
 
     Sprites::drawExternalMask(x, y, Images::Frame, Images::Frame_Mask, 0, 0);
     Sprites::drawSelfMasked(x + this->ballX + 4, y + 5, Images::Ball, 0);

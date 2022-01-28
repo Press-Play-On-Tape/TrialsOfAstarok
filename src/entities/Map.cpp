@@ -13,6 +13,7 @@ void Map::generateRoom(uint8_t roomNum) {
     uint8_t upperPlatform_Row = 0;
     uint8_t upperPlatform_Floor = 0;
     int8_t gap = 0;
+    bool chestCreatable = false;
     int tSpawnBarrier = roomNum * Constants::RoomWidth;
 
 
@@ -61,8 +62,10 @@ void Map::generateRoom(uint8_t roomNum) {
 
             if (roomNum && (roomNum < this->lastRoom)) {
 
+                chestCreatable = false;
+
                 if (upperPlatform_X == Constants::NoPlatform) {
-                        
+
                     if (random(10) == 0) { 
                         gap = random(2,5);
                     }
@@ -70,12 +73,15 @@ void Map::generateRoom(uint8_t roomNum) {
                         if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
                         else floor--;
                     }
+                    else {
+                        chestCreatable = true;
+                    }
 
                 }
 
                 if (tSpawnBarrier > spawnBarrier) {
 
-                    if (!random(8)) {
+                    if (!random(6)) {
 
                         uint8_t yLocation = floor - 2;
 
@@ -87,7 +93,7 @@ void Map::generateRoom(uint8_t roomNum) {
                         }
                         else {
 
-                            switch (random(29)) {
+                            switch (random(30)) {
 
                                 case 0 ... 9:
                                     this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::Triangleo], Images::SpriteMasks[ObjectTypes::Triangleo], tSpawnBarrier + x, yLocation);
@@ -107,8 +113,10 @@ void Map::generateRoom(uint8_t roomNum) {
                                     this->addObject(ObjectTypes::Coin, tSpawnBarrier + x, floor - 1);
                                     break;
 
-                                case 26 ... 26:
-                                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
+                                case 26 ... 27:
+                                    if (chestCreatable) {
+                                        this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
+                                    }
                                     break;
 
                                 default:

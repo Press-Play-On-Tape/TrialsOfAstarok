@@ -7,6 +7,7 @@
 #include "src/utils/Constants.h"
 #include "src/utils/Enums.h"
 #include "src/utils/Structs.h"
+#include "src/font/Font4x6.h"
 #include <ArduboyTones.h>
 
 Arduboy2Ext arduboy;
@@ -16,6 +17,7 @@ GameState gameState = GameState::Title_Init;
 
 TitleScreenVars titleScreenVars;
 HighScoreVars highScoreVars;
+IntroTextVars introTextVars;
 SeedVars seedVars;
 
 #ifndef DEBUG
@@ -56,6 +58,17 @@ void loop() {
             arduboy.display(true);
             break;
 
+        case GameState::IntroText_Init:
+
+            introText_Init();
+            [[Fallthrough]]
+
+        case GameState::IntroText:
+
+            introText();
+            arduboy.display(true);
+            break;
+
         case GameState::Seed_Init:
 
             seed_Init();
@@ -75,7 +88,6 @@ void loop() {
 
         case GameState::Game_Play:
 
-            // SoundEngine();
             game.cycle(gameState);
             game.draw();
 

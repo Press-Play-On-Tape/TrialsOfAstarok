@@ -28,7 +28,6 @@ void AstarokGame::newGame() {
 
     this->score = 0;
     this->distancePoints = 0;
-    //this->coins = 0;
     this->lives = 1;
     this->mapNumber = 1;
     this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
@@ -239,21 +238,16 @@ void AstarokGame::cycle(GameState &gameState) {
                     case ObjectTypes::AboveGroundExit:
                     case ObjectTypes::UnderGroundExit:
 
-                        //if (obj.collide(player.x + player.getWidth(), player.y)) {
-                            //this->SFX = Sounds::SFX_Pipe;
-                            this->event = EventType::LevelExit;
-                            this->eventCounter = 0;
-                        //}
+                        this->event = EventType::LevelExit;
+                        this->eventCounter = 0;
 
                         break;
 
                     case ObjectTypes::Coin:
 
-                        //if (obj.collide(player.x + player.getWidth(), player.y)) {
-                            obj.deactivate();
-                            this->score += Constants::Points_Coin;
-                            this->sound->tones(Sounds::Coin);
-                        //}
+                        obj.deactivate();
+                        this->score += Constants::Points_Coin;
+                        this->sound->tones(Sounds::Coin);
 
                         break;
 
@@ -264,11 +258,9 @@ void AstarokGame::cycle(GameState &gameState) {
 
                             if (pressed & A_BUTTON) {
                                 
-                                obj.type = ObjectTypes::Chest_Open;
                                 gameState = GameState::Game_Mini;
 
-                                this->chest.x = obj.x;
-                                this->chest.y = (obj.y * Constants::TileSize) - camera.y;
+                                this->chestObj = &obj;
                                 this->ballDirection = Direction::Left;
                                 this->ballX = 15;
                                 this->ballIdx = 5;
@@ -529,31 +521,15 @@ uint8_t AstarokGame::addMob(const uint8_t *data, const uint8_t * img, const uint
 
 }
 
-// uint8_t AstarokGame::getSpareMobCount() {
-
-//     uint8_t numberOfSpares = 0;
-
-//     for (AISprite &mobileObject : this->mobs) {   
-
-//         if (!mobileObject.getActive()) { 
-//             numberOfSpares++; 
-//         }
-
-//     }
-
-//     return numberOfSpares;
-
-// }
-
 void AstarokGame::playMiniGame(GameState &gameState) {
 
     const uint8_t increments[] = { 1, 2, 3, 3, 3, 3, 3, 3, 3, 2, 1 }; // 27
     
     uint8_t justPressed = this->arduboy->justPressedButtons();
-    uint8_t pressed = this->arduboy->pressedButtons();
 
-    uint8_t y = (this->chest.y < 20 ? this->chest.y + 15 : this->chest.y - 15);
-    uint8_t x = (this->chest.x * Constants::TileSize) - 24;
+    int16_t chestY = (this->chestObj->y * Constants::TileSize) - camera.y;
+    uint8_t y = (chestY < 20 ? chestY + 15 : chestY - 15);
+    uint8_t x = (this->chestObj->x * Constants::TileSize) - 24;
 
     Sprites::drawExternalMask(x, y, Images::Frame, Images::Frame_Mask, 0, 0);
     Sprites::drawSelfMasked(x + this->ballX + 4, y + 5, Images::Ball, 0);
@@ -583,33 +559,31 @@ void AstarokGame::playMiniGame(GameState &gameState) {
     }
 
     if (this->ballDelay == 0) {
-            
-        if (justPressed & A_BUTTON && this->ballIdx == 4 && this->ballDirection != Direction::None) {
+        
+        if (this->ballDirection != Direction::None) {
 
-            // if (random(0, 10) == 0) {
+            if (justPressed & A_BUTTON) {
+
                 this->ballDirection = Direction::None;
-            // }
-            // else {
-            //     Serial.println("Bump 1");
+                this->ballDelay = 24;
+                this->sound->tones(Sounds::OpenChest);
 
-            // }
+            } 
 
-        } 
-        else if (pressed & A_BUTTON && this->ballDirection != Direction::None) {
-            this->ballDirection = Direction::None;
         }
-        else if (justPressed & A_BUTTON && this->ballDirection == Direction::None) {
+        else  {
             
             gameState = GameState::Game_Play;
+            this->chestObj->type = ObjectTypes::Chest_Open;
 
             if (this->ballIdx >= 4 && ballIdx <= 6) {
-                this->addMob(Data::Mushroom, Images::Mushroom, Images::Mushroom_Mask, this->chest.x + random(-2, 3), 4);
+                this->addMob(Data::Mushroom, Images::Mushroom, Images::Mushroom_Mask, this->chestObj->x + random(-2, 3), 4);
             }
             else {
 
                 for (uint8_t i = 0; i < 5; i++) {
 
-                    this->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, this->chest.x + random(-1, 2), 4);//this->chest.y - 5);
+                    this->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, this->chestObj->x + random(-1, 2), 4);
 
                 }
 

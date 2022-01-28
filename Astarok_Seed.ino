@@ -11,19 +11,17 @@ void seed_Init() {
 
 void seed() {
 
+    drawBackground();
+    
     Sprites::drawSelfMasked(34, 8, Images::EnterRunes_Text, 0);
-    Sprites::drawSelfMasked(24, 21, Images::EnterRunes_LH, 0);
-    Sprites::drawSelfMasked(96, 21, Images::EnterRunes_RH, 0);
-
-    Sprites::drawOverwrite(2, 7, Images::Underground_Brick, 0);
-    Sprites::drawOverwrite(107, 7, Images::Underground_Brick, 0);
-    Sprites::drawOverwrite(7, 18, Images::Underground_Chain, 0);
-    Sprites::drawOverwrite(118, 18, Images::Underground_Chain, 0);
-
+    Sprites::drawSelfMasked(24, 21, Images::EnterRunes_00, 0);
+    Sprites::drawSelfMasked(24, 47, Images::EnterRunes_02, 0);
+    Sprites::drawSelfMasked(96, 21, Images::EnterRunes_01, 0);
+    Sprites::drawSelfMasked(96, 47, Images::EnterRunes_03, 0);
 
     arduboy.drawFastHLine(24, 21, 72);
     arduboy.drawFastHLine(24, 54, 72);
-    arduboy.drawFastHLine(26, 56, 70);
+    arduboy.drawFastHLine(26, 56, 75);
 
     for (uint8_t i = 0; i < 5; i++) {
 

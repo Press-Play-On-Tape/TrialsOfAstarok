@@ -14,6 +14,20 @@ struct TitleScreenVars {
 
 };
 
+struct IntroTextVars {
+
+    uint8_t panel = 0;
+    uint8_t index = 0;
+
+    void reset() {
+
+        this->panel = 0;
+        this->index = 0;
+
+    }
+
+};
+
 struct HighScoreVars {
 
     char seeds[5];

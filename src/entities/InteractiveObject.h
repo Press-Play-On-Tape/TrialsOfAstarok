@@ -12,7 +12,6 @@ class InteractiveObject {
         ObjectTypes         type;
         AstarokGame         * game;
         Arduboy2Ext         * arduboy;
-        //AISprite            * relatedSprite;
 
         uint8_t collide(int16_t tX, int16_t tY);
         void deactivate();

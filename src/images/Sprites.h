@@ -138,23 +138,4 @@ namespace Images {
         Tile_Mask, 
     };
 
-// enum ObjectTypes {
-//   Player = 0,  // Sprites
-//   STTriangleo,
-//   STStarmano,
-//   STSmileo,
-//   STBolt,
-
-//   STMushroom = 5,
-
-//   STQBlock,  // Interactive Tiles
-//   STBQBlock,
-//   STMushBlock,
-//   STBricks = 9,
-//   STAboveGroundExit,
-//   STUnderGroundExit,
-//   STSign,
-//   STFireball,
-// };
-
 };

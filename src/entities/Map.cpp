@@ -85,7 +85,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                         }
                         else {
-//this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
+
                             switch (random(29)) {
 
                                 case 0 ... 9:
@@ -212,43 +212,6 @@ void Map::addObject(ObjectTypes type, int tX, int tY) {
   }
 
 }
-
-/*
-void Map::handleObject(int x, int y) {
-
-    for (int a = 0; a < Constants::MapObjects; a++) {
-
-        if (objects[a].x == x && objects[a].y == y) {
-
-            switch (objects[a].type) {
-
-                case ObjectTypes::QBlock: 
-                    this->game->coins++;
-                    if (!(this->game->coins % 20)) {
-                        this->game->lives++;
-                        //this->game->SFX = Sounds::SFX_Life;
-                    }
-                    else {
-                        //this->game->SFX = Sounds::SFX_Coin;
-                    }
-                    objects[a].type = ObjectTypes::BQBlock;
-                    break;
-
-            // case ObjectTypes::MushBlock:
-            //   this->game->addMob(Data::Mushroom, Images::SpriteImages[ObjectTypes::Mushroom], Images::SpriteMasks[ObjectTypes::Mushroom], x, y - 1);
-            //   objects[a].type = ObjectTypes::BQBlock; break;
-
-            default:
-                break;
-
-            }
-
-        }
-
-    }
-
-}
-*/
 
 void Map::newMap() {
 

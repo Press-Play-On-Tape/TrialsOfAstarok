@@ -28,6 +28,10 @@ namespace Sounds {
         TONES_END
     };
 
+    const uint16_t OpenChest[] PROGMEM =  { 
+        NOTE_A4,75, NOTE_B4,75, NOTE_CS5,75, NOTE_G5,150, NOTE_DS5,150, TONES_END 
+    };
+
     const uint16_t LandOnTop[] PROGMEM =  { 
         NOTE_A4,75, NOTE_B4,75, NOTE_CS5,75, NOTE_G5,150, NOTE_DS5,150, TONES_END 
     };

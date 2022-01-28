@@ -61,11 +61,7 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     int16_t nX = tX / Constants::TileSize;
     int16_t nY = tY / Constants::TileSize;
 
-    // if (this->getLeftX() + this->getWidth() >= (tX / Constants::TileSize) * Constants::TileSize) {
-
-        if (this->game->level.isTile(nX, nY)) return 0xFF;  
-
-    //}
+    if (this->game->level.isTile(nX, nY)) return 0xFF;  
 
     uint8_t object = this->game->level.checkObject(nX, nY);
 
@@ -271,10 +267,11 @@ void Sprite::move() {
 
 
             if (vy < 0) { // Up
+
                 applyGravity();
+
                 for (int a = 0; a > vy; a--) {
                     if (this->collisionCheckY(Direction::Up)) { 
-                        //headCollision(); 
                         vy = 0; 
                         break; 
                     }
@@ -282,6 +279,7 @@ void Sprite::move() {
                         y--;
                     }
                 }
+
             }
 
             if (vx > 0) { // Right
@@ -401,14 +399,9 @@ void Sprite::draw() {
 
         default:
 
-            // if (this->game->mapNumber % 2 == MapLevel::AboveGround) {
-            //     Sprites::drawErase(x - this->game->camera.x, y -  this->game->camera.y, this->spriteImg, 0);
-            // }
-            // else {
-                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
-            // }
-
+            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
             break;
+            
     }
 
 }

@@ -32,7 +32,6 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
 
         case ObjectTypes::Coin:
             this->vx = random(-3, 4);
-            this->vy = random(-4, -1);
             this->autoExpire = random(12, 24) * 5;
             break;
 
@@ -61,26 +60,6 @@ void AISprite::updateExplosion() {
     }
 
 }
-
-// void AISprite::deactivate(bool explode) {
-
-//     this->active = false;
-
-//     if (!explode) {
-
-//         this->explodeCounter = 0;
-//         this->spriteData = nullptr;
-//         this->facing = Direction::Up;
-//         this->clear();
-
-//     }
-//     else {
-
-//         this->explodeCounter = 21;
-
-//     }
-
-// }
 
 bool AISprite::getActive() {
 

@@ -53,6 +53,5 @@ class Sprite {
         uint8_t collide(int16_t tX, int16_t tY);
         bool collisionCheckX(Direction direction);
         bool collisionCheckY(Direction direction);
-        // void headCollision();
 
 };

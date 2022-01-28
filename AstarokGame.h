@@ -32,7 +32,7 @@ class AstarokGame {
         uint16_t              mapNumber;
         Point                 camera;
 
-        Point                 chest;
+        InteractiveObject     * chestObj;
         Direction             ballDirection;
         uint8_t               ballX;
         uint8_t               ballIdx;

@@ -3,6 +3,8 @@
 enum GameState {
 	Title_Init,
 	Title,
+  IntroText_Init,
+  IntroText,
 	Seed_Init,
 	Seed,
 	Game_Init,

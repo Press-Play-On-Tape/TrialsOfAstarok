@@ -102,15 +102,11 @@ void AstarokGame::drawMap_Background() {
 
                     if (this->mapNumber % 2 == MapLevel::AboveGround) {   
                         Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, 
-                                                Images::Tile_Brick, Images::Tile_Mask, MapLevel::AboveGround, 0);
-                                                // pgm_read_word_near(&Images::SpriteImages[ObjectTypes::Bricks]),  
-                                                // pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::Bricks]), MapLevel::AboveGround, 0);
+                                                  Images::Tile_Brick, Images::Tile_Mask, MapLevel::AboveGround, 0);
                     }
                     else {
                         Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, 
-                        Images::Tile_Brick, Images::Tile_Mask, MapLevel::BelowGround, 0);
-                                                // pgm_read_word_near(&Images::SpriteImages[ObjectTypes::Bricks]), 
-                                                // pgm_read_word_near(&Images::SpriteMasks[ObjectTypes::Bricks]), 0, 0);
+                                                  Images::Tile_Brick, Images::Tile_Mask, MapLevel::BelowGround, 0);
                     }
 
                 }
@@ -144,13 +140,8 @@ void AstarokGame::drawMap_Background() {
                         break;
 
                     case ObjectTypes::Coin:
-                        // if (this->mapNumber % 2 == MapLevel::AboveGround) { 
-                            Sprites::drawSelfMasked(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins_Masks, arduboy->getFrameCount(16) / 4);
-                            Sprites::drawErase(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
-                        // }
-                        // else {
-                        //     Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, Images::Coins_Masks[2], arduboy->getFrameCount(16) / 4, arduboy->getFrameCount(16) / 4);
-                        // }
+                        Sprites::drawSelfMasked(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins_Masks, arduboy->getFrameCount(16) / 4);
+                        Sprites::drawErase(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
                         break;
 
                     case ObjectTypes::Chest_Closed:

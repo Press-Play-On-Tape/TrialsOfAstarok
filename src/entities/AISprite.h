@@ -6,9 +6,6 @@
 
 class AISprite : public Sprite {
 
-    // private:
-    //     bool  active;
-
     private:
         void seek();
         void detectJump();
@@ -19,7 +16,6 @@ class AISprite : public Sprite {
 
     public:
         void activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
-        // void deactivate(bool explode);
         void think();
         bool getActive();
         void updateExplosion();

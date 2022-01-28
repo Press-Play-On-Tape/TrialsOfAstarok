@@ -42,17 +42,11 @@ namespace Constants {
 
     constexpr uint8_t NoPlatform = 255;
 
-    // constexpr uint8_t UpperPlatform[] = { 3, 3, 3, 3, 3, 3,
-    //                                       3, 4, 4, 0, 0, 0,                                             
-    //                                       3, 4, 4, 3, 0, 0, 
-    //                                       3, 3, 4, 4, 0, 0,
-    //                                       };
-
-    constexpr uint8_t UpperPlatform[] = { 3, 3, 3, 3, 3, 3,  
-                                          3, 3, 3, 3, 3, 3,  
-                                          3, 3, 3, 3, 3, 3,  
-                                          3, 3, 3, 3, 3, 3, 
-                                          };
-    
+    constexpr uint8_t UpperPlatform[] = { 3, 3, 3, 3, 
+                                          3, 3, 3, 4, 
+                                          3, 4, 4, 0,                                              
+                                          3, 4, 4, 3,  
+                                          3, 3, 4, 4, 
+                                          };   
 
 }

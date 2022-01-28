@@ -28,10 +28,10 @@ void Map::generateRoom(uint8_t roomNum) {
 
         if (upperPlatform_X == Constants::NoPlatform) {
 
-            if (x >= 3 && x < 9 && random(0, 8) == 0) {
+            if (x >= 3 && x < 8 && random(0, 10) == 0) {
                 upperPlatform_X = 0;
                 upperPlatform_Floor = floor;
-                upperPlatform_Row = random(0, 4);
+                upperPlatform_Row = random(0, 5);
             }
 
         }
@@ -39,11 +39,12 @@ void Map::generateRoom(uint8_t roomNum) {
         if (upperPlatform_X != Constants::NoPlatform) {
 
             if (Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] > 0) {
+                
                 rooms[roomNum % Constants::MapRooms].setTile(x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X]);
 
-                if (upperPlatform_Row == 0 && upperPlatform_X == 1) {
+                if (upperPlatform_Row <= 1 && upperPlatform_X == 1 && random(0, 5) == 0) {
                     this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1);
-                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
+//                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
                 }
             }
 
@@ -162,7 +163,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
             upperPlatform_X++;
 
-            if (upperPlatform_X == 6) {
+            if (upperPlatform_X == 4) {
                 upperPlatform_X = Constants::NoPlatform;
             }
 

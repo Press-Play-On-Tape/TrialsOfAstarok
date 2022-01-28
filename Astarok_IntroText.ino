@@ -81,11 +81,13 @@ void introText() {
 
     if (justPressed & A_BUTTON) {
         
-        if (introTextVars.index == textLengths[introTextVars.panel]) {
+        if (introTextVars.index == textLengths[introTextVars.panel] && introTextVars.skipTypewriter == false) {
             introTextVars.panel++;
             introTextVars.index = 0;
         }
         else {
+            introTextVars.panel++;
+            introTextVars.skipTypewriter = true;
             introTextVars.index = textLengths[introTextVars.panel];
         }
 

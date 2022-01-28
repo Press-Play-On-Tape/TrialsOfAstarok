@@ -18,11 +18,13 @@ struct IntroTextVars {
 
     uint8_t panel = 0;
     uint8_t index = 0;
+    bool skipTypewriter = false;
 
     void reset() {
 
         this->panel = 0;
         this->index = 0;
+        this->skipTypewriter = false;
 
     }
 

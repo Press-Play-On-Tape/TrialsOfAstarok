@@ -42,6 +42,8 @@ class Sprite {
         uint16_t              maxHeight = 0;        
         uint8_t               jumpBoost;
         uint8_t               explodeCounter;
+        bool                  continuousBButton;
+
         Direction             facing;
         AstarokGame           * game;
         Arduboy2Ext           * arduboy;

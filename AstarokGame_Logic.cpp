@@ -98,13 +98,14 @@ void AstarokGame::processButtons() {
 
         if (!this->player.isFalling()) {
             if (this->player.jump()) {
+                this->player.continuousBButton = true;
                 this->sound->tones(Sounds::Jump);
             }
         }
 
     }
 
-    if (arduboy->pressed(B_BUTTON)) {
+    else if (this->player.continuousBButton && arduboy->pressed(B_BUTTON)) {
 
         if (this->player.isFalling()) {
 
@@ -125,6 +126,10 @@ void AstarokGame::processButtons() {
 
         }
 
+    }
+
+    else  {
+        this->player.continuousBButton = false;
     }
 
     // if (arduboy->pressed(A_BUTTON)) {

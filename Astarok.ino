@@ -122,7 +122,7 @@ void loop() {
         case GameState::HighScore_Check:
 
             highScoreVars.reset();
-            checkHighScoreSlot(game.totalScore);
+            checkHighScoreSlot(game.score + game.player.x / Constants::TileSize);
 
             if (highScoreVars.slot != Constants::EEPROM_No_Slot) {
                 game.arduboy->resetFrameCount();

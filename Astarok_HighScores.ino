@@ -48,7 +48,7 @@ void checkHighScoreSlot(uint16_t score) {
         if (tmpScore < score) {
             
             highScoreVars.slot = i;
-            highScoreVars.score = game.totalScore;
+            highScoreVars.score = game.score + game.player.x / Constants::TileSize;
 
             for (uint8_t i = 0; i < 5; i++) {
                 highScoreVars.seeds[i] = seedVars.seed[i];
@@ -83,7 +83,7 @@ void writeHighScoreEntry(HighScoreVars &highScoreVars) {
 
     // Write score and initials to the nominated slot ..
 
-    EEPROM.put(Constants::EEPROM_Scores + (7 * highScoreVars.slot), game.totalScore);
+    EEPROM.put(Constants::EEPROM_Scores + (7 * highScoreVars.slot), game.score + game.player.x / Constants::TileSize);
     EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 2, highScoreVars.seeds[0]);
     EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 3, highScoreVars.seeds[1]);
     EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 4, highScoreVars.seeds[2]);

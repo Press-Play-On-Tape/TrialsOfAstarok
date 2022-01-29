@@ -24,9 +24,7 @@ class AstarokGame {
         EventType             event;
         uint8_t               eventCounter;
         byte                  seeds[Constants::GameSeeds];
-        //uint16_t              coins;
         uint8_t               lives;
-        uint16_t              totalScore;
         uint16_t              score;
         uint16_t              distancePoints;
         uint16_t              mapNumber;

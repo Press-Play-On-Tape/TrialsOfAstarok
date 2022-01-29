@@ -35,7 +35,7 @@ void AstarokGame::drawMobs() {
 
 void AstarokGame::drawHUD() {
 
-    uint16_t tmpScore = this->score + this->player.x / Constants::TileSize; 
+    uint16_t tmpScore = this->score + this->distancePoints + this->player.x / Constants::TileSize; 
     uint8_t digits[6] = {};
     extractDigits(digits, tmpScore);
 
@@ -198,7 +198,7 @@ void AstarokGame::drawMap_Foreground() {
 void AstarokGame::drawPlayer() {
 
 
-    // Rnder player ..
+    // Render player ..
 
     switch (this->event) {
 

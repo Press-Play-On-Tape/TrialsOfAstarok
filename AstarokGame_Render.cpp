@@ -197,9 +197,34 @@ void AstarokGame::drawMap_Foreground() {
 
 void AstarokGame::drawPlayer() {
 
-    if ((this->event == EventType::StartLevel && this->eventCounter < 12) || this->event != EventType::StartLevel) { 
-        this->player.draw();
+
+    // Rnder player ..
+
+    switch (this->event) {
+
+        case EventType::StartLevel:
+
+            if (this->eventCounter < 12) { // Do not display for first half of puff cycle.
+                this->player.draw();
+            }
+
+            break;
+
+        case EventType::Death_Init:
+        case EventType::Death:
+        case EventType::Playing:   
+        case EventType::Flash:   
+            if (!(this->eventCounter % 2)) this->player.draw();
+            break;
+
+        default:
+            this->player.draw();
+            break;
+
     }
+
+
+    // Render entrance puff of smoke ..
 
     if (this->event == EventType::StartLevel) { 
 
@@ -214,32 +239,10 @@ void AstarokGame::drawPlayer() {
 
 void AstarokGame::draw() {
 
-    switch (this->event) {
-
-        case EventType::Death_Init:
-        case EventType::Death:
-        case EventType::Playing:   
-            drawMap_Background(); 
-            drawMobs(); 
-            if (!(this->eventCounter % 2)) drawPlayer();
-            drawMap_Foreground(); 
-            drawHUD();
-            break;
-
-        case EventType::StartLevel:   
-            drawMap_Background(); 
-            drawPlayer(); 
-            drawMobs(); 
-            drawMap_Foreground(); 
-            drawHUD();
-            break;
-
-        default: break;
-
-    }
-
-// if (arduboy->pressed(A_BUTTON)){
-//   arduboy->drawRect(this->player.x - this->camera.x + 2, this->player.y - this->camera.y, this->player.getWidth() - 2, this->player.getHeight(), BLACK);
-// }
+    drawMap_Background(); 
+    drawPlayer(); 
+    drawMobs(); 
+    drawMap_Foreground(); 
+    drawHUD();
 
 }

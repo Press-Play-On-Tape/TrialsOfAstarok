@@ -2,7 +2,7 @@
 
 #include "Arduboy2Ext.h"
 
-#define _DEBUG
+#define DEBUG
 #define _NO_DEATH
 
 namespace Constants {
@@ -11,7 +11,7 @@ namespace Constants {
     constexpr uint8_t GameSeeds         = 4;
     constexpr uint8_t MinLevelWidth     = 12;
 
-    constexpr uint8_t RoomWidth         = 16;
+    constexpr uint8_t RoomWidth         = 12;
     constexpr uint8_t RoomHeight        = 16;
     
     constexpr uint8_t RoomBytes         = RoomWidth;
@@ -38,6 +38,7 @@ namespace Constants {
     constexpr int8_t Fireball_StartPos = -20;
 
     constexpr uint8_t EventCounter_Death = 50;
+    constexpr uint8_t EventCounter_Flash = 50;
     constexpr uint8_t EventCounter_LevelStart = 28;
 
     constexpr uint8_t NoPlatform = 255;

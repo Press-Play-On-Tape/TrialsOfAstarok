@@ -64,6 +64,7 @@ enum EventType {
   Playing,
   Death_Init,
   Death,
+  Flash,
   LevelExit,
   StartLevel
 };

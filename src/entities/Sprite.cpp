@@ -191,6 +191,14 @@ void Sprite::move() {
             }
 
             break;
+
+        case ObjectTypes::Triangleo:
+
+            if (this->vy == 0 && random(0,20) == 0) {
+                this->vy = random(-4, 0);
+            }
+
+            break;
         
     }
 

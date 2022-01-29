@@ -33,11 +33,11 @@ namespace Sounds {
     };
 
     const uint16_t LandOnTop[] PROGMEM =  { 
-        NOTE_A4,75, NOTE_B4,75, NOTE_CS5,75, NOTE_G5,150, NOTE_DS5,150, TONES_END 
+        NOTE_A4,75, NOTE_B4,75, NOTE_CS5,75, TONES_END 
     };
 
     const uint16_t Jump[] PROGMEM = { 
-        NOTE_A4,40, NOTE_B4,40, TONES_END 
+        NOTE_A2,20, TONES_END 
     };
 
     const uint16_t Coin[] PROGMEM = {

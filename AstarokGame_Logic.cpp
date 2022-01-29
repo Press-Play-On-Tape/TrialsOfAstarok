@@ -227,7 +227,7 @@ void AstarokGame::cycle(GameState &gameState) {
 
         if (obj.x >= 0) {
 
-            Rect playerRect = { player.getLeftX(), player.getTopY(), player.getWidth() - 2, player.getHeight() };
+            Rect playerRect = this->player.getRect();
             Rect objRect = { obj.x * Constants::TileSize, obj.y * Constants::TileSize, Constants::TileSize, Constants::TileSize };
 
             switch (obj.getType()) {
@@ -607,7 +607,7 @@ void AstarokGame::playMiniGame(GameState &gameState) {
     uint8_t justPressed = this->arduboy->justPressedButtons();
 
     int16_t chestY = (this->chestObj->y * Constants::TileSize) - camera.y;
-    uint8_t y = (chestY < 20 ? chestY + 15 : chestY - 15);
+    uint8_t y = (chestY < 20 ? chestY + 16 : chestY - 16);
     uint8_t x = (this->chestObj->x * Constants::TileSize) - 8 - camera.x;
 
     Sprites::drawExternalMask(x, y, Images::Frame, Images::Frame_Mask, 0, 0);

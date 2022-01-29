@@ -29,7 +29,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
         if (upperPlatform_X == Constants::NoPlatform) {
 
-            if (x >= 3 && x < 8 && random(0, 10) == 0) {
+            if (x >= 3 && x < 9 && roomNum < this->lastRoom && random(0, 10) == 0) {
                 upperPlatform_X = 0;
                 upperPlatform_Floor = floor;
                 upperPlatform_Row = random(0, 5);
@@ -81,7 +81,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                 if (tSpawnBarrier > spawnBarrier) {
 
-                    if (!random(6)) {
+                    if (!random(3)) {
 
                         uint8_t yLocation = floor - 2;
 
@@ -104,7 +104,7 @@ void Map::generateRoom(uint8_t roomNum) {
                                     break;
 
                                 case 16 ... 18:
-                                    if (roomNum > 8) {
+                                    if (roomNum > 6) {
                                         this->game->addMob(Data::Starman, Images::SpriteImages[ObjectTypes::Starman], Images::SpriteMasks[ObjectTypes::Starman], tSpawnBarrier + x, yLocation);
                                     }
                                     break;
@@ -173,6 +173,7 @@ void Map::generateRoom(uint8_t roomNum) {
     }
 
     if (tSpawnBarrier > spawnBarrier) spawnBarrier = tSpawnBarrier;
+    
 
 }
 

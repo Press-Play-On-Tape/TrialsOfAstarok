@@ -116,18 +116,20 @@ bool Sprite::collisionCheckX(Direction direction) {
 
 bool Sprite::collisionCheckY(Direction direction) {
 
+    uint8_t width = this->getType() == ObjectTypes::Player ? 9 : this->getWidth();
+
     for (uint8_t tX = 0; tX < (this->getWidth() / Constants::TileSize); tX++) {
 
         switch (direction) {
 
             case Up:
-                if (this->collide(x + (tX * Constants::TileSize), y - 1) || this->collide(x + ((tX + 1) * Constants::TileSize) - 1, y - 1)) {
+                if (this->collide(x + (tX * Constants::TileSize), y - 1) || this->collide(x + (tX * Constants::TileSize) + width - 1, y - 1)) {
                     return true;
                 }
                 break;
 
             case Down:
-                if (this->collide(x + (tX * Constants::TileSize), y + this->getHeight()) || this->collide(x + ((tX + 1) * Constants::TileSize) - 1, y + this->getHeight())) {
+                if (this->collide(x + (tX * Constants::TileSize), y + this->getHeight()) || this->collide(x + (tX * Constants::TileSize) + width - 1, y + this->getHeight())) {
                     return true;
                 }
                 break;
@@ -353,23 +355,6 @@ bool Sprite::jump() {
 
 }
 
-/*
-void Sprite::headCollision() {
-
-  if (this->getFlags() & 0b10) return;
-
-  byte leftCheck = this->collide(x, y - 1);
-  byte rightCheck = this->collide(this->getRightX(), y - 1);
-
-  if (leftCheck == ObjectTypes::QBlock || leftCheck == ObjectTypes::MushBlock) {
-    this->game->level.handleObject(x / Constants::TileSize, (y - 1) / Constants::TileSize);
-  }
-  if (rightCheck == ObjectTypes::QBlock || rightCheck == ObjectTypes::MushBlock) {
-    this->game->level.handleObject(this->getRightX() / Constants::TileSize, (y - 1) / Constants::TileSize);
-  }
-  
-}
-*/
 void Sprite::draw() {
 
     switch (this->getType()) {

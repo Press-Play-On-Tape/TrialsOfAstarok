@@ -15,7 +15,6 @@ class Map {
         void loadMap();
         void generateRoom(uint8_t roomNum);
         void addObject(ObjectTypes type, int x, int y);
-        //void handleObject (int x, int y);
         uint8_t checkObject(int x, int y);
         bool isTile(int x, int y);
         void addSign(int x, int y);

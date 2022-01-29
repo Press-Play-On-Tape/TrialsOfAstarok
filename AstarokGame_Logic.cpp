@@ -28,7 +28,7 @@ void AstarokGame::newGame() {
 
     this->score = 0;
     this->distancePoints = 0;
-    this->lives = 2;
+    this->lives = 1;
     this->mapNumber = 1;
     this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
 
@@ -133,7 +133,7 @@ void AstarokGame::processButtons() {
     }
 
     // if (arduboy->pressed(A_BUTTON)) {
-    //     this->player.x = 2200;
+    //     this->player.x = 1600;
     // }
 
 }
@@ -164,6 +164,7 @@ void AstarokGame::adjustCamera() {
 void AstarokGame::cycle(GameState &gameState) {
 
     int mapPixelHeight = this->level.maxYPixel();
+
     this->processButtons();
 
 
@@ -364,12 +365,6 @@ void AstarokGame::cycle(GameState &gameState) {
 
                 if (obj.getActive()) { // May have been deativated just above (ie. a mushroom) ..
 
-                    // Serial.print("isActive() ");
-                    // Serial.print(obj.i);
-                    // Serial.print(" ");
-                    // Serial.println(this->player.vy);
-                    // if (this->player.isFalling() && this->player.getBottomY() + this->player.vy <= obj.getTopY()) { // And therefore landing on top of an object
-                    // if (this->player.isFalling() && this->player.vy >= 0) { // And therefore landing on top of an object
                     if (isFalling) { // And therefore landing on top of an object
 
                         switch (type) {
@@ -379,7 +374,7 @@ void AstarokGame::cycle(GameState &gameState) {
                                 #ifndef NO_DEATH
 
                                 if (event != EventType::Flash) {
-// Serial.println("lives1");        
+
                                     if (this->lives > 0) this->lives--; 
 
                                     if (this->lives == 0) {
@@ -411,10 +406,7 @@ void AstarokGame::cycle(GameState &gameState) {
                                 break;
 
                             default:
-// Serial.print("defaukt: ");
-// Serial.print(obj.i);
-// Serial.print(" ");
-// Serial.println("deactivate");
+
                                 obj.deactivate(true);
                                 this->score += Constants::Points_Skill;
                                 this->sound->tones(Sounds::LandOnTop);
@@ -435,7 +427,6 @@ void AstarokGame::cycle(GameState &gameState) {
 
                     }
                     else if (this->eventCounter == 0) {
-// Serial.println("lives2");        
 
                         if (this->lives > 0) this->lives--; 
 
@@ -498,6 +489,7 @@ void AstarokGame::cycle(GameState &gameState) {
         
             this->eventCounter = 0;
             this->distancePoints += this->player.x / Constants::TileSize;
+            //this->score = this->score + this->distancePoints;
             this->mapNumber++;
             this->player.x = 10;
             this->player.y = spawnY();
@@ -515,19 +507,6 @@ bool AstarokGame::testCollision(Sprite * player, AISprite * sprite) {
     Rect rect1 = player->getRect();
     Rect rect2 = sprite->getRect();
 
-    // if (arduboy->collide(rect1, rect2)) {
-
-    //     Serial.print(rect1.y);
-    //     Serial.print(",");
-    //     Serial.print(rect1.height);
-    //     Serial.print(" ");
-    //     Serial.print(rect2.y);
-    //     Serial.print(",");
-    //     Serial.print(rect2.height);
-    //     Serial.println("");
-
-    // }
-
     return arduboy->collide(rect1, rect2);
 
 }
@@ -543,9 +522,6 @@ void AstarokGame::die(GameState &gameState) {
     else {
 
         if (this->event == EventType::Death_Init) {
-            this->totalScore = this->score;
-            this->distancePoints += this->player.x / Constants::TileSize;
-            this->totalScore += this->distancePoints;
             this->event = EventType::Death;
         }
 

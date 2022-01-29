@@ -13,20 +13,20 @@ namespace Data {
          ObjectTypes::Player, 0, 0, 0,    // Flags, Speed, AI Setting
     };
 
-    PROGMEM const uint8_t Triangleo[] {
-        ObjectTypes::Triangleo, 
+    PROGMEM const uint8_t Spider[] {
+        ObjectTypes::Spider, 
         0b10,       // Flags
         1, AI_DETECT_WALL | AI_DETECT_GAP,    // Speed, AI Setting (0b11)
     };
 
-    PROGMEM const uint8_t Starmano[] {
-        ObjectTypes::Starmano, 
+    PROGMEM const uint8_t Starman[] {
+        ObjectTypes::Starman, 
         0b10,       // Flags
         2, AI_SEEK | AI_DETECT_JUMP | AI_DETECT_WALL | AI_DETECT_GAP,  // Speed, AI Setting (0b1111)
     };
 
-    PROGMEM const uint8_t Smileo[] {
-        ObjectTypes::Smileo, 
+    PROGMEM const uint8_t Skull[] {
+        ObjectTypes::Skull, 
         0b10,       // Flags
         2, AI_DETECT_WALL,     // Speed, AI Setting (0b1)
     };

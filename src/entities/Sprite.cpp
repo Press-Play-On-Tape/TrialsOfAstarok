@@ -67,7 +67,7 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
 
     switch (object) {
 
-        case ObjectTypes::Triangleo ... ObjectTypes::UnderGroundExit:
+        case ObjectTypes::Spider ... ObjectTypes::UnderGroundExit:
         case ObjectTypes::Fireball:
             return object;
 
@@ -191,7 +191,7 @@ void Sprite::move() {
 
             break;
 
-        case ObjectTypes::Triangleo:
+        case ObjectTypes::Spider:
 
             if (this->vy == 0 && random(0,20) == 0) {
                 this->vy = random(-4, 0);
@@ -387,8 +387,8 @@ void Sprite::draw() {
             }
             break;
 
-        case ObjectTypes::Smileo:
-        case ObjectTypes::Triangleo:
+        case ObjectTypes::Skull:
+        case ObjectTypes::Spider:
             Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
             break;
 

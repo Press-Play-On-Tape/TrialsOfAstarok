@@ -41,9 +41,9 @@ enum Direction { Up, Down, Left, Right, None };
 
 enum ObjectTypes {
   Player = 0,  // Sprites
-  Triangleo,
-  Starmano,
-  Smileo,
+  Spider,
+  Starman,
+  Skull,
   Bolt,
   Mushroom = 5,
   QBlock,  // Interactive Tiles

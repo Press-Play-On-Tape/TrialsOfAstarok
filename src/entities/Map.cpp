@@ -88,7 +88,7 @@ void Map::generateRoom(uint8_t roomNum) {
                         if (upperPlatform_X > 0 && upperPlatform_X < 3 && random(0, 2) == 0) {
 
                             yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
-                            this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::Triangleo], Images::SpriteMasks[ObjectTypes::Triangleo], tSpawnBarrier + x, yLocation);
+                            this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
 
                         }
                         else {
@@ -96,16 +96,16 @@ void Map::generateRoom(uint8_t roomNum) {
                             switch (random(30)) {
 
                                 case 0 ... 9:
-                                    this->game->addMob(Data::Triangleo, Images::SpriteImages[ObjectTypes::Triangleo], Images::SpriteMasks[ObjectTypes::Triangleo], tSpawnBarrier + x, yLocation);
+                                    this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
                                     break;
 
                                 case 10 ... 15:
-                                    this->game->addMob(Data::Smileo, Images::SpriteImages[ObjectTypes::Smileo], Images::SpriteMasks[ObjectTypes::Smileo], tSpawnBarrier + x, yLocation);
+                                    this->game->addMob(Data::Skull, Images::SpriteImages[ObjectTypes::Skull], Images::SpriteMasks[ObjectTypes::Skull], tSpawnBarrier + x, yLocation);
                                     break;
 
                                 case 16 ... 18:
                                     if (roomNum > 8) {
-                                        this->game->addMob(Data::Starmano, Images::SpriteImages[ObjectTypes::Starmano], Images::SpriteMasks[ObjectTypes::Starmano], tSpawnBarrier + x, yLocation);
+                                        this->game->addMob(Data::Starman, Images::SpriteImages[ObjectTypes::Starman], Images::SpriteMasks[ObjectTypes::Starman], tSpawnBarrier + x, yLocation);
                                     }
                                     break;
 

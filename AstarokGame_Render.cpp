@@ -245,4 +245,7 @@ void AstarokGame::draw() {
     drawMap_Foreground(); 
     drawHUD();
 
+    //arduboy->drawRect(player.getLeftX() - this->camera.x, player.getTopY() - this->camera.y, player.getWidth() - 3, player.getHeight(), BLACK);
+
+
 }

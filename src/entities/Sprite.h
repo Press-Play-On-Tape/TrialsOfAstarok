@@ -35,6 +35,8 @@ class Sprite {
         uint8_t getType();
         uint8_t getFrame();
 
+        Rect getRect();
+
         int16_t               x, y, yInit;
         int8_t                vx, vy;
         uint16_t              maxHeight = 0;        

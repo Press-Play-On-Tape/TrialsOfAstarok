@@ -419,3 +419,20 @@ uint8_t Sprite::getFrame() {
     return this->frame;
 
 }
+
+Rect Sprite::getRect() {
+
+    switch (this->getType()) {
+
+        case ObjectTypes::Player:
+            return Rect { this->getLeftX(), this->getTopY(), 9, this->getHeight()};
+
+        case ObjectTypes::Fireball:
+            return Rect { this->getLeftX() + 2, this->getTopY() + 2, this->getWidth() - 4, this->getHeight() - 4};
+
+        default:
+            return Rect { this->getLeftX(), this->getTopY(), this->getWidth(), this->getHeight()};
+
+    }
+
+}

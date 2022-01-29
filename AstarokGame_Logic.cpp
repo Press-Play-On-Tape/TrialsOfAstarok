@@ -161,6 +161,10 @@ void AstarokGame::cycle(GameState &gameState) {
     int mapPixelHeight = this->level.maxYPixel();
     this->processButtons();
 
+
+
+    // Handle any events that are still active ..
+
     switch (this->event) {
 
         case EventType::Death_Init:
@@ -217,7 +221,7 @@ void AstarokGame::cycle(GameState &gameState) {
     }
 
 
-    // Have we touched an end of level thingy?
+    // Have we touched any interactive objects (EOL, chests, etc) ..
 
     for (InteractiveObject &obj : this->level.objects) {
 
@@ -294,6 +298,9 @@ void AstarokGame::cycle(GameState &gameState) {
     }
 
 
+    // Handle the movement of sprites ..
+
+    bool isFalling = this->player.isFalling() && this->player.vy >= 0;
 
     for (AISprite &obj : this->mobs) {
 
@@ -329,7 +336,7 @@ void AstarokGame::cycle(GameState &gameState) {
             // Have we touched another object?
 
             if (obj.getActive() && testCollision(&player, &obj)) {
-                    
+              
                 uint8_t type = obj.getType();
 
                 switch (type) {
@@ -351,8 +358,14 @@ void AstarokGame::cycle(GameState &gameState) {
                 }
 
                 if (obj.getActive()) { // May have been deativated just above (ie. a mushroom) ..
-                    
-                    if (this->player.isFalling()) { // And therefore landing on top of an object
+
+                    // Serial.print("isActive() ");
+                    // Serial.print(obj.i);
+                    // Serial.print(" ");
+                    // Serial.println(this->player.vy);
+                    // if (this->player.isFalling() && this->player.getBottomY() + this->player.vy <= obj.getTopY()) { // And therefore landing on top of an object
+                    // if (this->player.isFalling() && this->player.vy >= 0) { // And therefore landing on top of an object
+                    if (isFalling) { // And therefore landing on top of an object
 
                         switch (type) {
 
@@ -393,7 +406,10 @@ void AstarokGame::cycle(GameState &gameState) {
                                 break;
 
                             default:
-
+// Serial.print("defaukt: ");
+// Serial.print(obj.i);
+// Serial.print(" ");
+// Serial.println("deactivate");
                                 obj.deactivate(true);
                                 this->score += Constants::Points_Skill;
                                 this->sound->tones(Sounds::LandOnTop);
@@ -452,10 +468,8 @@ void AstarokGame::cycle(GameState &gameState) {
         case EventType::Playing:
 
             if (this->player.y > mapPixelHeight) { 
-// Serial.println("lives3");        
 
-                if (this->lives > 0) this->lives--; 
-
+                this->lives = 0;
                 this->event = EventType::Death_Init; 
                 this->sound->tones(Sounds::Dying);
                 this->eventCounter = Constants::EventCounter_Death - 3; 
@@ -493,8 +507,21 @@ void AstarokGame::cycle(GameState &gameState) {
 
 bool AstarokGame::testCollision(Sprite * player, AISprite * sprite) {
 
-    Rect rect1 = { player->getLeftX(), player->getTopY(), player->getWidth(), player->getHeight()};
-    Rect rect2 = { sprite->getLeftX(), sprite->getTopY(), sprite->getWidth(), sprite->getHeight()};
+    Rect rect1 = player->getRect();
+    Rect rect2 = sprite->getRect();
+
+    // if (arduboy->collide(rect1, rect2)) {
+
+    //     Serial.print(rect1.y);
+    //     Serial.print(",");
+    //     Serial.print(rect1.height);
+    //     Serial.print(" ");
+    //     Serial.print(rect2.y);
+    //     Serial.print(",");
+    //     Serial.print(rect2.height);
+    //     Serial.println("");
+
+    // }
 
     return arduboy->collide(rect1, rect2);
 

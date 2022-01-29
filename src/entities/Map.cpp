@@ -131,21 +131,6 @@ void Map::generateRoom(uint8_t roomNum) {
 
                     }
 
-                    #ifdef ORIG_GAME_MUSHROOM
-                    if (!random(16) && !gap && floor > ceiling + 5 && x != Constants::RoomWidth - 1) {
-
-                        int y = random(max(floor - 7, ceiling + 2), floor - 3);
-
-                        if (!random(4)) {
-                            addObject (, tSpawnBarrier + x, y);
-                        }
-                        else {
-                            addObject(, tSpawnBarrier + x, y);
-                        }
-
-                    }
-                    #endif
-
                 }
 
             }
@@ -154,7 +139,6 @@ void Map::generateRoom(uint8_t roomNum) {
         else {
             
             gap--;
-
 
             if (random(0, 5) == 0) {
 

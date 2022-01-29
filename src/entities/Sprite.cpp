@@ -161,7 +161,6 @@ void Sprite::deactivate(bool explode) {
 }
 
 void Sprite::move() {
-
     
     switch (this->getType()) {
 

@@ -193,7 +193,17 @@ void AstarokGame::cycle(GameState &gameState) {
             break;
 
         case EventType::StartLevel:
+            if (this->eventCounter > 0) {
+                this->eventCounter--;
+                if (this->eventCounter == 0) {
+                    this->event = EventType::Playing;
+                }
+            }
+            break;
+
         case EventType::Flash:
+            this->player.move();
+            adjustCamera();
             if (this->eventCounter > 0) {
                 this->eventCounter--;
                 if (this->eventCounter == 0) {
@@ -349,13 +359,35 @@ void AstarokGame::cycle(GameState &gameState) {
                             case ObjectTypes::Fireball:
 
                                 #ifndef NO_DEATH
-                                if (this->eventCounter == 0) {
+
+                                if (event != EventType::Flash) {
+// Serial.println("lives1");        
                                     if (this->lives > 0) this->lives--; 
-                                    this->event = EventType::Death_Init; 
-                                    this->eventCounter = Constants::EventCounter_Death;   
-                                    this->sound->tones(Sounds::Dying);
-                                    obj.deactivate(true);
+
+                                    if (this->lives == 0) {
+
+                                        if (this->eventCounter == 0) {
+                                            
+                                            this->event = EventType::Death_Init; 
+                                            this->eventCounter = Constants::EventCounter_Death;   
+                                            this->sound->tones(Sounds::Dying);
+                                            obj.deactivate(true);
+
+                                        }
+
+                                    }
+                                    else {
+
+                                        #ifndef NO_DEATH
+                                        this->event = EventType::Flash; 
+                                        this->eventCounter = Constants::EventCounter_Flash;
+                                        this->sound->tones(Sounds::Dying);
+                                        #endif
+
+                                    }
+
                                 }
+
                                 #endif
 
                                 break;
@@ -382,21 +414,21 @@ void AstarokGame::cycle(GameState &gameState) {
 
                     }
                     else if (this->eventCounter == 0) {
+// Serial.println("lives2");        
 
                         if (this->lives > 0) this->lives--; 
 
-                        //if (this->player.getHeight() == Constants::TileSize) { 
                         if (this->lives == 0) {
-Serial.println("Death_Init 1a ");                            
+
                             #ifndef NO_DEATH
                             this->event = EventType::Death_Init; 
                             this->eventCounter = Constants::EventCounter_Death;
                             this->sound->tones(Sounds::Dying);
                             #endif
-                        //}
+
                         }
                         else {
-Serial.println("Death_Init 1b ");                            
+
                             #ifndef NO_DEATH
                             this->event = EventType::Flash; 
                             this->eventCounter = Constants::EventCounter_Flash;
@@ -420,12 +452,14 @@ Serial.println("Death_Init 1b ");
         case EventType::Playing:
 
             if (this->player.y > mapPixelHeight) { 
+// Serial.println("lives3");        
+
                 if (this->lives > 0) this->lives--; 
-Serial.println("Death_Init 2 ");                            
 
                 this->event = EventType::Death_Init; 
                 this->sound->tones(Sounds::Dying);
                 this->eventCounter = Constants::EventCounter_Death - 3; 
+
             }
 
             if (this->eventCounter > 0) this->eventCounter--;
@@ -435,7 +469,9 @@ Serial.println("Death_Init 2 ");
         case EventType::Death:
 
             if (this->eventCounter == 0) {
+
                 die(gameState);
+
             }
             break;
 

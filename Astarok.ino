@@ -50,7 +50,9 @@ void loop() {
 
             sound.tones(Sounds::Theme);
             gameState = GameState::Title;
-            [[Fallthrough]]
+            titleScreen();
+            arduboy.display(true);
+            break;
 
         case GameState::Title:
 
@@ -61,7 +63,9 @@ void loop() {
         case GameState::IntroText_Init:
 
             introText_Init();
-            [[Fallthrough]]
+            introText();
+            arduboy.display(true);
+            break;
 
         case GameState::IntroText:
 
@@ -72,7 +76,9 @@ void loop() {
         case GameState::Seed_Init:
 
             seed_Init();
-            [[Fallthrough]]
+            seed();
+            arduboy.display(true);
+            break;
 
         case GameState::Seed:
 
@@ -84,7 +90,15 @@ void loop() {
 
             game.newGame();
             gameState = GameState::Game_Play;
-            [[Fallthrough]]
+            game.cycle(gameState);
+            game.draw();
+
+            if (game.event == EventType::Death) {
+                game.drawScorePanel();
+            }
+
+            arduboy.displayWithBackground(game.mapNumber % 2 ? MapLevel::AboveGround : MapLevel::BelowGround);
+            break;
 
         case GameState::Game_Play:
 

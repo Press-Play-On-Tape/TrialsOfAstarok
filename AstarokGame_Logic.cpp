@@ -28,7 +28,7 @@ void AstarokGame::newGame() {
 
     this->score = 0;
     this->distancePoints = 0;
-    this->lives = 1;
+    this->lives = 2;
     this->mapNumber = 1;
     this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
 
@@ -193,6 +193,7 @@ void AstarokGame::cycle(GameState &gameState) {
             break;
 
         case EventType::StartLevel:
+        case EventType::Flash:
             if (this->eventCounter > 0) {
                 this->eventCounter--;
                 if (this->eventCounter == 0) {
@@ -382,13 +383,26 @@ void AstarokGame::cycle(GameState &gameState) {
                     }
                     else if (this->eventCounter == 0) {
 
-                        if (this->player.getHeight() == Constants::TileSize) { 
+                        if (this->lives > 0) this->lives--; 
+
+                        //if (this->player.getHeight() == Constants::TileSize) { 
+                        if (this->lives == 0) {
+Serial.println("Death_Init 1a ");                            
                             #ifndef NO_DEATH
-                            if (this->lives > 0) this->lives--; 
                             this->event = EventType::Death_Init; 
                             this->eventCounter = Constants::EventCounter_Death;
                             this->sound->tones(Sounds::Dying);
                             #endif
+                        //}
+                        }
+                        else {
+Serial.println("Death_Init 1b ");                            
+                            #ifndef NO_DEATH
+                            this->event = EventType::Flash; 
+                            this->eventCounter = Constants::EventCounter_Flash;
+                            this->sound->tones(Sounds::Dying);
+                            #endif
+
                         }
 
                     }
@@ -407,6 +421,8 @@ void AstarokGame::cycle(GameState &gameState) {
 
             if (this->player.y > mapPixelHeight) { 
                 if (this->lives > 0) this->lives--; 
+Serial.println("Death_Init 2 ");                            
+
                 this->event = EventType::Death_Init; 
                 this->sound->tones(Sounds::Dying);
                 this->eventCounter = Constants::EventCounter_Death - 3; 

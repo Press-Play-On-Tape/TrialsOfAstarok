@@ -79,7 +79,7 @@ void introText() {
 
     uint8_t justPressed = arduboy.justPressedButtons();
 
-    if (justPressed & A_BUTTON) {
+    if (justPressed & A_BUTTON || justPressed & B_BUTTON) {
         
         if (introTextVars.index == textLengths[introTextVars.panel] && introTextVars.skipTypewriter == false) {
             introTextVars.panel++;
@@ -92,13 +92,6 @@ void introText() {
         }
 
         if (introTextVars.panel == 3) gameState = GameState::Seed_Init;
-
-    }
-
-
-    if ((justPressed & B_BUTTON)) {
-        
-        gameState = GameState::Seed_Init;
 
     }
 

@@ -4,13 +4,13 @@
 
 namespace Images {
 
-    const uint8_t PROGMEM Mushroom[] = {
+    const uint8_t PROGMEM Health[] = {
     12, 12,
     0x7c, 0x82, 0x01, 0x11, 0x09, 0x02, 0x02, 0x01, 0x01, 0x01, 0x82, 0x7c, 
     0x00, 0x00, 0x01, 0x02, 0x04, 0x08, 0x08, 0x04, 0x02, 0x01, 0x00, 0x00, 
     };
 
-    const uint8_t PROGMEM Mushroom_Mask[] = {
+    const uint8_t PROGMEM Health_Mask[] = {
     0x7c, 0xfe, 0xff, 0xff, 0xff, 0xfe, 0xfe, 0xff, 0xff, 0xff, 0xfe, 0x7c, 
     0x00, 0x00, 0x01, 0x03, 0x07, 0x0f, 0x0f, 0x07, 0x03, 0x01, 0x00, 0x00, 
     };
@@ -118,7 +118,7 @@ namespace Images {
         Starman,                   // 2
         Skull,                     // 3
         Bolt,                       // 4
-        Mushroom,                   // 5
+        Health,                   // 5
         Tile_QBlock,                // 6
         Tile_BQBlock,               // 7
         Tile_QBlock,                // 8
@@ -131,7 +131,7 @@ namespace Images {
         Starman_Mask, 
         Skull_Mask, 
         Bolt_Mask, 
-        Mushroom_Mask,
+        Health_Mask,
         Tile_Mask, 
         Tile_Mask, 
         Tile_Mask, 

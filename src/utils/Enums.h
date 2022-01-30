@@ -1,6 +1,8 @@
 #pragma once
 
 enum GameState {
+	SplashScreen_Init,
+	SplashScreen,
 	Title_Init,
 	Title,
   IntroText_Init,
@@ -45,7 +47,7 @@ enum ObjectTypes {
   Starman,
   Skull,
   Bolt,
-  Mushroom = 5,
+  Health = 5,
   QBlock,  // Interactive Tiles
   BQBlock,
   MushBlock,

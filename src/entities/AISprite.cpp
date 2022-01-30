@@ -25,13 +25,13 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
             vy = Constants::Fireball_NotMoving;
             break;
 
-        case ObjectTypes::Mushroom:
-            vx = random(-2, 3);
+        case ObjectTypes::Health:
+            vx = random(-1, 2);
             this->autoExpire = random(12, 24) * 5;
             break;
 
         case ObjectTypes::Coin:
-            this->vx = random(-3, 4);
+            this->vx = random(-2, 3);
             this->autoExpire = random(12, 24) * 5;
             break;
 

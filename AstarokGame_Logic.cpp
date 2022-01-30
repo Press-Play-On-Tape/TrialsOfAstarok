@@ -27,7 +27,6 @@ AstarokGame::AstarokGame(Arduboy2Ext *arduboy, ArduboyTones *sound) {
 void AstarokGame::newGame() {
 
     this->score = 0;
-    this->distancePoints = 0;
     this->lives = 1;
     this->mapNumber = 1;
     this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
@@ -349,9 +348,9 @@ void AstarokGame::cycle(GameState &gameState) {
 
                 switch (type) {
 
-                    case ObjectTypes::Mushroom:
+                    case ObjectTypes::Health:
                         obj.deactivate(true);
-                        this->score += Constants::Points_Mushroom;
+                        this->score += Constants::Points_Health;
                         if (this->lives < 3) this->lives++;
                         break;
 
@@ -365,7 +364,7 @@ void AstarokGame::cycle(GameState &gameState) {
 
                 }
 
-                if (obj.getActive()) { // May have been deativated just above (ie. a mushroom) ..
+                if (obj.getActive()) { // May have been deativated just above (ie. a health) ..
 
                     if (isFalling) { // And therefore landing on top of an object
 
@@ -490,8 +489,6 @@ void AstarokGame::cycle(GameState &gameState) {
         case EventType::LevelExit:
         
             this->eventCounter = 0;
-            this->distancePoints += this->player.x / Constants::TileSize;
-            //this->score = this->score + this->distancePoints;
             this->mapNumber++;
             this->player.x = 10;
             this->player.y = spawnY();
@@ -639,7 +636,7 @@ void AstarokGame::playMiniGame(GameState &gameState) {
             this->chestObj->type = ObjectTypes::Chest_Open;
 
             if (this->ballIdx >= 4 && ballIdx <= 6) {
-                this->addMob(Data::Mushroom, Images::Mushroom, Images::Mushroom_Mask, this->chestObj->x + random(-2, 3), 4);
+                this->addMob(Data::Health, Images::Health, Images::Health_Mask, this->chestObj->x + random(-2, 3), 4);
             }
             else {
 

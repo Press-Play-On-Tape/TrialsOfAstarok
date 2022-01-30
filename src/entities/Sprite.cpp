@@ -176,7 +176,7 @@ void Sprite::move() {
 
             break;
 
-        case ObjectTypes::Mushroom:
+        case ObjectTypes::Health:
         case ObjectTypes::Coin:
 
             if (this->autoExpire > 0) {
@@ -196,7 +196,7 @@ void Sprite::move() {
         case ObjectTypes::Spider:
 
             if (this->vy == 0 && random(0,20) == 0) {
-                this->vy = random(-4, 0);
+                this->vy = random(-8, 0);
             }
 
             break;

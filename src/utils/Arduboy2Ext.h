@@ -3,7 +3,7 @@
 #include <Arduboy2.h>
 #include "Enums.h"
 
-class Arduboy2Ext : public Arduboy2 {
+class Arduboy2Ext : public Arduboy2Base {
 
   public:
 

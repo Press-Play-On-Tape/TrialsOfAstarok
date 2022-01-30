@@ -13,7 +13,7 @@
 Arduboy2Ext arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
 AstarokGame game(&arduboy, &sound);
-GameState gameState = GameState::Title_Init;
+GameState gameState = GameState::SplashScreen_Init;
 
 TitleScreenVars titleScreenVars;
 HighScoreVars highScoreVars;
@@ -45,6 +45,19 @@ void loop() {
     arduboy.pollButtons();
 
     switch (gameState) {
+
+        case GameState::SplashScreen_Init:
+
+            splashScreen_Init();
+            splashScreen();
+            arduboy.display(false);
+            break;
+
+        case GameState::SplashScreen:
+
+            splashScreen();
+            arduboy.display(false);
+            break;
 
         case GameState::Title_Init:
 

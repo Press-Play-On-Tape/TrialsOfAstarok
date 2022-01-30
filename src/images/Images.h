@@ -7,5 +7,6 @@
 #include "Puffs.h"
 #include "Runes.h"
 #include "Scenery.h"
+#include "Splash.h"
 #include "Sprites.h"
 #include "Titles.h"

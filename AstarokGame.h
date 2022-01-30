@@ -26,7 +26,6 @@ class AstarokGame {
         byte                  seeds[Constants::GameSeeds];
         uint8_t               lives;
         uint16_t              score;
-        uint16_t              distancePoints;
         uint16_t              mapNumber;
         Point                 camera;
 

@@ -1,7 +1,7 @@
 #include "Arduboy2Ext.h"
 #include "Enums.h"
 
-Arduboy2Ext::Arduboy2Ext() : Arduboy2() { }
+Arduboy2Ext::Arduboy2Ext() : Arduboy2Base() { }
 
 uint8_t Arduboy2Ext::justPressedButtons() const {
 

@@ -101,7 +101,7 @@ void highScores() {
     if (gameState == GameState::HighScore_NoFlash && highScoreVars.spinCountdown == 0) {
 
         highScoreVars.index = random(0, 14);
-        highScoreVars.spinIndex = 17;
+        highScoreVars.spinIndex = 16;
         highScoreVars.spinCountdown = 100;
 
     }

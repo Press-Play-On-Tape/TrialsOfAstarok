@@ -86,7 +86,7 @@ void introText() {
             introTextVars.index = 0;
         }
         else {
-            introTextVars.panel++;
+            if (introTextVars.skipTypewriter) introTextVars.panel++;
             introTextVars.skipTypewriter = true;
             introTextVars.index = textLengths[introTextVars.panel];
         }

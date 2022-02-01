@@ -317,6 +317,13 @@ void AstarokGame::cycle(GameState &gameState) {
 
             switch (obj.getType()) {
 
+                case ObjectTypes::Health:
+                    // Do nothing ..
+                    // if (this->event == EventType::Playing) {
+                    //     obj.move();
+                    // }
+                    break;
+
                 case ObjectTypes::Fireball:
                     if (this->event == EventType::Playing) {
                         obj.move();
@@ -635,14 +642,26 @@ void AstarokGame::playMiniGame(GameState &gameState) {
             gameState = GameState::Game_Play;
             this->chestObj->type = ObjectTypes::Chest_Open;
 
+            for (int i = 0; i < Constants::ParticlesMax; i++) {
+
+                particles[i].setX((this->chestObj->x * Constants::TileSize) - this->camera.x + 11);
+                particles[i].setY((this->chestObj->y * Constants::TileSize) - this->camera.y - 8);
+                particles[i].setVelX(random(-3, 4));
+                particles[i].setVelY(random(1, 4));
+                particles[i].setCounter(random(15, 46));
+            
+            }
+            
             if (this->ballIdx >= 4 && ballIdx <= 6) {
-                this->addMob(Data::Health, Images::Health, Images::Health_Mask, this->chestObj->x + random(-2, 3), 4);
+
+                this->addMob(Data::Health, Images::Health, Images::Health_Mask, this->chestObj->x, this->chestObj->y - 1);
+
             }
             else {
 
-                for (uint8_t i = 0; i < 5; i++) {
+                for (uint8_t i = 0; i < 4; i++) {
 
-                    this->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, this->chestObj->x + random(-1, 2), 4);
+                    this->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, this->chestObj->x, this->chestObj->y - 1);
 
                 }
 

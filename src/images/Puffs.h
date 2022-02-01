@@ -104,4 +104,31 @@ namespace Images {
     const uint8_t * const Puffs[] PROGMEM = { Puff_00, Puff_01, Puff_02, Puff_03, Puff_04, Puff_05, Puff_06 }; 
     const uint8_t * const Puff_Masks[] PROGMEM = { Puff_00_Mask, Puff_01_Mask, Puff_02_Mask, Puff_03_Mask, Puff_04_Mask, Puff_05_Mask, Puff_06_Mask }; 
 
+    const uint8_t PROGMEM Pixel_01[] = {
+    3, 3,
+    0x00, 0x02, 0x00, 
+    };
+
+    const uint8_t PROGMEM Pixel_01_Mask[] = {
+    0x07, 0x07, 0x07, 
+    };
+
+    const uint8_t PROGMEM Pixel_02[] = {
+    4, 4,
+    0x00, 0x02, 0x04, 0x00, 
+    };
+
+    const uint8_t PROGMEM Pixel_02_Mask[] = {
+    0x07, 0x0f, 0x0f, 0x0e, 
+    };
+
+    const uint8_t PROGMEM Pixel_03[] = {
+    4, 4,
+    0x00, 0x04, 0x02, 0x00, 
+    };
+
+    const uint8_t PROGMEM Pixel_03_Mask[] = {
+    0x0e, 0x0f, 0x0f, 0x07, 
+    };
+
 };

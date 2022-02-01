@@ -7,6 +7,8 @@
 
 namespace Constants {
 
+    constexpr uint8_t ParticlesMax      = 25;
+
     constexpr uint8_t TileSize          = 12;
     constexpr uint8_t GameSeeds         = 4;
     constexpr uint8_t MinLevelWidth     = 12;

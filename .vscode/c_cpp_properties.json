@@ -23,6 +23,7 @@
                 "/Applications/Programming/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/SPI/src",
                 "/Users/simonholmes/Documents/Arduino/libraries/ArduboyTones/src",
                 "/Users/simonholmes/Documents/Arduino/libraries/Arduboy2/src",
+                "/Users/simonholmes/Documents/Arduino/libraries/FixedPoints/src",
                 "/Applications/Programming/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
                 "/Applications/Programming/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
                 "/Applications/Programming/Arduino.app/Contents/Java/hardware/tools/avr/avr/include"

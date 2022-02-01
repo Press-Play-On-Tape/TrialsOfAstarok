@@ -43,13 +43,10 @@ void Map::generateRoom(uint8_t roomNum) {
                 
                 rooms[roomNum % Constants::MapRooms].setTile(x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X]);
 
-                if (upperPlatform_Row <= 1 && upperPlatform_X == 1 && random(0, 5) == 0) {
-                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1);
-//                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
-                }
             }
 
         }
+
 
         if (gap == 0) {
 
@@ -85,7 +82,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                         uint8_t yLocation = floor - 2;
 
-                        if (upperPlatform_X > 0 && upperPlatform_X < 3 && random(0, 2) == 0) {
+                        if (upperPlatform_X > 0 && upperPlatform_X < 3 && random(0, 8) == 0) {
 
                             yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
                             this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);

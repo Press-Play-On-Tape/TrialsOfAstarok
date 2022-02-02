@@ -624,54 +624,66 @@ void AstarokGame::playMiniGame(GameState &gameState) {
 
     }
 
-    if (this->ballDelay == 0) {
+    switch (this->ballDelay) {
         
-        if (this->ballDirection != Direction::None) {
-
-            if (justPressed & A_BUTTON) {
-
-                this->ballDirection = Direction::None;
-                this->ballDelay = 24;
-                this->sound->tones(Sounds::OpenChest);
-
-            } 
-
-        }
-        else  {
+        case 0:
             
-            gameState = GameState::Game_Play;
-            this->chestObj->type = ObjectTypes::Chest_Open;
+            if (this->ballDirection != Direction::None) {
 
-            for (int i = 0; i < Constants::ParticlesMax; i++) {
+                if (justPressed & A_BUTTON) {
 
-                particles[i].setX((this->chestObj->x * Constants::TileSize) - this->camera.x + 11);
-                particles[i].setY((this->chestObj->y * Constants::TileSize) - this->camera.y - 8);
-                particles[i].setVelX(random(-3, 4));
-                particles[i].setVelY(random(1, 4));
-                particles[i].setCounter(random(15, 46));
-            
-            }
-            
-            if (this->ballIdx >= 4 && ballIdx <= 6) {
+                    this->ballDirection = Direction::None;
+                    this->ballDelay = 24;
+                    this->sound->tones(Sounds::OpenChest);
 
-                this->addMob(Data::Health, Images::Health, Images::Health_Mask, this->chestObj->x, this->chestObj->y - 1);
+                } 
 
             }
-            else {
+            else  {
+                
+                gameState = GameState::Game_Play;
+                this->chestObj->type = ObjectTypes::Chest_Open;
+                
+                if (this->ballIdx >= 4 && ballIdx <= 6) {
 
-                for (uint8_t i = 0; i < 4; i++) {
+                    this->addMob(Data::Health, Images::Health, Images::Health_Mask, this->chestObj->x, this->chestObj->y - 1);
 
-                    this->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, this->chestObj->x, this->chestObj->y - 1);
+                }
+                else {
+
+                    for (uint8_t i = 0; i < 4; i++) {
+
+                        this->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, this->chestObj->x, this->chestObj->y - 1);
+
+                    }
 
                 }
 
             }
 
-        }
+            break;
 
-    }
-    else {
-        this->ballDelay--;
+        case 6:
+
+            for (int i = 0; i < Constants::ParticlesMax; i++) {
+
+                particles[i].setX((this->chestObj->x * Constants::TileSize) - this->camera.x + 8 + random(0, 7));
+                particles[i].setY((this->chestObj->y * Constants::TileSize) - this->camera.y - 6 - random(0, 4));
+                particles[i].setVelX(random(-3, 4));
+                particles[i].setVelY(random(1, 4));
+                particles[i].setCounter(random(15, 46));
+            
+            }
+
+            this->ballDelay--;
+
+            break;
+
+        default:
+
+            this->ballDelay--;
+            break;
+
     }
 
 }

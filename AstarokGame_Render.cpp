@@ -247,5 +247,33 @@ void AstarokGame::draw() {
 
     //arduboy->drawRect(player.getLeftX() - this->camera.x, player.getTopY() - this->camera.y, player.getWidth() - 3, player.getHeight(), BLACK);
 
+    // Particles?
+
+    for (uint8_t i = 0; i < Constants::ParticlesMax; i++) {
+
+        particles[i].update();
+
+        if (particles[i].render()) { // the dot should be rendered
+
+            uint8_t pSize = particles[i].getSize();
+
+            switch (pSize) {
+
+                case 1:
+                    Sprites::drawExternalMask( particles[i].getX(), particles[i].getY(), Images::Pixel_01, Images::Pixel_01_Mask, 0, 0);
+                    break;
+
+                case 2:
+                    Sprites::drawExternalMask( particles[i].getX(), particles[i].getY(), Images::Pixel_02, Images::Pixel_02_Mask, 0, 0);
+                    break;
+
+                case 3:
+                    Sprites::drawExternalMask( particles[i].getX(), particles[i].getY(), Images::Pixel_03, Images::Pixel_03_Mask, 0, 0);
+                    break;
+            } 
+
+        }
+
+    }
 
 }

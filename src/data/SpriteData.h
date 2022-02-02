@@ -34,7 +34,7 @@ namespace Data {
     PROGMEM const uint8_t Health[] {
         ObjectTypes::Health, 
         0b10,       // Flags
-        2, AI_DETECT_WALL,     // Speed, AI Setting (0b1)
+        1, 0,     // Speed, AI Setting (0b1)
     };
 
     PROGMEM const uint8_t Bolt[] {

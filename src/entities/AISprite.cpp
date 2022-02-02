@@ -26,12 +26,16 @@ void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t
             break;
 
         case ObjectTypes::Health:
-            vx = random(-1, 2);
+            x = x + 6;
+            y = y - 4;
             this->autoExpire = random(12, 24) * 5;
             break;
 
         case ObjectTypes::Coin:
+            x = x + 6;
+            y = y - 4;
             this->vx = random(-2, 3);
+            this->vy = random(-4, 0);
             this->autoExpire = random(12, 24) * 5;
             break;
 

@@ -15,6 +15,8 @@
 #include "src/entities/Room.h"
 #include "src/entities/Map.h"
 
+#include "src/entities/Particle.h"
+
 class AstarokGame {
 
     public:  // Constructor
@@ -40,6 +42,8 @@ class AstarokGame {
         Map                   level;
         Arduboy2Ext           * arduboy;
         ArduboyTones          * sound;
+
+        Particle particles[Constants::ParticlesMax];
 
     public:  // Methods
         void newGame();

@@ -36,32 +36,32 @@ void AstarokGame::drawMobs() {
 void AstarokGame::drawHUD() {
 
     uint16_t tmpScore = this->score + this->player.x / Constants::TileSize; 
-    uint8_t digits[6] = {};
+    uint8_t digits[5] = {};
     extractDigits(digits, tmpScore);
 
     if (this->mapNumber % 2 == MapLevel::AboveGround) {
 
-        for(size_t index = 0; index < 58; ++index) arduboy->sBuffer[index] = 0xFF;
+        for(size_t index = 0; index < 53; ++index) arduboy->sBuffer[index] = 0xFF;
 
         Sprites::drawErase(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawErase(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawErase(17, 1, Images::Heart, this->lives >= 3 ? Hearts::FilledIn : Hearts::Outline);
 
-        for (uint8_t x = 6; x > 0; x--) {
-            Sprites::drawErase(27 + ((6 - x) * 5), 1, Images::Numbers, digits[x - 1]);
+        for (uint8_t x = 5; x > 0; x--) {
+            Sprites::drawErase(27 + ((5 - x) * 5), 1, Images::Numbers, digits[x - 1]);
         }
 
     }
     else {
 
-        for(size_t index = 0; index < 58; ++index) arduboy->sBuffer[index] = 0x00;
+        for(size_t index = 0; index < 53; ++index) arduboy->sBuffer[index] = 0x00;
 
         Sprites::drawSelfMasked(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawSelfMasked(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawSelfMasked(17, 1, Images::Heart, this->lives >= 3 ? Hearts::FilledIn : Hearts::Outline);
 
-        for (uint8_t x = 6; x > 0; x--) {
-            Sprites::drawSelfMasked(27 + ((6 - x) * 5), 1, Images::Numbers, digits[x - 1]);
+        for (uint8_t x = 5; x > 0; x--) {
+            Sprites::drawSelfMasked(27 + ((5 - x) * 5), 1, Images::Numbers, digits[x - 1]);
         }
 
     }

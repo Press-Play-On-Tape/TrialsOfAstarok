@@ -3,11 +3,11 @@
 #include "Arduboy2Ext.h"
 
 #define _DEBUG
-#define _NO_DEATH
+#define NO_DEATH
 
 namespace Constants {
 
-    constexpr uint8_t ParticlesMax      = 25;
+    constexpr uint8_t ParticlesMax      = 20;
 
     constexpr uint8_t TileSize          = 12;
     constexpr uint8_t GameSeeds         = 4;

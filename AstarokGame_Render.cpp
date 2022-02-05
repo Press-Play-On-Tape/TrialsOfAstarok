@@ -8,6 +8,14 @@ void AstarokGame::drawScorePanel() {
 
 }
 
+void AstarokGame::renderPause() {
+
+    if (this->pause) {
+        Sprites::drawExternalMask(32, 15, Images::Pause, Images::Pause_Mask, 0, 0);
+    }
+
+}
+
 void AstarokGame::drawMobs() {
 
     for (AISprite &obj : this->mobs) {
@@ -35,9 +43,11 @@ void AstarokGame::drawMobs() {
 
 void AstarokGame::drawHUD() {
 
-    uint16_t tmpScore = this->score + this->player.x / Constants::TileSize; 
+    int16_t tmpScore = this->score + this->player.x / Constants::TileSize; 
+    if (tmpScore < 0) tmpScore = 0;
+    
     uint8_t digits[5] = {};
-    extractDigits(digits, tmpScore);
+    extractDigits(digits, static_cast<uint16_t>(tmpScore));
 
     if (this->mapNumber % 2 == MapLevel::AboveGround) {
 
@@ -244,6 +254,7 @@ void AstarokGame::draw() {
     drawMobs(); 
     drawMap_Foreground(); 
     drawHUD();
+    renderPause();
 
     //arduboy->drawRect(player.getLeftX() - this->camera.x, player.getTopY() - this->camera.y, player.getWidth() - 3, player.getHeight(), BLACK);
 

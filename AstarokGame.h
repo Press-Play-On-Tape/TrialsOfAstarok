@@ -27,7 +27,7 @@ class AstarokGame {
         uint8_t               eventCounter;
         byte                  seeds[Constants::GameSeeds];
         uint8_t               lives;
-        uint16_t              score;
+        int16_t               score;
         uint16_t              mapNumber;
         Point                 camera;
 
@@ -43,9 +43,17 @@ class AstarokGame {
         Arduboy2Ext           * arduboy;
         ArduboyTones          * sound;
 
+
+    private:
+
+        uint8_t               pauseCount = 0;  
+        bool                  pause = false;
+        bool                  collideWithChest = false;
         Particle particles[Constants::ParticlesMax];
 
+
     public:  // Methods
+
         void newGame();
         void cycle(GameState &gameState);
         void draw();
@@ -55,6 +63,7 @@ class AstarokGame {
         void playMiniGame(GameState &gameState);
 
     private:  // Methods
+
         void startLevel();
         bool testCollision(Sprite * player, AISprite * sprite);
         void die(GameState &gameState);
@@ -65,6 +74,7 @@ class AstarokGame {
         void drawMobs();
         void adjustCamera();
         void processButtons();
+        void renderPause();
         uint8_t spawnY();
 
 };

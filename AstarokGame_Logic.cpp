@@ -26,7 +26,7 @@ AstarokGame::AstarokGame(Arduboy2Ext *arduboy, ArduboyTones *sound) {
 
 void AstarokGame::newGame() {
 
-    this->score = 0;
+    this->score = -2;
     this->lives = 1;
     this->mapNumber = 1;
     this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
@@ -163,9 +163,44 @@ void AstarokGame::adjustCamera() {
 void AstarokGame::cycle(GameState &gameState) {
 
     int mapPixelHeight = this->level.maxYPixel();
+    uint8_t justPressed = this->arduboy->justPressedButtons();
+    uint8_t pressed = this->arduboy->pressedButtons();
 
-    this->processButtons();
 
+    // Pause?
+
+    if (this->event == EventType::Playing && !this->collideWithChest) {
+
+        if (justPressed & A_BUTTON) {
+            this->pause = ! this->pause;
+        }
+        else if (pressed & A_BUTTON) {
+
+            this->pauseCount++;
+
+            if (this->pauseCount > 32) {
+                this->pauseCount = 0;
+                gameState = GameState::Title_Init;
+                this->pause = false;
+            }
+
+        }
+        else {
+
+            this->pauseCount = 0;
+
+        }
+
+    }
+    else {
+
+        this->pauseCount = 0;
+
+    }
+
+    if (this->pause) return;
+
+    this->collideWithChest = false;
 
 
     // Handle any events that are still active ..
@@ -197,6 +232,7 @@ void AstarokGame::cycle(GameState &gameState) {
             break;
 
         case EventType::Playing:
+            this->processButtons();
             this->player.move();
             adjustCamera();
             break;
@@ -211,6 +247,7 @@ void AstarokGame::cycle(GameState &gameState) {
             break;
 
         case EventType::Flash:
+            this->processButtons();
             this->player.move();
             adjustCamera();
             if (this->eventCounter > 0) {
@@ -272,21 +309,18 @@ void AstarokGame::cycle(GameState &gameState) {
                         break;
 
                     case ObjectTypes::Chest_Closed:
-                        {
 
-                            uint8_t pressed = this->arduboy->justPressedButtons();
+                        this->collideWithChest = true;
 
-                            if (pressed & A_BUTTON) {
-                                
-                                gameState = GameState::Game_Mini;
+                        if (justPressed & A_BUTTON) {
+                            
+                            gameState = GameState::Game_Mini;
 
-                                this->chestObj = &obj;
-                                this->ballDirection = Direction::Left;
-                                this->ballX = 15;
-                                this->ballIdx = 5;
-                                this->ballDelay = 4;
-
-                            }
+                            this->chestObj = &obj;
+                            this->ballDirection = Direction::Left;
+                            this->ballX = 15;
+                            this->ballIdx = 5;
+                            this->ballDelay = 4;
 
                         }
 
@@ -494,6 +528,7 @@ void AstarokGame::cycle(GameState &gameState) {
         
             this->eventCounter = 0;
             this->mapNumber++;
+            this->score = this->score + (this->player.x / Constants::TileSize) - 2;
             this->player.x = 10;
             this->player.y = spawnY();
             startLevel();
@@ -518,7 +553,7 @@ void AstarokGame::die(GameState &gameState) {
 
     if (this->lives > 0) {
 
-        this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 10, spawnY());
+        this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
         startLevel();
 
     }

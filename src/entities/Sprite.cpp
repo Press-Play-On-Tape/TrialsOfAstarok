@@ -43,6 +43,7 @@ void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mas
     this->vx = 0; 
     this->vy = 0;
     this->facing = Direction::Right;
+    this->autoExpire = 0;
 
 }
 
@@ -216,6 +217,9 @@ void Sprite::move() {
     }
  
     switch (this->getType()) {
+        
+        case ObjectTypes::Health:
+            break;
 
         case ObjectTypes::Fireball:
 
@@ -386,6 +390,13 @@ void Sprite::draw() {
             if (this->autoExpire > 20 || (this->autoExpire / 4) % 2 == 0) {
                 Sprites::drawSelfMasked(x - this->game->camera.x, y - this->game->camera.y, Images::Coins_Masks, arduboy->getFrameCount(16) / 4);
                 Sprites::drawErase(x - this->game->camera.x, y - this->game->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
+            }
+            break;
+
+        case ObjectTypes::Health:
+
+            if (this->autoExpire > 20 || (this->autoExpire / 4) % 2 == 0) {
+                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
             }
             break;
 

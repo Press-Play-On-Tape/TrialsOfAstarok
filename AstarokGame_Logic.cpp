@@ -318,10 +318,7 @@ void AstarokGame::cycle(GameState &gameState) {
             switch (obj.getType()) {
 
                 case ObjectTypes::Health:
-                    // Do nothing ..
-                    // if (this->event == EventType::Playing) {
-                    //     obj.move();
-                    // }
+                    obj.move();
                     break;
 
                 case ObjectTypes::Fireball:

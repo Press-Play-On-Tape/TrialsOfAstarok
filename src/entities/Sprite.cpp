@@ -44,6 +44,7 @@ void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mas
     this->vy = 0;
     this->facing = Direction::Right;
     this->autoExpire = 0;
+    this->explodeCounter = 0;
 
 }
 
@@ -54,6 +55,8 @@ void Sprite::clear() {
     this->y = -1;
     this->vx = 0;
     this->vy = 0;
+    this->autoExpire = 0;
+    this->explodeCounter = 0;
 
 }
 

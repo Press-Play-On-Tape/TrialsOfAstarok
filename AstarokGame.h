@@ -42,6 +42,7 @@ class AstarokGame {
         Map                   level;
         Arduboy2Ext           * arduboy;
         ArduboyTones          * sound;
+        uint16_t              seed;
 
 
     private:

@@ -208,8 +208,8 @@ void Sprite::move() {
 
         case ObjectTypes::Spider:
 
-            if (this->vy == 0 && random(0,20) == 0) {
-                this->vy = random(-8, 0);
+            if (this->vy == 0 && !this->isFalling() && hash(this->game->seed) % 20 == 0) {
+                this->vy = -(hash(this->game->seed) % 8);
             }
 
             break;
@@ -235,7 +235,7 @@ void Sprite::move() {
 
         case ObjectTypes::Fireball:
 
-            if (this->vy == Constants::Fireball_NotMoving && random(0, 40) == 0) {
+            if (this->vy == Constants::Fireball_NotMoving && hash(this->game->seed) % 40 == 0) {
                 this->vy = Constants::Fireball_StartPos;
             }
 

@@ -114,7 +114,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                                 case 26 ... 27:
                                     if (chestCreatable) {
-                                        this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
+                                        this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x - 1, floor - 1);
                                     }
                                     break;
 

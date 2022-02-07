@@ -699,11 +699,11 @@ void AstarokGame::playMiniGame(GameState &gameState) {
 
             for (int i = 0; i < Constants::ParticlesMax; i++) {
 
-                particles[i].setX((this->chestObj->x * Constants::TileSize) - this->camera.x + 8 + random(0, 7));
-                particles[i].setY((this->chestObj->y * Constants::TileSize) - this->camera.y - 6 - random(0, 4));
-                particles[i].setVelX(random(-3, 4));
-                particles[i].setVelY(random(1, 4));
-                particles[i].setCounter(random(15, 46));
+                particles[i].setX((this->chestObj->x * Constants::TileSize) - this->camera.x + 8 + (hash(this->seed) % 7));
+                particles[i].setY((this->chestObj->y * Constants::TileSize) - this->camera.y - 6 - (hash(this->seed) % 4));
+                particles[i].setVelX((hash(this->seed) % 7) - 3);
+                particles[i].setVelY((hash(this->seed) % 3) + 1);
+                particles[i].setCounter((hash(this->seed) % 30) + 15);                
             
             }
 

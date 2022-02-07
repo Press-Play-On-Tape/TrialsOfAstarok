@@ -2,8 +2,8 @@
 
 #include "Arduboy2Ext.h"
 
-#define _DEBUG
-#define _NO_DEATH
+#define DEBUG
+#define NO_DEATH
 
 namespace Constants {
 

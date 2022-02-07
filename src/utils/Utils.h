@@ -3,6 +3,14 @@
 #include <stddef.h>
 #include <Print.h>
 
+static uint16_t hash(uint16_t &value)
+{
+  value ^= (value << 13);
+  value ^= (value >> 7);
+  value ^= (value << 5);
+  return value;
+}
+
 // ----------------------------------------------------------------------------
 //  Extract the size of an array .. 
 //

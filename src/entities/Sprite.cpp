@@ -65,7 +65,7 @@ uint8_t Sprite::collide(int16_t tX, int16_t tY) {
     int16_t nX = tX / Constants::TileSize;
     int16_t nY = tY / Constants::TileSize;
 
-    if (this->game->level.isTile(nX, nY)) return 0xFF;  
+    if (this->game->level.isTile(nX, nY)) return Constants::Collision_Platform;  
 
     uint8_t object = this->game->level.checkObject(nX, nY);
 
@@ -167,7 +167,16 @@ void Sprite::deactivate(bool explode) {
 }
 
 void Sprite::move() {
-    
+        
+
+    // Capture skulls etc in walls ..
+
+    if (this->collide(this->x, this->y) == Constants::Collision_Platform) {
+
+        this->deactivate(false);
+       
+    }
+
     switch (this->getType()) {
 
         case ObjectTypes::Player:

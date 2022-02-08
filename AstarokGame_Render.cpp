@@ -95,8 +95,8 @@ void AstarokGame::drawMap_Background() {
         for (uint8_t i = 0; i <= 128; i += 64) {
 
             Sprites::drawOverwrite(i + 7 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
-            Sprites::drawOverwrite(i + 22 - backgroundXOffset, backgroundYOffset + 6, Images::Underground_Brick, 0);
             Sprites::drawOverwrite(i + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
+            Sprites::drawOverwrite(i + 26 - backgroundXOffset, backgroundYOffset + 7, Images::Torch, arduboy->getFrameCount(16) / 4);
 
         }
 

@@ -11,11 +11,12 @@ void Map::generateRoom(uint8_t roomNum) {
     uint8_t upperPlatform_X = Constants::NoPlatform;
     uint8_t upperPlatform_Row = 0;
     uint8_t upperPlatform_Floor = 0;
+
     int8_t gap = 0;
     bool largeGap = false;
     bool largeGapFinished = false;
-    uint8_t flatFloor = 0;
     int tSpawnBarrier = roomNum * Constants::RoomWidth;
+    uint8_t flatFloor = 0;
 
 
     // If this is the first room on a level, add the sign ..
@@ -81,11 +82,28 @@ void Map::generateRoom(uint8_t roomNum) {
 
                 if (tSpawnBarrier > spawnBarrier) {
 
-                    if (!(hash(this->game->seed) % 5)) {
+                    if (!(hash(this->game->seed) % 3)) {
 
                         uint8_t yLocation = floor - 2;
+                        uint8_t randomMax;
 
-                        if (upperPlatform_X > 0 && upperPlatform_X < 3 && hash(this->game->seed) % 8 == 0) {
+                        switch (this->game->mapNumber) {
+
+                            case 0 ... 3:
+                                randomMax = 12;
+                                break;
+
+                            case 4 ... 6:
+                                randomMax = 10;
+                                break;
+
+                            default:
+                                randomMax = 8;
+                                break;
+
+                        }
+
+                        if (upperPlatform_X > 0 && upperPlatform_X < 3 && (hash(this->game->seed) % randomMax) == 0) {
 
                             yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
                             this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
@@ -93,7 +111,25 @@ void Map::generateRoom(uint8_t roomNum) {
                         }
                         else {
 
-                            switch (hash(this->game->seed) % 30) {
+                            uint8_t randomMax;
+
+                            switch (this->game->mapNumber) {
+
+                                case 0 ... 3:
+                                    randomMax = 50;
+                                    break;
+
+                                case 4 ... 6:
+                                    randomMax = 40;
+                                    break;
+
+                                default:
+                                    randomMax = 30;
+                                    break;
+
+                            }
+
+                            switch (hash(this->game->seed) % randomMax) {
 
                                 case 0 ... 9:
                                     this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
@@ -119,11 +155,13 @@ void Map::generateRoom(uint8_t roomNum) {
                                     }
                                     break;
 
-                                default:
+                                 case 28 ... 29:
                                     if (roomNum > 8) {
                                         this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::Bolt], Images::SpriteMasks[ObjectTypes::Bolt], tSpawnBarrier + x, 2);
                                     }
                                     break;
+
+                                default: break;
 
                             }
 
@@ -187,31 +225,31 @@ void Map::generateRoom(uint8_t roomNum) {
 
 void Map::addExit(ObjectTypes exitType, int x, int y) {
 
-  addObject(exitType, x, y);
+    addObject(exitType, x, y);
 
 }
 
 void Map::addSign(int x, int y) {
 
-  addObject(ObjectTypes::Sign,  x,   y);
+    addObject(ObjectTypes::Sign,  x,   y);
 
 }
 
 void Map::addObject(ObjectTypes type, int tX, int tY) {
 
-  if (checkObject(tX, tY)) {
-    return;
-  }
-  else {
-   
-    objects[this->objectIndex].x = tX;
-    objects[this->objectIndex].y = tY;
-    objects[this->objectIndex].type = type;
-    this->objectIndex++;
+    if (checkObject(tX, tY)) {
+        return;
+    }
+    else {
 
-    if (this->objectIndex == Constants::MapObjects) this->objectIndex = 0;
+        objects[this->objectIndex].x = tX;
+        objects[this->objectIndex].y = tY;
+        objects[this->objectIndex].type = type;
+        this->objectIndex++;
 
-  }
+        if (this->objectIndex == Constants::MapObjects) this->objectIndex = 0;
+
+    }
 
 }
 
@@ -229,9 +267,7 @@ void Map::newMap() {
     // Seed for level length
 
     this->game->seed = this->game->seeds[ this->game->mapNumber % Constants::GameSeeds ] * this->game->mapNumber;
-    uint16_t lowEnd = Constants::MinLevelWidth + (hash(this->game->seed) % this->game->mapNumber);
-    uint16_t highEnd = (hash(this->game->seed) % this->game->mapNumber) + lowEnd;
-    this->lastRoom = lowEnd == highEnd ? lowEnd : (hash(this->game->seed) % highEnd - lowEnd) + lowEnd;
+    this->lastRoom = Constants::MinLevelWidth + (hash(this->game->seed) % this->game->mapNumber); 
 
 
 
@@ -256,8 +292,8 @@ void Map::loadMap() {
 
 bool Map::isTile(int x, int y) {
 
-  int room = (x / Constants::RoomWidth) % Constants::MapRooms;
-  return rooms[room].readTile(x % Constants::RoomWidth, y);
+    int room = (x / Constants::RoomWidth) % Constants::MapRooms;
+    return rooms[room].readTile(x % Constants::RoomWidth, y);
 
 }
 

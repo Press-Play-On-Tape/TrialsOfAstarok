@@ -3,12 +3,12 @@
 #include <stddef.h>
 #include <Print.h>
 
-static uint16_t hash(uint16_t &value)
+static uint32_t hash(uint32_t &value)
 {
-  value ^= (value << 13);
-  value ^= (value >> 7);
-  value ^= (value << 5);
-  return value;
+    value ^= (value << 13);
+    value ^= (value >> 17);
+    value ^= (value << 5);
+    return value;
 }
 
 // ----------------------------------------------------------------------------
@@ -16,7 +16,7 @@ static uint16_t hash(uint16_t &value)
 //
 template< typename T, size_t size > constexpr size_t getSize(T(&)[size]) {
 
-  return size;
+    return size;
 
 }
 
@@ -24,10 +24,10 @@ template< typename T, size_t size > constexpr size_t getSize(T(&)[size]) {
 
 template< size_t size > void extractDigits(uint8_t (&buffer)[size], uint8_t value) {
 
-  for(uint8_t i = 0; i < size; ++i) {
-    buffer[i] = value % 10;
-    value /= 10;
-  }
+    for(uint8_t i = 0; i < size; ++i) {
+        buffer[i] = value % 10;
+        value /= 10;
+    }
 
 }
 

@@ -146,7 +146,7 @@ void AstarokGame::drawMap_Background() {
                         break;
 
                     case ObjectTypes::Sign:
-                        Sprites::drawOverwrite(x * Constants::TileSize - this->camera.x - 4, y * Constants::TileSize - this->camera.y - 4, Images::SignPost, this->mapNumber % 2);
+                        Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x - 4, y * Constants::TileSize - this->camera.y - 4, Images::SignPost, Images::SignPost_Mask, this->mapNumber % 2, 0);
                         break;
 
                     case ObjectTypes::Coin:

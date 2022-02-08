@@ -3,8 +3,24 @@
 #include "../data/SpriteData.h"
 #include "../../AstarokGame.h"
 
-uint8_t AISprite::getSpeed()            { return pgm_read_byte(this->spriteData + SpriteSpeed); }
-uint8_t AISprite::getIntelligence()     { return pgm_read_byte(this->spriteData + SpriteIntelligence); }
+uint8_t AISprite::getSpeed()            { return pgm_read_byte(this->spriteData + SpriteDataLayout::Speed); }
+
+uint8_t AISprite::getIntelligence() { 
+
+    switch (this->game->mapNumber) {
+
+        case 0 ... 3:
+            return pgm_read_byte(this->spriteData + SpriteDataLayout::Intelligence); 
+
+        case 4 ... 6:
+            return pgm_read_byte(this->spriteData + SpriteDataLayout::Intelligence + 1); 
+
+        default:
+            return pgm_read_byte(this->spriteData + SpriteDataLayout::Intelligence + 2); 
+
+    }
+
+}
 
 void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
 

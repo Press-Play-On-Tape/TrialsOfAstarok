@@ -62,8 +62,10 @@ void seed() {
 
         if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
 
-            randomSeed(seedVars.getSeedValue());
-            for (uint8_t a = 0; a < Constants::GameSeeds; a++ ) game.seeds[a] = random(255);
+            game.seed = seedVars.getSeedValue();
+            for (uint8_t a = 0; a < Constants::GameSeeds; a++ ) {
+                game.seeds[a] = hash(game.seed);
+            }
 
             sound.tones(Sounds::ButtonPress);
             gameState = GameState::Game_Init;

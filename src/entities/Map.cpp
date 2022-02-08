@@ -15,7 +15,7 @@ void Map::generateRoom(uint8_t roomNum) {
     int8_t gap = 0;
     bool largeGap = false;
     bool largeGapFinished = false;
-    bool chestCreatable = false;
+    uint8_t flatFloor = 0;
     int tSpawnBarrier = roomNum * Constants::RoomWidth;
 
 
@@ -26,6 +26,7 @@ void Map::generateRoom(uint8_t roomNum) {
     }
 
     for (int x = 0; x < Constants::RoomWidth; x++) {
+
 
         // Should we launch an upper platform?
 
@@ -61,20 +62,20 @@ void Map::generateRoom(uint8_t roomNum) {
 
             if (roomNum && (roomNum < this->lastRoom)) {
 
-                chestCreatable = false;
-
                 if (upperPlatform_X == Constants::NoPlatform) {
 
                     if (random(10) == 0) { 
                         gap = random(2,5);
                         if (gap == 4) largeGap = true;
+                        flatFloor = 0;
                     }
                     else if (random(5) == 0) {
                         if (!random(1) && floor < Constants::RoomHeight - 1) floor++;
                         else floor--;
+                        flatFloor = 0;
                     }
                     else {
-                        chestCreatable = true;
+                        flatFloor++;
                     }
 
                 }
@@ -114,7 +115,7 @@ void Map::generateRoom(uint8_t roomNum) {
                                     break;
 
                                 case 26 ... 27:
-                                    if (chestCreatable) {
+                                    if (flatFloor >= 2) {
                                         this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
                                     }
                                     break;

@@ -32,7 +32,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
         if (upperPlatform_X == Constants::NoPlatform && !largeGapFinished && gap == 0) {
 
-            if (x >= 3 && x < 9 && roomNum < this->lastRoom && hash(this->game->seed) % 10 == 0) {
+            if (x >= 3 && x < 9 && roomNum < this->lastRoom && hash(this->game->seed) % 7 == 0) {
                 upperPlatform_X = 0;
                 upperPlatform_Floor = floor;
                 upperPlatform_Row = hash(this->game->seed) % 5;
@@ -82,88 +82,84 @@ void Map::generateRoom(uint8_t roomNum) {
 
                 if (tSpawnBarrier > spawnBarrier) {
 
-                    if (!(hash(this->game->seed) % 3)) {
+                    uint8_t yLocation = floor - 2;
+                    uint8_t randomMax = 5;
 
-                        uint8_t yLocation = floor - 2;
-                        uint8_t randomMax;
+
+                    // Place items on upper platform?
+
+                    if (upperPlatform_X > 0 && upperPlatform_X < 3) {
+
+                        yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
+                        uint8_t randomNumber = hash(this->game->seed) % randomMax;
+
+                        if (randomNumber == 1) {
+
+                            this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
+
+                        }
+                        else if ((hash(this->game->seed) % 4) == 0) {
+
+                            this->addObject(ObjectTypes::Coin, tSpawnBarrier + x, yLocation);
+
+                        }
+
+                    }
+                    
+
+                    // Place items on lower platform?
+
+                    if (!(hash(this->game->seed) % 3)) {
 
                         switch (this->game->mapNumber) {
 
                             case 0 ... 3:
-                                randomMax = 12;
+                                randomMax = 40;
                                 break;
 
                             case 4 ... 6:
-                                randomMax = 10;
+                                randomMax = 35;
                                 break;
 
                             default:
-                                randomMax = 8;
+                                randomMax = 30;
                                 break;
 
                         }
 
-                        if (upperPlatform_X > 0 && upperPlatform_X < 3 && (hash(this->game->seed) % randomMax) == 0) {
+                        switch (hash(this->game->seed) % randomMax) {
 
-                            yLocation = upperPlatform_Floor - Constants::UpperPlatform[(upperPlatform_Row * 4) + upperPlatform_X] - 1;
-                            this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
+                            case 0 ... 9:
+                                this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
+                                break;
 
-                        }
-                        else {
+                            case 10 ... 15:
+                                this->game->addMob(Data::Skull, Images::SpriteImages[ObjectTypes::Skull], Images::SpriteMasks[ObjectTypes::Skull], tSpawnBarrier + x, yLocation);
+                                break;
 
-                            uint8_t randomMax;
+                            case 16 ... 18:
+                                if (roomNum > 6) {
+                                    this->game->addMob(Data::Starman, Images::SpriteImages[ObjectTypes::Starman], Images::SpriteMasks[ObjectTypes::Starman], tSpawnBarrier + x, yLocation);
+                                }
+                                break;
 
-                            switch (this->game->mapNumber) {
+                            case 19 ... 25:
+                                this->addObject(ObjectTypes::Coin, tSpawnBarrier + x, floor - 1);
+                                break;
 
-                                case 0 ... 3:
-                                    randomMax = 50;
-                                    break;
+                            case 26 ... 27:
+                                if (flatFloor >= 2) {
+                                    this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
+                                }
+                                break;
 
-                                case 4 ... 6:
-                                    randomMax = 40;
-                                    break;
+                                case 28 ... 29:
+                                if (roomNum > 8) {
+                                    this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::Bolt], Images::SpriteMasks[ObjectTypes::Bolt], tSpawnBarrier + x, 2);
+                                }
+                                break;
 
-                                default:
-                                    randomMax = 30;
-                                    break;
-
-                            }
-
-                            switch (hash(this->game->seed) % randomMax) {
-
-                                case 0 ... 9:
-                                    this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
-                                    break;
-
-                                case 10 ... 15:
-                                    this->game->addMob(Data::Skull, Images::SpriteImages[ObjectTypes::Skull], Images::SpriteMasks[ObjectTypes::Skull], tSpawnBarrier + x, yLocation);
-                                    break;
-
-                                case 16 ... 18:
-                                    if (roomNum > 6) {
-                                        this->game->addMob(Data::Starman, Images::SpriteImages[ObjectTypes::Starman], Images::SpriteMasks[ObjectTypes::Starman], tSpawnBarrier + x, yLocation);
-                                    }
-                                    break;
-
-                                case 19 ... 25:
-                                    this->addObject(ObjectTypes::Coin, tSpawnBarrier + x, floor - 1);
-                                    break;
-
-                                case 26 ... 27:
-                                    if (flatFloor >= 2) {
-                                        this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
-                                    }
-                                    break;
-
-                                 case 28 ... 29:
-                                    if (roomNum > 8) {
-                                        this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::Bolt], Images::SpriteMasks[ObjectTypes::Bolt], tSpawnBarrier + x, 2);
-                                    }
-                                    break;
-
-                                default: break;
-
-                            }
+                            default: break;
 
                         }
 

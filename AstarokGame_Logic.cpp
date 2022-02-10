@@ -356,9 +356,7 @@ void AstarokGame::cycle(GameState &gameState) {
                     break;
 
                 case ObjectTypes::Fireball:
-                    // if (this->event == EventType::Playing) {
-                        obj.move();
-                    // }
+                    obj.move();
                     break;
 
                 default:

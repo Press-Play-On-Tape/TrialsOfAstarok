@@ -91,7 +91,10 @@ void introText() {
             introTextVars.index = textLengths[introTextVars.panel];
         }
 
-        if (introTextVars.panel == 3) gameState = GameState::Seed_Init;
+        if (introTextVars.panel == 3) {
+            tunes.stopScore();
+            gameState = GameState::Seed_Init;
+        }
 
     }
 

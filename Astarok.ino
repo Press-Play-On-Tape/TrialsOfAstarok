@@ -8,11 +8,11 @@
 #include "src/utils/Enums.h"
 #include "src/utils/Structs.h"
 #include "src/font/Font4x6.h"
-#include <ArduboyTones.h>
+#include <ArduboyPlaytune.h>
 
 Arduboy2Ext arduboy;
-ArduboyTones sound(arduboy.audio.enabled);
-AstarokGame game(&arduboy, &sound);
+ArduboyPlaytune tunes(arduboy.audio.enabled);
+AstarokGame game(&arduboy, &tunes);
 GameState gameState = GameState::SplashScreen_Init;
 
 TitleScreenVars titleScreenVars;
@@ -33,6 +33,8 @@ void setup() {
 
     #ifndef DEBUG
     arduboy.audio.begin();
+    tunes.initChannel(PIN_SPEAKER_1);
+    tunes.initChannel(PIN_SPEAKER_2);    
     #endif
 
     initEEPROM(false);
@@ -61,7 +63,7 @@ void loop() {
 
         case GameState::Title_Init:
 
-            sound.tones(Sounds::Theme);
+            tunes.playScore(Sounds::Theme);
             gameState = GameState::Title;
             titleScreen();
             arduboy.display(true);

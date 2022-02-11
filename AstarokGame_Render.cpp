@@ -8,6 +8,7 @@ void AstarokGame::drawScorePanel() {
 
 }
 
+#ifdef PAUSE
 void AstarokGame::renderPause() {
 
     if (this->pause) {
@@ -15,6 +16,7 @@ void AstarokGame::renderPause() {
     }
 
 }
+#endif
 
 void AstarokGame::drawMobs() {
 
@@ -254,7 +256,9 @@ void AstarokGame::draw() {
     drawMobs(); 
     drawMap_Foreground(); 
     drawHUD();
+    #ifdef PAUSE
     renderPause();
+    #endif
 
     //arduboy->drawRect(player.getLeftX() - this->camera.x, player.getTopY() - this->camera.y, player.getWidth() - 3, player.getHeight(), BLACK);
 

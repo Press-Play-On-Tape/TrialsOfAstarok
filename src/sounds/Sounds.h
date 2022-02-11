@@ -2,30 +2,80 @@
 
 namespace Sounds {
 
-    const uint16_t Theme[] PROGMEM = {
-        NOTE_E6,802, NOTE_REST,1, NOTE_C6,534, NOTE_REST,1, NOTE_G5,534, NOTE_REST,1, NOTE_A5,534, NOTE_REST,1,
-        NOTE_F6,400, NOTE_REST,1, NOTE_F6,266, NOTE_REST,1, NOTE_A5,1070, NOTE_REST,135, NOTE_B5,266, NOTE_REST,1,
-        NOTE_A6,266, NOTE_REST,1, NOTE_A6,266, NOTE_REST,1, NOTE_A6,534, NOTE_REST,1, NOTE_G6,266, NOTE_REST,1,
-        NOTE_F6,534, NOTE_REST,1, NOTE_E6,266, NOTE_REST,1, NOTE_C6,266, NOTE_REST,1, NOTE_A5,266, NOTE_REST,1,
-        NOTE_G5,1070, NOTE_REST,1, NOTE_G5,266, NOTE_REST,1, NOTE_E6,802, NOTE_REST,1, NOTE_C6,534, NOTE_REST,1,
-        NOTE_G5,534, NOTE_REST,1, NOTE_A5,534, NOTE_REST,1, NOTE_F6,400, NOTE_REST,1, NOTE_F6,266, NOTE_REST,1,
-        NOTE_A5,1070, NOTE_REST,135, NOTE_G5,534, NOTE_REST,1, NOTE_G5,534, NOTE_REST,1, NOTE_G5,266, NOTE_REST,1,
-        NOTE_A5,266, NOTE_REST,1, NOTE_B5,266, NOTE_REST,1, NOTE_C6,266, NOTE_REST,536, NOTE_C6,1606, NOTE_REST,1,
-        NOTE_E5,802, NOTE_REST,1, NOTE_C5,534, NOTE_REST,1, NOTE_G4,534, NOTE_REST,1, NOTE_A4,534, NOTE_REST,1,
-        NOTE_F5,400, NOTE_REST,1, NOTE_F5,266, NOTE_REST,1, NOTE_A4,1070, NOTE_REST,135, NOTE_B4,266, NOTE_REST,1,
-        NOTE_A5,266, NOTE_REST,1, NOTE_A5,266, NOTE_REST,1, NOTE_A5,534, NOTE_REST,1, NOTE_G5,266, NOTE_REST,1,
-        NOTE_F5,534, NOTE_REST,1, NOTE_E5,266, NOTE_REST,1, NOTE_C5,266, NOTE_REST,1, NOTE_A4,266, NOTE_REST,1,
-        NOTE_G4,1070, NOTE_REST,1, NOTE_G4,266, NOTE_REST,1, NOTE_E5,802, NOTE_REST,1, NOTE_C5,534, NOTE_REST,1,
-        NOTE_G4,534, NOTE_REST,1, NOTE_A4,534, NOTE_REST,1, NOTE_F5,400, NOTE_REST,1, NOTE_F5,266, NOTE_REST,1,
-        NOTE_A4,1070, NOTE_REST,135, NOTE_G4,534, NOTE_REST,1, NOTE_G4,534, NOTE_REST,1, NOTE_G4,266, NOTE_REST,1,
-        NOTE_A4,266, NOTE_REST,1, NOTE_B4,266, NOTE_REST,1, NOTE_C5,266, NOTE_REST,536, NOTE_G5,1606,
-        TONES_END
+    const byte Theme[] PROGMEM = {
+    0x90,52, 1,27, 0x91,64, 0,141, 0x81, 0,141, 0x91,66, 0,141, 0x81, 0,141, 0x91,64, 0,141, 0x81, 0,141, 0x91,67,
+    0,141, 0x81, 0,141, 0x91,66, 0,141, 0x81, 0,141, 0x91,64, 0,141, 0x81, 0,141, 0x91,66, 0,141, 0x80, 0x81, 0,141,
+    0x90,50, 1,27, 0x91,64, 0,141, 0x81, 0,141, 0x91,66, 0,141, 0x81, 0,141, 0x91,64, 0,141, 0x81, 0,141, 0x91,67,
+    0,141, 0x81, 0,141, 0x91,66, 0,141, 0x81, 0,141, 0x91,64, 0,141, 0x81, 0,141, 0x91,66, 0,141, 0x81, 0,141,
+    0x91,48, 0x80, 1,27, 0x90,64, 0,141, 0x80, 0,141, 0x90,66, 0,141, 0x80, 0,141, 0x90,64, 0,141, 0x80, 0,141,
+    0x90,67, 0,141, 0x80, 0,141, 0x90,66, 0,141, 0x80, 0,141, 0x90,64, 0,141, 0x80, 0,141, 0x90,66, 0,141, 0x80,
+    0,141, 0x90,50, 0x81, 1,27, 0x91,64, 0,141, 0x81, 0,141, 0x91,66, 0,141, 0x81, 0,141, 0x91,64, 0,141, 0x81,
+    0,141, 0x91,71, 0,141, 0x81, 0,141, 0x91,69, 0,141, 0x81, 0,141, 0x91,67, 0,141, 0x81, 0,141, 0x91,66, 0,141,
+    0x81, 0,141, 0x80,
+    0xE0
     };
 
-    const uint16_t NewLevel[] PROGMEM = {
-        NOTE_A6,40, 0, 5, NOTE_C6,40,  0, 5,  NOTE_E6,40, 0, 5, NOTE_G6,40,  0, 5, 
-        TONES_END 
+    const byte NewLevel[] PROGMEM = {
+        0x90, 78, 0, 30, 
+        0x90, 83, 0, 30, 
+        0x90, 88, 0, 30, 
+        0x90, 93, 0, 30, 
+        0x80, 0xF0 
     };
+
+    const byte Jump[] PROGMEM = { 
+        0x90, 60, 0, 20, 
+        0x80, 0xF0 
+    };
+
+    const byte ButtonPress[] PROGMEM = { 
+        0x90, 50, 0, 20, 
+        0x80, 0xF0 
+    };
+
+    const byte OpenChest[] PROGMEM = { 
+        0x90, 50, 0, 50, 
+        0x90, 58, 0, 50, 
+        0x90, 68, 0, 50, 
+        0x90, 72, 0, 50, 
+        0x80, 0xF0 
+    };
+
+    const byte LandOnTop[] PROGMEM =  { 
+        0x90, 78, 0, 70, 
+        0x90, 83, 0, 70, 
+        0x90, 102, 0, 70, 
+        0x80, 0xF0 
+    };
+
+    const byte Coin[] PROGMEM = {
+        0x90, 68, 0, 50, 
+        0x90, 73, 0, 50, 
+        0x90, 78, 0, 50, 
+        0x90, 83, 0, 50, 
+        0x80, 0xF0 
+    };
+
+    const byte Dying[] PROGMEM = {
+        0x90, 110, 0, 50, 
+        0x90, 104, 0, 50, 
+        0x90,  98, 0, 50, 
+        0x90,  92, 0, 50, 
+        0x90,  86, 0, 50, 
+        0x90,  80, 0, 50, 
+        0x90,  74, 0, 50, 
+        0x90,  68, 0, 50, 
+        0x90,  62, 0, 50, 
+        0x00,  20,
+        0x90,  62, 0, 50, 
+        0x00,  20,
+        0x90,  62, 0, 50, 
+        0x00,  20,
+        0x90,  62, 0, 50, 
+        0x80, 0xF0 
+    };
+
+/*
 
     const uint16_t Dying[] PROGMEM = {
         NOTE_G5, 50, NOTE_E5, 50, NOTE_C5, 50, NOTE_A5, 50,
@@ -36,28 +86,6 @@ namespace Sounds {
         TONES_END
     };
 
-    const uint16_t OpenChest[] PROGMEM =  { 
-        NOTE_A4,75, NOTE_B4,75, NOTE_CS5,75, NOTE_G5,150, NOTE_DS5,150, TONES_END 
-    };
 
-    const uint16_t LandOnTop[] PROGMEM =  { 
-        NOTE_A4,75, NOTE_B4,75, NOTE_CS5,75, TONES_END 
-    };
-
-    const uint16_t Jump[] PROGMEM = { 
-        NOTE_A2,20, TONES_END 
-    };
-
-    const uint16_t Coin[] PROGMEM = {
-        NOTE_C3, 70, NOTE_REST,20,
-        NOTE_C4, 70, NOTE_REST,20,
-        NOTE_C5, 70, NOTE_REST,20,
-        NOTE_C6, 70, NOTE_REST,20,
-        TONES_END
-    };
-
-    const uint16_t ButtonPress[] PROGMEM = { 
-        NOTE_A4, 20, TONES_END 
-    };
-
+*/
 };

@@ -1,12 +1,12 @@
 #include "src/utils/Arduboy2Ext.h"
 #include "AstarokGame.h"
 
-AstarokGame::AstarokGame(Arduboy2Ext *arduboy, ArduboyTones *sound) {
+AstarokGame::AstarokGame(Arduboy2Ext *arduboy, ArduboyPlaytune *tunes) {
 
     this->player.game = this;
     this->level.game = this;
     this->arduboy = arduboy;
-    this->sound = sound;
+    this->tunes = tunes;
 
     for (AISprite &mobileObject : this->mobs) {
 
@@ -37,7 +37,8 @@ void AstarokGame::newGame() {
 
 void AstarokGame::startLevel() {
 
-    this->sound->tones(Sounds::NewLevel);
+    // this->sound->tones(Sounds::NewLevel);
+    this->tunes->playScore(Sounds::NewLevel);
 
     this->level.newMap();
     this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
@@ -98,7 +99,7 @@ void AstarokGame::processButtons() {
         if (!this->player.isFalling()) {
             if (this->player.jump()) {
                 this->player.continuousBButton = true;
-                this->sound->tones(Sounds::Jump);
+                this->tunes->playScore(Sounds::Jump);
             }
         }
 
@@ -164,10 +165,12 @@ void AstarokGame::cycle(GameState &gameState) {
 
     int mapPixelHeight = this->level.maxYPixel();
     uint8_t justPressed = this->arduboy->justPressedButtons();
-    uint8_t pressed = this->arduboy->pressedButtons();
 
 
     // Pause?
+
+    #ifdef PAUSE
+    uint8_t pressed = this->arduboy->pressedButtons();
 
     if (this->event == EventType::Playing && !this->collideWithChest) {
 
@@ -199,6 +202,7 @@ void AstarokGame::cycle(GameState &gameState) {
     }
 
     if (this->pause) return;
+    #endif
 
     this->collideWithChest = false;
 
@@ -304,7 +308,7 @@ void AstarokGame::cycle(GameState &gameState) {
 
                         obj.deactivate();
                         this->score += Constants::Points_Coin;
-                        this->sound->tones(Sounds::Coin);
+                        this->tunes->playScore(Sounds::Coin);
 
                         break;
 
@@ -393,7 +397,7 @@ void AstarokGame::cycle(GameState &gameState) {
                     case ObjectTypes::Coin:
                         obj.deactivate(false);
                         this->score += Constants::Points_Coin;
-                        this->sound->tones(Sounds::Coin);
+                        this->tunes->playScore(Sounds::Coin);
                         break;
                         
                     default: break;
@@ -420,7 +424,7 @@ void AstarokGame::cycle(GameState &gameState) {
                                             
                                             this->event = EventType::Death_Init; 
                                             this->eventCounter = Constants::EventCounter_Death;   
-                                            this->sound->tones(Sounds::Dying);
+                                            this->tunes->playScore(Sounds::Dying);
                                             obj.deactivate(true);
 
                                         }
@@ -431,7 +435,7 @@ void AstarokGame::cycle(GameState &gameState) {
                                         #ifndef NO_DEATH
                                         this->event = EventType::Flash; 
                                         this->eventCounter = Constants::EventCounter_Flash;
-                                        this->sound->tones(Sounds::Dying);
+                                        this->tunes->playScore(Sounds::Dying);
                                         #endif
 
                                     }
@@ -446,7 +450,7 @@ void AstarokGame::cycle(GameState &gameState) {
 
                                 obj.deactivate(true);
                                 this->score += Constants::Points_Skill;
-                                this->sound->tones(Sounds::LandOnTop);
+                                this->tunes->playScore(Sounds::LandOnTop);
 
 
                                 // Get a bounce if we are pressing 'A' ..
@@ -472,7 +476,7 @@ void AstarokGame::cycle(GameState &gameState) {
                             #ifndef NO_DEATH
                             this->event = EventType::Death_Init; 
                             this->eventCounter = Constants::EventCounter_Death;
-                            this->sound->tones(Sounds::Dying);
+                            this->tunes->playScore(Sounds::Dying);
                             #endif
 
                         }
@@ -481,7 +485,7 @@ void AstarokGame::cycle(GameState &gameState) {
                             #ifndef NO_DEATH
                             this->event = EventType::Flash; 
                             this->eventCounter = Constants::EventCounter_Flash;
-                            this->sound->tones(Sounds::Dying);
+                            this->tunes->playScore(Sounds::Dying);
                             #endif
 
                         }
@@ -504,7 +508,7 @@ void AstarokGame::cycle(GameState &gameState) {
 
                 this->lives = 0;
                 this->event = EventType::Death_Init; 
-                this->sound->tones(Sounds::Dying);
+                this->tunes->playScore(Sounds::Dying);
                 this->eventCounter = Constants::EventCounter_Death - 3; 
 
             }
@@ -664,7 +668,7 @@ void AstarokGame::playMiniGame(GameState &gameState) {
 
                     this->ballDirection = Direction::None;
                     this->ballDelay = 24;
-                    this->sound->tones(Sounds::OpenChest);
+                    this->tunes->playScore(Sounds::OpenChest);
 
                 } 
 

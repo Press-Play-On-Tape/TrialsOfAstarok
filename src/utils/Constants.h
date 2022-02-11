@@ -4,6 +4,7 @@
 
 #define _DEBUG
 #define _NO_DEATH
+#define _PAUSE
 
 namespace Constants {
 

@@ -202,6 +202,7 @@ namespace Images {
     0x04, 0x00, 0x0a, 0x0a, 0x00, 0x04, 
     };
 
+    #ifdef PAUSE
     #ifndef DEBUG
     const uint8_t PROGMEM Pause[] = {
     61, 32,
@@ -227,6 +228,7 @@ namespace Images {
     const uint8_t PROGMEM Pause_Mask[] = {
     0x01
     };
+    #endif
     #endif
 
 };

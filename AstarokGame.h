@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ArduboyTones.h>
+#include <ArduboyPlaytune.h>
 #include "src/utils/Arduboy2Ext.h"
 #include "src/data/SpriteData.h"
 #include "src/images/Images.h"
@@ -20,7 +20,7 @@
 class AstarokGame {
 
     public:  // Constructor
-        AstarokGame(Arduboy2Ext *arduboy, ArduboyTones *sound);
+        AstarokGame(Arduboy2Ext *arduboy, ArduboyPlaytune *tunes);
 
     public:  // Variables
         EventType             event;
@@ -41,14 +41,16 @@ class AstarokGame {
         AISprite              mobs[Constants::SpriteCap];
         Map                   level;
         Arduboy2Ext           * arduboy;
-        ArduboyTones          * sound;
+        ArduboyPlaytune       * tunes;
         uint32_t              seed;
-
 
     private:
 
+        #ifdef PAUSE
         uint8_t               pauseCount = 0;  
         bool                  pause = false;
+        #endif
+
         bool                  collideWithChest = false;
         Particle particles[Constants::ParticlesMax];
 
@@ -75,7 +77,10 @@ class AstarokGame {
         void drawMobs();
         void adjustCamera();
         void processButtons();
-        void renderPause();
         uint8_t spawnY();
+
+        #ifdef PAUSE
+        void renderPause();
+        #endif
 
 };

@@ -44,20 +44,20 @@ void seed() {
 
         if (justPressed & UP_BUTTON) {
             seedVars.incValue();
-            sound.tones(Sounds::ButtonPress);
+            tunes.playScore(Sounds::ButtonPress);
         }
 
         if (justPressed & DOWN_BUTTON) { 
             seedVars.decValue();
-            sound.tones(Sounds::ButtonPress);
+            tunes.playScore(Sounds::ButtonPress);
         }
 
         if (justPressed & LEFT_BUTTON) { 
-            if (seedVars.decIndex()) sound.tones(Sounds::ButtonPress);
+            if (seedVars.decIndex()) tunes.playScore(Sounds::ButtonPress);
         }
 
         if (justPressed & RIGHT_BUTTON) { 
-            if (seedVars.incIndex()) sound.tones(Sounds::ButtonPress);
+            if (seedVars.incIndex()) tunes.playScore(Sounds::ButtonPress);
         }
 
         if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
@@ -67,7 +67,7 @@ void seed() {
                 game.seeds[a] = hash(game.seed);
             }
 
-            sound.tones(Sounds::ButtonPress);
+            tunes.playScore(Sounds::ButtonPress);
             gameState = GameState::Game_Init;
 
         }

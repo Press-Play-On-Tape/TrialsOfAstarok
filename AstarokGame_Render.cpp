@@ -82,10 +82,10 @@ void AstarokGame::drawHUD() {
 
 void AstarokGame::drawMap_Background() {
 
-    int16_t backgroundXOffset = (this->camera.x / 4) % 64;
-    int16_t backgroundYOffset = (this->camera.y / 12) - 8;
-
     if (this->mapNumber % 2 == MapLevel::AboveGround) {
+
+        int16_t backgroundXOffset = (this->camera.x / 4) % 64;
+        int16_t backgroundYOffset = (this->camera.y / 12) - 8;
 
         for (uint8_t i = 0; i <= 128; i += 64) {
             Sprites::drawOverwrite(i - backgroundXOffset, backgroundYOffset + 2, Images::Sky, 0);
@@ -94,8 +94,12 @@ void AstarokGame::drawMap_Background() {
     }
     else {
 
+        int16_t backgroundXOffset = (this->camera.x / 4) % 64;
+        int16_t backgroundYOffset = (this->camera.y / 6) - 16;
+
         for (uint8_t i = 0; i <= 128; i += 64) {
 
+            Sprites::drawOverwrite(i + 7 - backgroundXOffset, backgroundYOffset - 12, Images::Underground_Chain, 0);
             Sprites::drawOverwrite(i + 7 - backgroundXOffset, backgroundYOffset, Images::Underground_Chain, 0);
             Sprites::drawOverwrite(i + 42 - backgroundXOffset, backgroundYOffset + 11, Images::Underground_Brick, 0);
             Sprites::drawOverwrite(i + 26 - backgroundXOffset, backgroundYOffset + 7, Images::Torch, arduboy->getFrameCount(16) / 4);

@@ -12,6 +12,7 @@ AstarokGame::AstarokGame(Arduboy2Ext *arduboy, ArduboyPlaytune *tunes) {
 
         mobileObject.game = this;
         mobileObject.arduboy = arduboy;
+        mobileObject.deactivate(false);
 
     }
 
@@ -19,6 +20,7 @@ AstarokGame::AstarokGame(Arduboy2Ext *arduboy, ArduboyPlaytune *tunes) {
 
         interactiveObject.game = this;
         interactiveObject.arduboy = arduboy;
+        interactiveObject.deactivate();
 
     }
 
@@ -382,7 +384,7 @@ void AstarokGame::cycle(GameState &gameState) {
 
             // Have we touched another object?
 
-            if (event != EventType::Flash && event != EventType::Death && event != EventType::Death_Init) {
+            if (event != EventType::Death && event != EventType::Death_Init) {
 
                 if (obj.getActive() && testCollision(&player, &obj)) {
                 
@@ -414,33 +416,37 @@ void AstarokGame::cycle(GameState &gameState) {
 
                                 case ObjectTypes::Fireball:
 
-                                    #ifndef NO_DEATH
+                                    if (event != EventType::Flash) {
 
-                                    if (this->lives > 0) this->lives--; 
+                                        #ifndef NO_DEATH
 
-                                    if (this->lives == 0) {
+                                        if (this->lives > 0) this->lives--; 
 
-                                        if (this->eventCounter == 0) {
-                                            
-                                            this->event = EventType::Death_Init; 
-                                            this->eventCounter = Constants::EventCounter_Death;   
+                                        if (this->lives == 0) {
+
+                                            if (this->eventCounter == 0) {
+                                                
+                                                this->event = EventType::Death_Init; 
+                                                this->eventCounter = Constants::EventCounter_Death;   
+                                                this->tunes->playScore(Sounds::Dying);
+                                                obj.deactivate(true);
+
+                                            }
+
+                                        }
+                                        else {
+
+                                            #ifndef NO_DEATH
+                                            this->event = EventType::Flash; 
+                                            this->eventCounter = Constants::EventCounter_Flash;
                                             this->tunes->playScore(Sounds::Dying);
-                                            obj.deactivate(true);
+                                            #endif
 
                                         }
 
-                                    }
-                                    else {
-
-                                        #ifndef NO_DEATH
-                                        this->event = EventType::Flash; 
-                                        this->eventCounter = Constants::EventCounter_Flash;
-                                        this->tunes->playScore(Sounds::Dying);
                                         #endif
 
                                     }
-
-                                    #endif
 
                                     break;
 

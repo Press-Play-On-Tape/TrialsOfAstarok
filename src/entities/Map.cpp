@@ -148,7 +148,7 @@ void Map::generateRoom(uint8_t roomNum) {
                                 break;
 
                             case 26 ... 27:
-                                if (flatFloor >= 2) {
+                                if (flatFloor >= 2 && upperPlatform_X == Constants::NoPlatform) {
                                     this->addObject(ObjectTypes::Chest_Closed, tSpawnBarrier + x, floor - 1);
                                 }
                                 break;

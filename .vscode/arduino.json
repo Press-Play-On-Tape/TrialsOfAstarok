@@ -1,6 +1,7 @@
 {
-    "board": "arduino:avr:leonardo",
+    "board": "arduboy-homemade:avr:arduboy-homemade",
     "sketch": "Astarok.ino",
     "output": "../build",
-    "port": "/dev/cu.usbmodem14101"
+    "port": "/dev/cu.usbmodem14101",
+    "configuration": "based_on=leonardo,boot=org,core=arduboy-core,display=sh1106,flashselect=sda,contrast=normal"
 }

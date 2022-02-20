@@ -30,7 +30,7 @@ void AstarokGame::newGame() {
 
     this->score = -2;
     this->lives = 1;
-    this->mapNumber = 1;
+    this->mapNumber = 2;
     this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
 
     startLevel();

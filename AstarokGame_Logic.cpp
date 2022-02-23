@@ -693,7 +693,7 @@ void AstarokGame::playMiniGame(GameState &gameState) {
 
                     for (uint8_t i = 0; i < 4; i++) {
 
-                        this->addMob(Data::Coin, Images::Coins, Images::Coins_Masks, this->chestObj->x, this->chestObj->y - 1);
+                        this->addMob(Data::Coin, Images::Coins, Images::Coins, this->chestObj->x, this->chestObj->y - 1);
 
                     }
 

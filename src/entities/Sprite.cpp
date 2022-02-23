@@ -410,8 +410,7 @@ void Sprite::draw() {
         case ObjectTypes::Coin:
 
             if (this->autoExpire > 20 || (this->autoExpire / 4) % 2 == 0) {
-                Sprites::drawSelfMasked(x - this->game->camera.x, y - this->game->camera.y, Images::Coins_Masks, arduboy->getFrameCount(16) / 4);
-                Sprites::drawErase(x - this->game->camera.x, y - this->game->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
+                Sprites::drawPlusMask(x +2 - this->game->camera.x, y +2 - this->game->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
             }
             break;
 

@@ -156,8 +156,7 @@ void AstarokGame::drawMap_Background() {
                         break;
 
                     case ObjectTypes::Coin:
-                        Sprites::drawSelfMasked(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins_Masks, arduboy->getFrameCount(16) / 4);
-                        Sprites::drawErase(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
+                        Sprites::drawPlusMask(x * Constants::TileSize +2 - this->camera.x, y * Constants::TileSize +2 - this->camera.y, Images::Coins, arduboy->getFrameCount(16) / 4);
                         break;
 
                     case ObjectTypes::Chest_Closed:

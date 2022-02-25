@@ -404,8 +404,22 @@ void Sprite::draw() {
             break;
 
         case ObjectTypes::Fireball:
-            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
-            break;
+            if (this->game->mapNumber % 2 == 0) {
+
+                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
+
+            }
+            else {
+
+                if (this->vy > 0) {
+                    Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Down, Images::Pirahna_Down_Mask, arduboy->getFrameCountHalf(8), 0);
+                }
+                else {
+                    Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Up, Images::Pirahna_Up_Mask, arduboy->getFrameCountHalf(8), 0);
+                }
+
+            }
+            break;            
 
         case ObjectTypes::Coin:
 

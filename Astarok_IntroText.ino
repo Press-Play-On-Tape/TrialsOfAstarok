@@ -31,10 +31,10 @@ void introText() {
     uint8_t line = 0;
     uint8_t x = 0;
     
-    Sprites::drawSelfMasked(1, 1, Images::EnterRunes_00, 0);
-    Sprites::drawSelfMasked(1, 54, Images::EnterRunes_02, 0);
-    Sprites::drawSelfMasked(120, 1, Images::EnterRunes_01, 0);
-    Sprites::drawSelfMasked(120, 54, Images::EnterRunes_03, 0);
+    Sprites::drawSelfMasked(  1,  1, Images::EnterRunes_Frame, 0);
+    Sprites::drawSelfMasked(  1, 54, Images::EnterRunes_Frame, 2);
+    Sprites::drawSelfMasked(120,  1, Images::EnterRunes_Frame, 1);
+    Sprites::drawSelfMasked(120, 54, Images::EnterRunes_Frame, 3);
 
     arduboy.drawFastHLine(1, 1, 125);
     arduboy.drawFastHLine(1, 61, 125);

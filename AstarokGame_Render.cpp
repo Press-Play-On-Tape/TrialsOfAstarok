@@ -137,11 +137,11 @@ void AstarokGame::drawMap_Background() {
                     break;
 
                 case ObjectTypes::Chest_Closed:
-                    Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y - 3, Images::Chest_Closed, Images::Chest_Closed_Mask, 0, 0);
+                    Sprites::drawPlusMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y - 3, Images::Chest_Closed, 0);
                     break;
 
                 case ObjectTypes::Chest_Open:
-                    Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y - 2, Images::Chest_Open, Images::Chest_Open_Mask, 0, 0);
+                    Sprites::drawPlusMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y - 2, Images::Chest_Open, 0);
                     break;
 
                 default: break;

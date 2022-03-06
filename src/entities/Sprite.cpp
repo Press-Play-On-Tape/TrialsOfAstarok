@@ -400,7 +400,7 @@ void Sprite::draw() {
 
         case ObjectTypes::Skull:
         case ObjectTypes::Spider:
-            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
+            Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->facing == Direction::Right);
             break;
 
         case ObjectTypes::Fireball:

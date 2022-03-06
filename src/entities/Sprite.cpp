@@ -431,7 +431,7 @@ void Sprite::draw() {
         case ObjectTypes::Health:
 
             if (this->autoExpire > 20 || (this->autoExpire / 4) % 2 == 0) {
-                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
+                Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, 0);
             }
             break;
 

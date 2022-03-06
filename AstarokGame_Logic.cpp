@@ -686,7 +686,7 @@ void AstarokGame::playMiniGame(GameState &gameState) {
                 
                 if (this->ballIdx >= 4 && ballIdx <= 6) {
 
-                    this->addMob(Data::Health, Images::Health, Images::Health_Mask, this->chestObj->x, this->chestObj->y - 1);
+                    this->addMob(Data::Health, Images::Health, Images::Health, this->chestObj->x, this->chestObj->y - 1);
 
                 }
                 else {

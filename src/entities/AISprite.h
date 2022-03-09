@@ -15,7 +15,7 @@ class AISprite : public Sprite {
         uint8_t getIntelligence();
 
     public:
-        void activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
+        void activate(const uint8_t * data, const uint8_t * img, int tX, int tY);
         void think();
         bool getActive();
         void updateExplosion();

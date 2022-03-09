@@ -42,11 +42,10 @@ uint8_t Sprite::getHeight() {
 
 }
 
-void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
+void Sprite::init(const uint8_t * data, const uint8_t * img, int tX, int tY) {
 
     this->spriteData = data;
     this->spriteImg = img;
-    this->spriteMask = mask;
     this->x = tX; 
     this->y = tY;
     this->yInit = tY;
@@ -405,8 +404,7 @@ void Sprite::draw() {
 
         case ObjectTypes::Fireball:
             if (this->game->mapNumber % 2 == 0) {
-
-                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
+                Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->vy > 0);
 
             }
             else {
@@ -437,7 +435,7 @@ void Sprite::draw() {
 
         default:
 
-            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
+            Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, 0);
             break;
             
     }

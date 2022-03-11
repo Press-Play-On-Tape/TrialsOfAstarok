@@ -410,10 +410,10 @@ void Sprite::draw() {
             else {
 
                 if (this->vy > 0) {
-                    Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Down, Images::Pirahna_Down_Mask, arduboy->getFrameCountHalf(8), 0);
+                    Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Down, arduboy->getFrameCountHalf(8));
                 }
                 else {
-                    Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Up, Images::Pirahna_Up_Mask, arduboy->getFrameCountHalf(8), 0);
+                    Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Up, arduboy->getFrameCountHalf(8));
                 }
 
             }

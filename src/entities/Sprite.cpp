@@ -387,13 +387,13 @@ void Sprite::draw() {
        case ObjectTypes::Player:
 
             if (this->isFalling()) {
-                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawPlusMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, Images::Player_Jumping, this->facing == Direction::Right);
             }
             else if (this->vx == 0 && this->vy == 0) {
-                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawPlusMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), this->facing == Direction::Right);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawPlusMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), this->facing == Direction::Right);
             }
             break;
 

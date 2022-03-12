@@ -156,7 +156,7 @@ void AstarokGame::drawMap_Background() {
 
 void AstarokGame::drawMap_Background_2() {
 
-    // Rneder water ..
+    // Render water ..
 
     if (mapNumber % 2 == MapLevel::AboveGround) {
 
@@ -297,26 +297,9 @@ void AstarokGame::draw() {
         particles[i].update();
 
         if (particles[i].render()) { // the dot should be rendered
-
-            uint8_t pSize = particles[i].getSize();
-
-            switch (pSize) {
-
-                case 1:
-                    Sprites::drawExternalMask( particles[i].getX(), particles[i].getY(), Images::Pixel_01, Images::Pixel_01_Mask, 0, 0);
-                    break;
-
-                case 2:
-                    Sprites::drawExternalMask( particles[i].getX(), particles[i].getY(), Images::Pixel_02, Images::Pixel_02_Mask, 0, 0);
-                    break;
-
-                case 3:
-                    Sprites::drawExternalMask( particles[i].getX(), particles[i].getY(), Images::Pixel_03, Images::Pixel_03_Mask, 0, 0);
-                    break;
-            } 
-
+            uint8_t pSize = particles[i].getSize() -1;
+            Sprites::drawPlusMask( particles[i].getX(), particles[i].getY(), Images::Pixel, pSize);
         }
-
-    }
+     }
 
 }

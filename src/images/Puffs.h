@@ -104,31 +104,26 @@ namespace Images {
     const uint8_t * const Puffs[] PROGMEM = { Puff_00, Puff_01, Puff_02, Puff_03, Puff_04, Puff_05, Puff_06 }; 
     const uint8_t * const Puff_Masks[] PROGMEM = { Puff_00_Mask, Puff_01_Mask, Puff_02_Mask, Puff_03_Mask, Puff_04_Mask, Puff_05_Mask, Puff_06_Mask }; 
 
-    const uint8_t PROGMEM Pixel_01[] = {
-    3, 3,
-    0x00, 0x02, 0x00, 
-    };
+    const uint8_t PROGMEM Pixel[] = {
+        4, 4,  // 4x4 px image
+        
+        // Frame 0
+        0x00, 0x07,  // ▓▓▓▓▓▓▓▓ Image  ▓▓▓▓▓░░░ +Mask  ·····▓▓▓ Sprite
+        0x02, 0x07,  // ▓▓▓▓▓▓░▓        ▓▓▓▓▓░░░        ·····▓░▓
+        0x00, 0x07,  // ▓▓▓▓▓▓▓▓        ▓▓▓▓▓░░░        ·····▓▓▓
+        0x00, 0x00,  // ▓▓▓▓▓▓▓▓        ▓▓▓▓▓▓▓▓        ········
 
-    const uint8_t PROGMEM Pixel_01_Mask[] = {
-    0x07, 0x07, 0x07, 
-    };
+        // Frame 1
+        0x00, 0x07,  // ▓▓▓▓▓▓▓▓ Image  ▓▓▓▓▓░░░ +Mask  ·····▓▓▓ Sprite
+        0x02, 0x0F,  // ▓▓▓▓▓▓░▓        ▓▓▓▓░░░░        ····▓▓░▓
+        0x04, 0x0F,  // ▓▓▓▓▓░▓▓        ▓▓▓▓░░░░        ····▓░▓▓
+        0x00, 0x0E,  // ▓▓▓▓▓▓▓▓        ▓▓▓▓░░░▓        ····▓▓▓·
 
-    const uint8_t PROGMEM Pixel_02[] = {
-    4, 4,
-    0x00, 0x02, 0x04, 0x00, 
-    };
-
-    const uint8_t PROGMEM Pixel_02_Mask[] = {
-    0x07, 0x0f, 0x0f, 0x0e, 
-    };
-
-    const uint8_t PROGMEM Pixel_03[] = {
-    4, 4,
-    0x00, 0x04, 0x02, 0x00, 
-    };
-
-    const uint8_t PROGMEM Pixel_03_Mask[] = {
-    0x0e, 0x0f, 0x0f, 0x07, 
+        // Frame 2
+        0x00, 0x0E,  // ▓▓▓▓▓▓▓▓ Image  ▓▓▓▓░░░▓ +Mask  ····▓▓▓· Sprite
+        0x04, 0x0F,  // ▓▓▓▓▓░▓▓        ▓▓▓▓░░░░        ····▓░▓▓
+        0x02, 0x0F,  // ▓▓▓▓▓▓░▓        ▓▓▓▓░░░░        ····▓▓░▓
+        0x00, 0x07,  // ▓▓▓▓▓▓▓▓        ▓▓▓▓▓░░░        ·····▓▓▓
     };
 
 };

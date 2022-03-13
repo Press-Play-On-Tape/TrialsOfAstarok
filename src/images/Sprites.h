@@ -241,7 +241,7 @@ const uint8_t PROGMEM Spider[] = {
         0x95,  // ░▓▓░▓░▓░
         0x9D,  // ░▓▓░░░▓░
         0x81,  // ░▓▓▓▓▓▓░
-        0xFF,  // ░░░░░░░░
+        0xFF   // ░░░░░░░░
     };
 
     const uint8_t PROGMEM Tile_BQBlock[] = {
@@ -253,7 +253,7 @@ const uint8_t PROGMEM Spider[] = {
         0x81,  // ░▓▓▓▓▓▓░
         0xA5,  // ░▓░▓▓░▓░
         0x81,  // ░▓▓▓▓▓▓░
-        0xFF,  // ░░░░░░░░
+        0xFF   // ░░░░░░░░
     };
 
     const uint8_t PROGMEM Tile_Mask[] = {
@@ -281,7 +281,7 @@ const uint8_t PROGMEM Spider[] = {
         0x0F,  // ▓▓▓▓░░░░
         0x0F,  // ▓▓▓▓░░░░
         0x0F,  // ▓▓▓▓░░░░
-        0x0F,  // ▓▓▓▓░░░░
+        0x0F   // ▓▓▓▓░░░░
     };
 
     const uint8_t PROGMEM Fireball[] = {
@@ -355,19 +355,6 @@ const uint8_t PROGMEM Spider[] = {
         Tile_Brick,                 // 9
     };
 
-    const uint8_t * const SpriteMasks[] PROGMEM =  { 
-        Spider, 
-        Spider, 
-        Starman, 
-        Skull, 
-        Bolt, 
-        Health,
-        Tile_Mask, 
-        Tile_Mask, 
-        Tile_Mask, 
-        Tile_Mask, 
-    };
-
     const uint8_t PROGMEM Pirahna_Up[] = {
         12, 16, // 12x16 px image
         
@@ -423,7 +410,7 @@ const uint8_t PROGMEM Spider[] = {
         0xAB, 0xFF,  // ░▓░▓░▓░░        ░░░░░░░░        ░▓░▓░▓░░
         0x94, 0xF7,  // ░▓▓░▓░▓▓        ░░░░▓░░░        ░▓▓░·░▓▓
         0x63, 0x63,  // ▓░░▓▓▓░░        ▓░░▓▓▓░░        ·░░···░░
-        0x00, 0x00,  // ▓▓▓▓▓▓▓▓        ▓▓▓▓▓▓▓▓        ········
+        0x00, 0x00   // ▓▓▓▓▓▓▓▓        ▓▓▓▓▓▓▓▓        ········
     };
 
 
@@ -482,7 +469,7 @@ const uint8_t PROGMEM Spider[] = {
         0xAF, 0xFF,  // ░▓░▓░░░░        ░░░░░░░░        ░▓░▓░░░░
         0x5F, 0x7F,  // ▓░▓░░░░░        ▓░░░░░░░        ·░▓░░░░░
         0x20, 0x3F,  // ▓▓░▓▓▓▓▓        ▓▓░░░░░░        ··░▓▓▓▓▓
-        0x1F, 0x1F,  // ▓▓▓░░░░░        ▓▓▓░░░░░        ···░░░░░
+        0x1F, 0x1F   // ▓▓▓░░░░░        ▓▓▓░░░░░        ···░░░░░
     };
 
 

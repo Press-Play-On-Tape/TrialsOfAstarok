@@ -117,7 +117,7 @@ void AstarokGame::drawMap_Background() {
             switch (tile) {
 
                 case ObjectTypes::QBlock ... ObjectTypes::Bricks:
-                    Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, pgm_read_word_near(&Images::SpriteImages[tile]), pgm_read_word_near(&Images::SpriteMasks[tile]), 0, 0);
+                    Sprites::drawExternalMask(x * Constants::TileSize - this->camera.x, y * Constants::TileSize - this->camera.y, pgm_read_word_near(&Images::SpriteImages[tile]), Images::Tile_Mask, 0, 0);
                     break;
 
                 case ObjectTypes::AboveGroundExit:

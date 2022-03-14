@@ -5,7 +5,7 @@
 namespace Images {
 
     const uint8_t PROGMEM Runes[] = {
-        5, 8   // 5x8 px image 
+        5, 8,  // 5x8 px image 
 
         // Rune 0
         0xED,  // ░░░▓░░▓░
@@ -53,7 +53,7 @@ namespace Images {
 
     #ifndef DEBUG
     const uint8_t PROGMEM Rune_Frame[] = {
-        12, 16 // 12x14 px image 
+        12, 16, // 12x14 px image 
         
         // Frame 0
         0xFC,  // ░░░░░░▓▓

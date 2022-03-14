@@ -60,7 +60,7 @@ class AstarokGame {
         void newGame();
         void cycle(GameState &gameState);
         void draw();
-        uint8_t addMob(const uint8_t *data, const uint8_t *sprite, const uint8_t *mask, int16_t x, uint8_t y, uint8_t maxHeight = 255);
+        uint8_t addMob(const uint8_t *data, const uint8_t *sprite, int16_t x, uint8_t y, uint8_t maxHeight = 255);
         uint8_t getSpareMobCount();
         void drawScorePanel();
         void playMiniGame(GameState &gameState);

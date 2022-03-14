@@ -42,11 +42,10 @@ uint8_t Sprite::getHeight() {
 
 }
 
-void Sprite::init(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
+void Sprite::init(const uint8_t * data, const uint8_t * img, int tX, int tY) {
 
     this->spriteData = data;
     this->spriteImg = img;
-    this->spriteMask = mask;
     this->x = tX; 
     this->y = tY;
     this->yInit = tY;
@@ -388,34 +387,33 @@ void Sprite::draw() {
        case ObjectTypes::Player:
 
             if (this->isFalling()) {
-                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, Images::Player_Jumping, Images::Player_Jumping_Mask, this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawPlusMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, Images::Player_Jumping, this->facing == Direction::Right);
             }
             else if (this->vx == 0 && this->vy == 0) {
-                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), pgm_read_word_near(&Images::Player_Idle_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawPlusMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Idle[this->getFrame()]), this->facing == Direction::Right);
             }
             else {
-                Sprites::drawExternalMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), pgm_read_word_near(&Images::Player_Masks[this->getFrame()]), this->facing == Direction::Right, this->facing == Direction::Right);
+                Sprites::drawPlusMask(x - this->game->camera.x - 2, y - 1 - this->game->camera.y, pgm_read_word_near(&Images::Player_Images[this->getFrame()]), this->facing == Direction::Right);
             }
             break;
 
         case ObjectTypes::Skull:
         case ObjectTypes::Spider:
-            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->facing == Direction::Right, this->facing == Direction::Right);
+            Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->facing == Direction::Right);
             break;
 
         case ObjectTypes::Fireball:
             if (this->game->mapNumber % 2 == 0) {
-
-                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, this->vy > 0, this->vy > 0);
+                Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->vy > 0);
 
             }
             else {
 
                 if (this->vy > 0) {
-                    Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Down, Images::Pirahna_Down_Mask, arduboy->getFrameCountHalf(8), 0);
+                    Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Down, arduboy->getFrameCountHalf(8));
                 }
                 else {
-                    Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Up, Images::Pirahna_Up_Mask, arduboy->getFrameCountHalf(8), 0);
+                    Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, Images::Pirahna_Up, arduboy->getFrameCountHalf(8));
                 }
 
             }
@@ -431,13 +429,13 @@ void Sprite::draw() {
         case ObjectTypes::Health:
 
             if (this->autoExpire > 20 || (this->autoExpire / 4) % 2 == 0) {
-                Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
+                Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, 0);
             }
             break;
 
         default:
 
-            Sprites::drawExternalMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, this->spriteMask, 0, 0);
+            Sprites::drawPlusMask(x - this->game->camera.x, y - this->game->camera.y, this->spriteImg, 0);
             break;
             
     }

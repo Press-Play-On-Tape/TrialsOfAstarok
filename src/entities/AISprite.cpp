@@ -22,12 +22,12 @@ uint8_t AISprite::getIntelligence() {
 
 }
 
-void AISprite::activate(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY) {
+void AISprite::activate(const uint8_t * data, const uint8_t * img, int tX, int tY) {
 
     this->active = true;
     this->facing = Direction::Left;
 
-    init(data, img, mask, tX * Constants::TileSize, tY * Constants::TileSize);
+    init(data, img, tX * Constants::TileSize, tY * Constants::TileSize);
 
     switch (this->getType()) {
 

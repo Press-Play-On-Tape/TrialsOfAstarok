@@ -31,7 +31,7 @@ void AstarokGame::newGame() {
     this->score = -2;
     this->lives = 1;
     this->mapNumber = 1;
-    this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
+    this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], 24, spawnY());
 
     startLevel();
 
@@ -43,7 +43,7 @@ void AstarokGame::startLevel() {
     this->tunes->playScore(Sounds::NewLevel);
 
     this->level.newMap();
-    this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
+    this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], 24, spawnY());
 
     while (this->player.isFalling()) {
         this->player.move();
@@ -561,7 +561,7 @@ void AstarokGame::die(GameState &gameState) {
 
     if (this->lives > 0) {
 
-        this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], Images::SpriteMasks[ObjectTypes::Player], 24, spawnY());
+        this->player.init(Data::Astarok, Images::SpriteImages[ObjectTypes::Player], 24, spawnY());
         startLevel();
 
     }
@@ -585,7 +585,7 @@ void AstarokGame::die(GameState &gameState) {
 
 }
 
-uint8_t AstarokGame::addMob(const uint8_t *data, const uint8_t * img, const uint8_t * mask, int x, uint8_t y, uint8_t maxHeight) {
+uint8_t AstarokGame::addMob(const uint8_t *data, const uint8_t * img, int x, uint8_t y, uint8_t maxHeight) {
 
     int distances[Constants::SpriteCap];
 
@@ -593,7 +593,7 @@ uint8_t AstarokGame::addMob(const uint8_t *data, const uint8_t * img, const uint
 
         if (!this->mobs[a].getActive()) {
 
-            this->mobs[a].activate(data, img, mask, x, y); 
+            this->mobs[a].activate(data, img, x, y); 
 
             if (maxHeight != 255) {
                 this->mobs[a].maxHeight = maxHeight * Constants::TileSize;
@@ -617,7 +617,7 @@ uint8_t AstarokGame::addMob(const uint8_t *data, const uint8_t * img, const uint
         }
     }
 
-    this->mobs[candidate].activate(data, img, mask, x, y);
+    this->mobs[candidate].activate(data, img, x, y);
 
     if (maxHeight != 255) {
         this->mobs[candidate].maxHeight = maxHeight * Constants::TileSize;
@@ -686,14 +686,14 @@ void AstarokGame::playMiniGame(GameState &gameState) {
                 
                 if (this->ballIdx >= 4 && ballIdx <= 6) {
 
-                    this->addMob(Data::Health, Images::Health, Images::Health_Mask, this->chestObj->x, this->chestObj->y - 1);
+                    this->addMob(Data::Health, Images::Health, this->chestObj->x, this->chestObj->y - 1);
 
                 }
                 else {
 
                     for (uint8_t i = 0; i < 4; i++) {
 
-                        this->addMob(Data::Coin, Images::Coins, Images::Coins, this->chestObj->x, this->chestObj->y - 1);
+                        this->addMob(Data::Coin, Images::Coins, this->chestObj->x, this->chestObj->y - 1);
 
                     }
 

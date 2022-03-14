@@ -95,7 +95,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                         if (randomNumber == 1) {
 
-                            this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
+                            this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
 
                         }
                         else if ((hash(this->game->seed) % 4) == 0) {
@@ -130,16 +130,16 @@ void Map::generateRoom(uint8_t roomNum) {
                         switch (hash(this->game->seed) % randomMax) {
 
                             case 0 ... 9:
-                                this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], Images::SpriteMasks[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
+                                this->game->addMob(Data::Spider, Images::SpriteImages[ObjectTypes::Spider], tSpawnBarrier + x, yLocation);
                                 break;
 
                             case 10 ... 15:
-                                this->game->addMob(Data::Skull, Images::SpriteImages[ObjectTypes::Skull], Images::SpriteMasks[ObjectTypes::Skull], tSpawnBarrier + x, yLocation);
+                                this->game->addMob(Data::Skull, Images::SpriteImages[ObjectTypes::Skull], tSpawnBarrier + x, yLocation);
                                 break;
 
                             case 16 ... 18:
                                 if (roomNum > 6) {
-                                    this->game->addMob(Data::Starman, Images::SpriteImages[ObjectTypes::Starman], Images::SpriteMasks[ObjectTypes::Starman], tSpawnBarrier + x, yLocation);
+                                    this->game->addMob(Data::Starman, Images::SpriteImages[ObjectTypes::Starman], tSpawnBarrier + x, yLocation);
                                 }
                                 break;
 
@@ -185,7 +185,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
                                 case 28 ... 29:
                                 if (roomNum > 8) {
-                                    this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::Bolt], Images::SpriteMasks[ObjectTypes::Bolt], tSpawnBarrier + x, 2);
+                                    this->game->addMob(Data::Bolt, Images::SpriteImages[ObjectTypes::Bolt], tSpawnBarrier + x, 2);
                                 }
                                 break;
 
@@ -214,7 +214,7 @@ void Map::generateRoom(uint8_t roomNum) {
 
             if (hash(this->game->seed) % 5 == 0) {
 
-                this->game->addMob(Data::Fireball, Images::Fireball, Images::Fireball_Mask, tSpawnBarrier + x, 16, floor - (hash(this->game->seed) % 4) + 1);
+                this->game->addMob(Data::Fireball, Images::Fireball, tSpawnBarrier + x, 16, floor - (hash(this->game->seed) % 4) + 1);
 
             }
 

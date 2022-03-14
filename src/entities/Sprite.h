@@ -11,13 +11,12 @@ class Sprite {
     protected:
         const uint8_t       * spriteData;
         const uint8_t       * spriteImg;
-        const uint8_t       * spriteMask;
         uint8_t               autoExpire;
         bool                  active;
 
     public:
 
-        void init(const uint8_t * data, const uint8_t * img, const uint8_t * mask, int tX, int tY);
+        void init(const uint8_t * data, const uint8_t * img, int tX, int tY);
         bool isFalling();
         void move();
         bool jump();

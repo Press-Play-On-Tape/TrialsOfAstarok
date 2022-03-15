@@ -12,7 +12,7 @@ void AstarokGame::drawScorePanel() {
 void AstarokGame::renderPause() {
 
     if (this->pause) {
-        Sprites::drawExternalMask(32, 15, Images::Pause, Images::Pause_Mask, 0, 0);
+        Sprites::drawPlusMask(32, 15, Images::Pause, 0);
     }
 
 }

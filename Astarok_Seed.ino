@@ -35,8 +35,8 @@ void seed() {
 
     }
 
-    Sprites::drawSelfMasked(33 + (seedVars.index * 14), 26, Images::ArrowUp, 0);
-    Sprites::drawSelfMasked(33 + (seedVars.index* 14), 47, Images::ArrowDown, 0);
+    Sprites::drawSelfMasked(33 + (seedVars.index * 14), 26, Images::Arrows, 0);
+    Sprites::drawSelfMasked(33 + (seedVars.index* 14), 47, Images::Arrows, 1);
 
     uint8_t justPressed = arduboy.justPressedButtons();
 

@@ -40,10 +40,16 @@ void titleScreen() {
         switch (titleScreenVars.index) {
 
             case TitleScreenMode::Play:
-                gameState = GameState::IntroText_Init;
+                if (introTextVars.seenIntroText)  {
+                    gameState = GameState::Seed_Init;
+                }
+                else {
+                    gameState = GameState::IntroText_Init;
+                    introTextVars.seenIntroText = true;
+                }
                 break;
 
-            case TitleScreenMode::HighScore:
+            default:
                 gameState = GameState::HighScore_NoFlash;
                 break;
 

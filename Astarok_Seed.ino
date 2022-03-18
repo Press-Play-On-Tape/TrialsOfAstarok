@@ -4,6 +4,7 @@
 
 void seed_Init() {
 
+    tunes.stopScore();
     seedVars.reset();
     gameState = GameState::Seed;
 

@@ -97,7 +97,6 @@ void introText() {
         }
 
         if (introTextVars.panel == 3) {
-            tunes.stopScore();
             gameState = GameState::Seed_Init;
         }
 

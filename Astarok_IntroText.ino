@@ -40,10 +40,10 @@ void introText() {
     uint8_t line = 0;
     uint8_t x = 0;
     
-    Sprites::drawSelfMasked(  1,  1, Images::EnterRunes_Frame, 0);
-    Sprites::drawSelfMasked(  1, 54, Images::EnterRunes_Frame, 2);
-    Sprites::drawSelfMasked(120,  1, Images::EnterRunes_Frame, 1);
-    Sprites::drawSelfMasked(120, 54, Images::EnterRunes_Frame, 3);
+    Sprites::drawOverwrite(  1,  1, Images::EnterRunes_Frame, 0);
+    Sprites::drawOverwrite(  1, 54, Images::EnterRunes_Frame, 2);
+    Sprites::drawOverwrite(120,  1, Images::EnterRunes_Frame, 1);
+    Sprites::drawOverwrite(120, 54, Images::EnterRunes_Frame, 3);
 
     arduboy.drawFastHLine(1, 1, 125);
     arduboy.drawFastHLine(1, 61, 125);
@@ -66,7 +66,7 @@ void introText() {
                 break;
             
             default:
-                Sprites::drawSelfMasked(6 + x, 3 + (line * 10), Font::Images, Font::getIndex(c));
+                Sprites::drawOverwrite(6 + x, 3 + (line * 10), Font::Images, Font::getIndex(c));
                 x = x + 5;
                 break;
 

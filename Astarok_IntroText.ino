@@ -3,19 +3,28 @@
 #include "src/images/Images.h"
 
 
-const uint8_t textLengths[] = { 90, 84, 87 };
+const uint8_t textLengths[] = { 88, 81, 84 };
 
-const uint8_t PROGMEM IntroText_00[] = { 3,'E','a','c','h',' ','y','e','a','r',' ','t','h','e',' ','p','e','o','p','l','e',' ','o','f','~','t','h','e',' ','v','i','l','l','a','g','e', 
-                            ' ','c','h','o','o','s','e',' ','a',' ','n','e','w','~',12,'c','h','a','m','p','i','o','n',' ','t','o',' ','p','r','o','t','e','c','t','~',15,'t',
-                            'h','e','m',' ','f','r','o','m',' ','A','s','t','a','r','o','k','.' };
+const uint8_t PROGMEM IntroText_00[] = {
+    3,'E','a','c','h',' ','y','e','a','r',' ','t','h','e',' ','p','e','o','p','l','e',' ','o','f',
+    0,'t','h','e',' ','v','i','l','l','a','g','e',' ','c','h','o','o','s','e',' ','a',' ','n','e','w',
+    12,'c','h','a','m','p','i','o','n',' ','t','o',' ','p','r','o','t','e','c','t',
+    15,'t','h','e','m',' ','f','r','o','m',' ','A','s','t','a','r','o','k','.'
+};
 
-const uint8_t PROGMEM IntroText_01[] = { 7, 'C','o','m','p','e','t','e',' ','i','n',' ','t','h','e',' ','t','r','i','a','l','s','~',6,'t','o',' ','s','e','e',' ','h','o','w',' ','f','a',
-                            'r',' ','y','o','u',' ','c','a','n','~',11,'g','e','t',' ','a','n','d',' ','y','o','u',' ','c','o','u','l','d',' ','b','e','~',25,'t','h','a','t',' ','c','h','a','m','p','i','o','n','!' };
+const uint8_t PROGMEM IntroText_01[] = {
+    7, 'C','o','m','p','e','t','e',' ','i','n',' ','t','h','e',' ','t','r','i','a','l','s',
+    6,'t','o',' ','s','e','e',' ','h','o','w',' ','f','a','r',' ','y','o','u',' ','c','a','n',
+    11,'g','e','t',' ','a','n','d',' ','y','o','u',' ','c','o','u','l','d',' ','b','e',
+    25,'t','h','a','t',' ','c','h','a','m','p','i','o','n','!'
+};
 
-
-const uint8_t PROGMEM IntroText_02[] = { 10,'Y','o','u','r',' ','c','h','o','i','c','e',' ','o','f',' ','r','u','n','e','s','~',7,'w','i','l','l',' ','s','e','l','e','c','t',' ',
-                            'd','i','f','f','e','r','e','n','t','~',12,'c','o','u','r','s','e','s',' ','.','.',' ','s','o','m','e',' ','a','r','e','~',13,'e','a','s','i','e','r',
-                            ' ','t','h','a','n',' ','o','t','h','e','r','s','!' };
+const uint8_t PROGMEM IntroText_02[] = { 
+    10,'Y','o','u','r',' ','c','h','o','i','c','e',' ','o','f',' ','r','u','n','e','s',
+    7,'w','i','l','l',' ','s','e','l','e','c','t',' ','d','i','f','f','e','r','e','n','t',
+    12,'c','o','u','r','s','e','s','.','.','.',' ','s','o','m','e',' ','a','r','e',
+    13,'e','a','s','i','e','r',' ','t','h','a','n',' ','o','t','h','e','r','s','!'
+};
 
 const uint8_t * const IntroTexts[] = { IntroText_00, IntroText_01, IntroText_02 }; 
 
@@ -47,13 +56,9 @@ void introText() {
 
         switch (c) {
 
-            case '~':
-                line++;
-                x = 0;
-                break;
-
             case 0 ... 31:
-                x = x + c;
+                line++;
+                x = 0 + c;
                 break;
 
             case ' ':
@@ -61,7 +66,7 @@ void introText() {
                 break;
             
             default:
-                Sprites::drawSelfMasked(6 + x, 13 + (line * 10), Font::Images, Font::getIndex(c));
+                Sprites::drawSelfMasked(6 + x, 3 + (line * 10), Font::Images, Font::getIndex(c));
                 x = x + 5;
                 break;
 

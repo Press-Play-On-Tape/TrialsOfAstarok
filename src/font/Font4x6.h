@@ -2,19 +2,13 @@ namespace Font {
 
 
 #define CHAR_EXCLAMATION 33
-#define CHAR_PERIOD 46
-#define CHAR_SPACE 32
 #define CHAR_LETTER_A 65
 #define CHAR_LETTER_Z 90
 #define CHAR_LETTER_A_LOWER 97
 #define CHAR_LETTER_Z_LOWER 122
-#define CHAR_NUMBER_0 48
-#define CHAR_NUMBER_9 57
 
-#define FONT_EXCLAMATION_INDEX 62
-#define FONT_PERIOD_INDEX 63
-#define FONT_SPACE_INDEX 64
-#define FONT_NUMBER_INDEX 52
+#define FONT_EXCLAMATION_INDEX 52
+#define FONT_PERIOD_INDEX 53
 
 uint8_t static getIndex(const char c) {
 
@@ -29,23 +23,14 @@ uint8_t static getIndex(const char c) {
     case CHAR_LETTER_A_LOWER ... CHAR_LETTER_Z_LOWER:
       idx = c - CHAR_LETTER_A_LOWER + 26;
       break;
-
-    case CHAR_NUMBER_0 ... CHAR_NUMBER_9:
-      idx = c - CHAR_NUMBER_0 + FONT_NUMBER_INDEX;
-      break;
       
     case CHAR_EXCLAMATION:
       idx = FONT_EXCLAMATION_INDEX;
       break;
       
-    case CHAR_PERIOD:
+    default:
       idx = FONT_PERIOD_INDEX;
       break;
- 
-    case CHAR_SPACE:
-      idx = FONT_SPACE_INDEX;
-      break;
-
   }
 
   return idx;
@@ -367,66 +352,6 @@ uint8_t static getIndex(const char c) {
     0x26,  // ░░▓░░▓▓░
     0x22,  // ░░▓░░░▓░
 
-    // #48 Number '0'.
-    0x1E,  // ░░░▓▓▓▓░
-    0x29,  // ░░▓░▓░░▓
-    0x25,  // ░░▓░░▓░▓
-    0x1E,  // ░░░▓▓▓▓░
-
-    // #49 Number '1'.
-    0x22,  // ░░▓░░░▓░
-    0x3F,  // ░░▓▓▓▓▓▓
-    0x20,  // ░░▓░░░░░
-    0x00,  // ░░░░░░░░
-
-    // #50 Number '2'.
-    0x32,  // ░░▓▓░░▓░
-    0x29,  // ░░▓░▓░░▓
-    0x29,  // ░░▓░▓░░▓
-    0x26,  // ░░▓░░▓▓░
-
-    // #51 Number '3'.
-    0x12,  // ░░░▓░░▓░
-    0x21,  // ░░▓░░░░▓
-    0x25,  // ░░▓░░▓░▓
-    0x1A,  // ░░░▓▓░▓░
-
-    // #52 Number '4'.
-    0x0C,  // ░░░░▓▓░░
-    0x0A,  // ░░░░▓░▓░
-    0x3F,  // ░░▓▓▓▓▓▓
-    0x08,  // ░░░░▓░░░
-
-    // #53 Number '5'.
-    0x17,  // ░░░▓░▓▓▓
-    0x25,  // ░░▓░░▓░▓
-    0x25,  // ░░▓░░▓░▓
-    0x19,  // ░░░▓▓░░▓
-
-    // #54 Number '6'.
-    0x1E,  // ░░░▓▓▓▓░
-    0x25,  // ░░▓░░▓░▓
-    0x25,  // ░░▓░░▓░▓
-    0x18,  // ░░░▓▓░░░
-
-    // #55 Number '7'.
-    0x01,  // ░░░░░░░▓
-    0x39,  // ░░▓▓▓░░▓
-    0x05,  // ░░░░░▓░▓
-    0x03,  // ░░░░░░▓▓
-
-    // #56 Number '8'.
-    0x1A,  // ░░░▓▓░▓░
-    0x25,  // ░░▓░░▓░▓
-    0x25,  // ░░▓░░▓░▓
-    0x1A,  // ░░░▓▓░▓░
-
-    // #57 Number '9'.
-    0x06,  // ░░░░░▓▓░
-    0x29,  // ░░▓░▓░░▓
-    0x29,  // ░░▓░▓░░▓
-    0x1E,  // ░░░▓▓▓▓░
-
     // #33 Symbol '!'.
     0x00,  // ░░░░░░░░
     0x2F,  // ░░▓░▓▓▓▓
@@ -436,12 +361,6 @@ uint8_t static getIndex(const char c) {
     // #46 Symbol '.'.
     0x00,  // ░░░░░░░░
     0x20,  // ░░▓░░░░░
-    0x00,  // ░░░░░░░░
-    0x00,  // ░░░░░░░░
-
-    // #46 Space ' '.
-    0x00,  // ░░░░░░░░
-    0x00,  // ░░░░░░░░
     0x00,  // ░░░░░░░░
     0x00,  // ░░░░░░░░
     };

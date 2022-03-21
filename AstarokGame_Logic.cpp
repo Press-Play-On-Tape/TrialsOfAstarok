@@ -358,9 +358,6 @@ void AstarokGame::cycle(GameState &gameState) {
             switch (obj.getType()) {
 
                 case ObjectTypes::Health:
-                    obj.move();
-                    break;
-
                 case ObjectTypes::Fireball:
                     obj.move();
                     break;
@@ -408,7 +405,7 @@ void AstarokGame::cycle(GameState &gameState) {
 
                     }
 
-                    if (obj.getActive()) { // May have been deativated just above (ie. a health) ..
+                    if (obj.getActive()) { // May have been deativated just above (i.e. a health) ..
 
                         if (isFalling) { // And therefore landing on top of an object
 

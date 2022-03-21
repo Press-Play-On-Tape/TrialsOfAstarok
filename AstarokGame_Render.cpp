@@ -246,7 +246,6 @@ void AstarokGame::drawPlayer() {
             if (this->eventCounter < 12) { // Do not display for first half of puff cycle.
                 this->player.draw();
             }
-
             break;
 
         case EventType::Death_Init:

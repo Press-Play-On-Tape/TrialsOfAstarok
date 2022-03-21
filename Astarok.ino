@@ -51,9 +51,7 @@ void loop() {
         case GameState::SplashScreen_Init:
 
             splashScreen_Init();
-            splashScreen();
-            arduboy.display(false);
-            break;
+            /*-fallthrough*/
 
         case GameState::SplashScreen:
 
@@ -65,9 +63,7 @@ void loop() {
 
             tunes.playScore(Sounds::Theme);
             gameState = GameState::Title;
-            titleScreen();
-            arduboy.display(true);
-            break;
+            /*-fallthrough*/
 
         case GameState::Title:
 
@@ -78,9 +74,7 @@ void loop() {
         case GameState::IntroText_Init:
 
             introText_Init();
-            introText();
-            arduboy.display(true);
-            break;
+            /*-fallthrough*/
 
         case GameState::IntroText:
 
@@ -91,10 +85,8 @@ void loop() {
         case GameState::Seed_Init:
 
             seed_Init();
-            seed();
-            arduboy.display(true);
-            break;
-
+            /*-fallthrough*/
+            
         case GameState::Seed:
 
             seed();
@@ -105,15 +97,7 @@ void loop() {
 
             game.newGame();
             gameState = GameState::Game_Play;
-            game.cycle(gameState);
-            game.draw();
-
-            if (game.event == EventType::Death) {
-                game.drawScorePanel();
-            }
-
-            arduboy.displayWithBackground(game.mapNumber % 2 ? MapLevel::AboveGround : MapLevel::BelowGround);
-            break;
+            /*-fallthrough*/
 
         case GameState::Game_Play:
 
@@ -147,9 +131,7 @@ void loop() {
                 gameState = GameState::HighScore_NoFlash;
             }
 
-            highScores();
-            arduboy.display(true);
-            break;
+            /*-fallthrough*/
 
         case GameState::HighScore_Flash:
         case GameState::HighScore_NoFlash:

@@ -189,30 +189,21 @@ void Sprite::move() {
     switch (this->getType()) {
 
         case ObjectTypes::Player:
-
             if (this->vx == 0 && this->vy == 0) {
                 if (this->game->arduboy->getFrameCount(6) == 0) {
                 this->frame = (this->frame + 1) % 3;
                 }
             }
-
             break;
 
         case ObjectTypes::Health:
         case ObjectTypes::Coin:
-
             if (this->autoExpire > 0) {
-    
                 this->autoExpire--;
-    
                 if (this->autoExpire == 0) {
-
                     this->deactivate(false);
-
                 }
-
             }
-
             break;
 
         case ObjectTypes::Spider:
@@ -220,9 +211,7 @@ void Sprite::move() {
             if (this->vy == 0 && !this->isFalling() && hash(this->game->seed) % 20 == 0) {
                 this->vy = -(hash(this->game->seed) % 8);
             }
-
             break;
-        
     }
 
     // Handle player frame if stationary ..

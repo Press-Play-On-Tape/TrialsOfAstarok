@@ -18,7 +18,6 @@ struct Particle {
         SQ7x8 velx = 0;
         SQ7x8 vely = 0;
         uint8_t counter = 0;
-        uint8_t pSize = 1;
 
     public:
 
@@ -29,14 +28,12 @@ struct Particle {
         int16_t getX()                          { return this->x; }
         int16_t getY()                          { return this->y; }
         int8_t getCounter()                     { return this->counter; }
-        uint8_t getSize()                       { return this->pSize; }
 
         void setX(int16_t val)                  { this->x = val; }
         void setY(int16_t val)                  { this->y = val; }
         void setCounter(int16_t val)            { this->counter = val; }
         void setVelX(SQ7x8 val)                 { this->velx = val; }
         void setVelY(SQ7x8 val)                 { this->vely = val; }
-        void setSize(uint8_t val)               { this->pSize = val; }
 
     public:
 
@@ -49,11 +46,11 @@ struct Particle {
             const uint8_t boundR = WIDTH;
             const uint8_t maxR = 64;
 
-            this->vely -= gravity * this->pSize;
+            this->vely -= gravity;
             this->velx *= cF;
 
-            if (this->x > boundR - this->pSize ){
-                this->x = boundR - this->pSize ;
+            if (this->x > boundR - 1 ){
+                this->x = boundR - 1 ;
                 this->velx = -this->velx;
             }
 

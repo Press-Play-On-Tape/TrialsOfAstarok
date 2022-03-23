@@ -28,12 +28,7 @@ void titleScreen() {
 
     Sprites::drawOverwrite(titleScreenVars.index == TitleScreenMode::Play ? 35 : 65, 59, Images::Title_Highlight, 0);
 
-    if (arduboy.audio.enabled()) {
-        Sprites::drawExternalMask(119, 56, Images::Sound_On, Images::Sound_Mask, 0, 0);
-    }
-    else {
-        Sprites::drawExternalMask(119, 56, Images::Sound_Off, Images::Sound_Mask, 0, 0);
-    }
+    Sprites::drawOverwrite(119, 56, Images::SoundToggle, arduboy.audio.enabled());
 
     if ((justPressed & A_BUTTON) || (justPressed & B_BUTTON)) {
 

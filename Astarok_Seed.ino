@@ -4,6 +4,7 @@
 
 void seed_Init() {
 
+    tunes.stopScore();
     seedVars.reset();
     gameState = GameState::Seed;
 
@@ -13,11 +14,11 @@ void seed() {
 
     drawBackground();
     
-    Sprites::drawSelfMasked(34, 8, Images::EnterRunes_Text, 0);
-    Sprites::drawSelfMasked(24, 21, Images::EnterRunes_Frame, 0);
-    Sprites::drawSelfMasked(24, 47, Images::EnterRunes_Frame, 2);
-    Sprites::drawSelfMasked(96, 21, Images::EnterRunes_Frame, 1);
-    Sprites::drawSelfMasked(96, 47, Images::EnterRunes_Frame, 3);
+    Sprites::drawOverwrite(34, 8, Images::EnterRunes_Text, 0);
+    Sprites::drawOverwrite(24, 21, Images::EnterRunes_Frame, 0);
+    Sprites::drawOverwrite(24, 47, Images::EnterRunes_Frame, 2);
+    Sprites::drawOverwrite(96, 21, Images::EnterRunes_Frame, 1);
+    Sprites::drawOverwrite(96, 47, Images::EnterRunes_Frame, 3);
 
     arduboy.drawFastHLine(24, 21, 72);
     arduboy.drawFastHLine(24, 54, 72);

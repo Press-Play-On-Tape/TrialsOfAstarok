@@ -146,7 +146,7 @@ void highScores() {
             extractDigits(digits, score);
             
             for (uint8_t j = 0; j < 6; j++) {
-                Sprites::drawSelfMasked(69 + ((6 - j) * 5), 15 + (i * 17) + 4, Images::Numbers, digits[j]);
+                Sprites::drawOverwrite(69 + ((6 - j) * 5), 15 + (i * 17) + 4, Images::Numbers, digits[j]);
             }
 
         }

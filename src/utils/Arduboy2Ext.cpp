@@ -66,7 +66,7 @@ void Arduboy2Ext::displayWithBackground(MapLevel mapLevel) {
   if (mapLevel == MapLevel::AboveGround) {
 
       // memset(sBuffer, 0xff, 1024);
-      for(size_t index = 0; index < 1024; ++index) sBuffer[index] = 0xFF;
+      for(size_t index = 52; index < 1024; ++index) sBuffer[index] = 0xFF;
       
   }
 

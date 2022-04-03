@@ -52,7 +52,7 @@ class AstarokGame {
         #endif
 
         bool                  collideWithChest = false;
-        Particle particles[Constants::ParticlesMax];
+        Particle              particles[Constants::ParticlesMax];
 
 
     public:  // Methods

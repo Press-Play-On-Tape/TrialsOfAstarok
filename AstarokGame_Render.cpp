@@ -53,7 +53,7 @@ void AstarokGame::drawHUD() {
 
     if (this->mapNumber % 2 == MapLevel::AboveGround) {
 
-        for(size_t index = 0; index < 53; ++index) arduboy->sBuffer[index] = 0xFF;
+        for(size_t index = 0; index < 52; ++index) arduboy->sBuffer[index] = 0xFF; // Blank background as HUD is drawn last
 
         Sprites::drawErase(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawErase(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
@@ -66,7 +66,7 @@ void AstarokGame::drawHUD() {
     }
     else {
 
-        for(size_t index = 0; index < 53; ++index) arduboy->sBuffer[index] = 0x00;
+        for(size_t index = 0; index < 52; ++index) arduboy->sBuffer[index] = 0x00; // Blank background as HUD is drawn last
 
         Sprites::drawSelfMasked(1, 1, Images::Heart, this->lives >= 1 ? Hearts::FilledIn : Hearts::Outline);
         Sprites::drawSelfMasked(9, 1, Images::Heart, this->lives >= 2 ? Hearts::FilledIn : Hearts::Outline);
@@ -161,7 +161,7 @@ void AstarokGame::drawMap_Background_2() {
     if (mapNumber % 2 == MapLevel::AboveGround) {
 
         for (int16_t i = -arduboy->getFrameCount(24) / 2; i < 128; i = i + 24) {
-            Sprites::drawErase(i, 183 - camera.y, Images::Water, 0);
+            Sprites::drawErase(i, 185 - camera.y, Images::Water, 0);
         }
 
     }

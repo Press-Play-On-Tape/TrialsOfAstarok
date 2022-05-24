@@ -27,13 +27,16 @@ namespace Constants {
     constexpr uint8_t Points_Skill              = 20;
     constexpr uint8_t Points_Coin               = 20;
 
-    constexpr uint16_t EEPROM_Start_C1          = EEPROM_STORAGE_SPACE_START + 500;
+    constexpr uint8_t NumberOfScores            = 3;
+    constexpr uint16_t EEPROM_Start             = EEPROM_STORAGE_SPACE_START + 500;
+    constexpr uint16_t EEPROM_Start_C1          = EEPROM_Start;
     constexpr uint16_t EEPROM_Start_C2          = EEPROM_Start_C1 + 1;
     constexpr uint16_t EEPROM_Sounds            = EEPROM_Start_C2 + 1;
     constexpr uint16_t EEPROM_Seeds             = EEPROM_Sounds + 1;
     constexpr uint16_t EEPROM_Scores            = EEPROM_Seeds + 5;
+    constexpr uint16_t EEPROM_End               = EEPROM_Scores + (Constants::NumberOfScores * 7);
+    constexpr uint16_t EEPROM_Checksum          = EEPROM_End;
     constexpr uint8_t  EEPROM_No_Slot           = 255;
-    constexpr uint8_t NumberOfScores            = 3;
 
     constexpr uint8_t Fireball_NotMoving        = 127;
     constexpr int8_t Fireball_StartPos          = -20;

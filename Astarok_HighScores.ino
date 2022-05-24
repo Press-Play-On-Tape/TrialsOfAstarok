@@ -32,7 +32,42 @@ void initEEPROM(bool forceOverwrite) {
         }
 
     } 
+    else {
+
+        int16_t checkSumOld = 0;
+        int16_t checkSumNow = checkSum(false);
+        EEPROM.get(Constants::EEPROM_Checksum, checkSumOld);
+
+        if (checkSumNow != checkSumOld) {
+
+            initEEPROM(true);
+
+        }
+        
+    }    
    
+}
+
+
+/* -----------------------------------------------------------------------------
+ *   Generate and optionally save a check sum .. 
+ */
+int16_t checkSum(bool update) {
+
+    int16_t checksum = 0;
+
+    for (uint8_t i = 0; i < (Constants::EEPROM_End - Constants::EEPROM_Start); i++) {
+
+        checksum = checksum + ((i % 2 == 0 ? 1 : -1) * eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Start + i)));
+
+    }
+
+    if (update) {
+        EEPROM.put(Constants::EEPROM_Checksum, static_cast<uint16_t>(checksum));
+    }
+
+    return checksum;
+
 }
 
 
@@ -90,6 +125,8 @@ void writeHighScoreEntry(HighScoreVars &highScoreVars) {
         EEPROM.update(Constants::EEPROM_Scores + (7 * highScoreVars.slot) + 2 + i, highScoreVars.seeds[i]);
 
     }
+
+    checkSum(true);
 
 }
 

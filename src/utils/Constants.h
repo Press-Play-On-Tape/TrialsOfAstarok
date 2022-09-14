@@ -3,6 +3,7 @@
 #include "Arduboy2Ext.h"
 
 #define _DEBUG
+#define _SOUNDS
 #define _NO_DEATH
 #define PAUSE
 

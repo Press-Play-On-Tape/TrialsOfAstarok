@@ -20,7 +20,11 @@
 class AstarokGame {
 
     public:  // Constructor
+        #ifdef SOUNDS
         AstarokGame(Arduboy2Ext *arduboy, ArduboyPlaytune *tunes);
+        #else
+        AstarokGame(Arduboy2Ext *arduboy);
+        #endif
 
     public:  // Variables
         EventType             event;
@@ -41,7 +45,9 @@ class AstarokGame {
         AISprite              mobs[Constants::SpriteCap];
         Map                   level;
         Arduboy2Ext           * arduboy;
+        #ifdef SOUNDS
         ArduboyPlaytune       * tunes;
+        #endif
         uint32_t              seed;
 
     private:

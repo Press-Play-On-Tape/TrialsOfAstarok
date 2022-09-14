@@ -11,8 +11,12 @@
 #include <ArduboyPlaytune.h>
 
 Arduboy2Ext arduboy;
+#ifdef SOUNDS
 ArduboyPlaytune tunes(arduboy.audio.enabled);
 AstarokGame game(&arduboy, &tunes);
+#else
+AstarokGame game(&arduboy);
+#endif
 GameState gameState = GameState::SplashScreen_Init;
 
 TitleScreenVars titleScreenVars;
@@ -31,7 +35,7 @@ void setup() {
 	arduboy.flashlight();
 	arduboy.systemButtons();
 
-    #ifndef DEBUG
+    #ifdef SOUNDS
     arduboy.audio.begin();
     tunes.initChannel(PIN_SPEAKER_1);
     tunes.initChannel(PIN_SPEAKER_2);    
@@ -61,7 +65,9 @@ void loop() {
 
         case GameState::Title_Init:
 
+            #ifdef SOUNDS
             tunes.playScore(Sounds::Theme);
+            #endif
             gameState = GameState::Title;
             /*-fallthrough*/
 
